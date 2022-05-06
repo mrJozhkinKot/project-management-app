@@ -1,0 +1,41 @@
+.footer-container {
+  background-color: #323535;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  padding: 10px;
+  color: #fff;
+}
+
+.footer-link:hover {
+  color: #E36655;
+}
+
+.footer-logo {
+  min-width: 50px;
+  color: #000;
+  background-color: #fff;
+  padding: 0 10px;
+}
+
+.footer-logo:hover {
+  background-color: #E36655;
+}
+
+.footer-link-wrapper:not(:last-child) {
+  padding-right: 15px;
+}
+
+.MuiGrid-item {
+  display: flex;
+  justify-content: center;
+}
+
+.MuiTypography-root {
+  display: flex;
+  align-items: center;
+}
+
+.MuiSvgIcon-fontSizeSmall {
+  margin-right: 4px;
+}
