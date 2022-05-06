@@ -1,7 +1,7 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 
-const Footer: React.FC = () => {
-  return <div>Footer</div>;
-};
+function Footer(): React.ReactElement {
+  return <div id="footer">Footer</div>;
+}
 
 export default Footer;
