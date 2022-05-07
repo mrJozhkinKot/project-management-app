@@ -7,8 +7,8 @@ import './Footer.css';
 const Footer: React.FC = () => {
   return (
     <footer>
-      <Grid className="footer-container" container lg={12}>
-        <Grid item lg={4} sm={3} xs={12}>
+      <Grid className="footer-container" container>
+        <Grid item lg={4} sm={3} xs={12} className="footer-list-item">
           <Link
             href="https://rs.school/react/"
             target="_blank"
@@ -18,7 +18,7 @@ const Footer: React.FC = () => {
             <SvgIcon component={RSSIcon} inheritViewBox className="footer-logo" />
           </Link>
         </Grid>
-        <Grid container item lg={4} sm={6} xs={12} p={1.25}>
+        <Grid container item lg={4} sm={6} xs={12} p={1.25} className="footer-list-item">
           <Grid item className="footer-link-wrapper">
             <Link
               className="footer-link"
@@ -28,8 +28,8 @@ const Footer: React.FC = () => {
               underline="none"
               color="inherit"
             >
-              <Typography component="span">
-                <GitHubIcon fontSize="small" />
+              <Typography component="span" className="footer-teammate">
+                <GitHubIcon fontSize="small" className="footer-github-icon" />
                 Yulia
               </Typography>
             </Link>
@@ -43,8 +43,8 @@ const Footer: React.FC = () => {
               underline="none"
               color="inherit"
             >
-              <Typography component="span">
-                <GitHubIcon fontSize="small" />
+              <Typography component="span" className="footer-teammate">
+                <GitHubIcon fontSize="small" className="footer-github-icon" />
                 Sergey
               </Typography>
             </Link>
@@ -58,14 +58,14 @@ const Footer: React.FC = () => {
               underline="none"
               color="inherit"
             >
-              <Typography component="span">
-                <GitHubIcon fontSize="small" />
+              <Typography component="span" className="footer-teammate">
+                <GitHubIcon fontSize="small" className="footer-github-icon" />
                 Vera
               </Typography>
             </Link>
           </Grid>
         </Grid>
-        <Grid item lg={4} sm={3} xs={12}>
+        <Grid item lg={4} sm={3} xs={12} className="footer-list-item">
           <Typography component="span">© 2022</Typography>
         </Grid>
       </Grid>

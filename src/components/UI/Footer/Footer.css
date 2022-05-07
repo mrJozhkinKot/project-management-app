@@ -26,16 +26,16 @@
   padding-right: 15px;
 }
 
-.MuiGrid-item {
+.footer-list-item {
   display: flex;
   justify-content: center;
 }
 
-.MuiTypography-root {
+.footer-teammate {
   display: flex;
   align-items: center;
 }
 
-.MuiSvgIcon-fontSizeSmall {
+.footer-github-icon {
   margin-right: 4px;
 }
