@@ -12,7 +12,7 @@ import { useAppDispatch } from '../../hooks/redux';
 
 interface Props {
   board: {
-    id?: number;
+    id?: number | Date;
     name?: string;
     description?: string;
   };
@@ -29,27 +29,13 @@ const Board: React.FC<Props> = ({ board }) => {
   };
 
   return (
-    <Card
-      sx={{
-        minWidth: 275,
-        maxWidth: 350,
-        backgroundColor: '#C4C4C4',
-        paddingBottom: '1rem',
-      }}
-    >
+    <Card sx={{ minWidth: 275 }} style={{ backgroundColor: '#f0ede9', padding: '1rem' }}>
       <CardActionArea
         onClick={() => {
           navigate(`/board/:${board.id}`);
         }}
       >
-        <CardHeader
-          title={board.name}
-          style={{
-            background:
-              'linear-gradient(56deg, rgba(37,197,168,1) 28%, rgba(172,197,37,1) 66%, rgba(227,102,85,1) 100%',
-            color: '#fff',
-          }}
-        />
+        <CardHeader title={board.name} />
         <CardContent>
           <Typography variant="body1">{board.description}</Typography>
         </CardContent>
@@ -58,7 +44,7 @@ const Board: React.FC<Props> = ({ board }) => {
         <Button
           variant="contained"
           size="small"
-          style={{ backgroundColor: '#E36655' }}
+          style={{ backgroundColor: '#e86842' }}
           onClick={onClickDeleteBtn}
         >
           Delete
