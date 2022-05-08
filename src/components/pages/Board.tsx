@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 
-const Board: React.FC = () => {
+function Board(): React.ReactElement {
   return <Fragment>Board</Fragment>;
-};
+}
 
 export default Board;
