@@ -32,7 +32,7 @@ const Board: React.FC<Props> = ({ board }) => {
     <Card sx={{ minWidth: 275 }} style={{ backgroundColor: '#f0ede9', padding: '1rem' }}>
       <CardActionArea
         onClick={() => {
-          navigate(`/board/:${board.id}`);
+          navigate(`/boards/:${board.id}`);
         }}
       >
         <CardHeader title={board.name} />
