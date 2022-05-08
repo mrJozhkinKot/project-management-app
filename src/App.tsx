@@ -6,7 +6,7 @@ import Board from './components/pages/Board';
 import Login from './components/pages/Login';
 import Main from './components/pages/Main';
 import NotFound from './components/pages/NotFound';
-import Footer from './components/UI/Footer';
+import Footer from './components/UI/Footer/Footer';
 import Navbar from './components/UI/Navbar';
 
 const App: React.FunctionComponent = () => {
