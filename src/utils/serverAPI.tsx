@@ -1,8 +1,7 @@
 import {
   IUser,
-  IGetUsers,
-  ISignIn,
-  ISignUp,
+  ISignInResponse,
+  ISignUpBody,
   IUpdateUser,
   IBadRequest,
   IInternalServerError,
@@ -12,7 +11,7 @@ const remoteServerURL = 'https://serene-inlet-66010.herokuapp.com';
 const token =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhNGQwNWExNy04YTEyLTQwOWMtYjcwZS0xN2Q5ZGFkNzU1Y2UiLCJsb2dpbiI6InVzZXIwMDEiLCJpYXQiOjE2NTE4NzE5MTh9.4pGFpqAg1EqW4ZjVUd0RGViqdmRPlzPN1sigO25zXl8';
 
-export async function getUsers(): Promise<IGetUsers | void> {
+export async function getUsers(): Promise<IUser[] | void> {
   await fetch(`${remoteServerURL}/users`, {
     method: 'GET',
     headers: {
@@ -43,7 +42,7 @@ export async function getUser(userID: string): Promise<IUser | IBadRequest | voi
     .then(async (response) => {
       if (response.ok) {
         const data = await response.json();
-        console.log('data: ', data);
+        console.log('data:IUser : ', data);
         return data;
       }
     })
@@ -63,7 +62,7 @@ export async function deleteUser(userID: string): Promise<IBadRequest | void> {
     .then(async (response) => {
       if (!response.ok) {
         const data = await response.json();
-        console.log('data: ', data);
+        console.log('data:IBadRequest : ', data);
         return data;
       }
     })
@@ -86,23 +85,54 @@ export async function updateUser(
     body: JSON.stringify(body),
   })
     .then(async (response) => {
+      const data = await response.json();
+
       if (response.ok) {
-        const data = await response.json();
-        console.log('data: ', data);
-        return data;
-      }
-      if (response.status === 500) {
-        const data = await response.json();
-        console.log('data:IInternalServerError : ', data);
-        console.log('User with this login already exists!');
-        return data;
+        console.log('data:IUpdateUser : ', data);
       }
       if (response.status === 400 || response.status === 404) {
-        const data = await response.json();
-        console.log('data:IBadRequest : ', data);
         console.log('User was not found (invalid ID)!');
-        return data;
+        console.log('data:IBadRequest : ', data);
       }
+      if (response.status === 500) {
+        console.log('User login already exists!');
+        console.log('data:IInternalServerError : ', data);
+      }
+
+      return data;
+    })
+    .catch((error) => {
+      throw new Error(`${error.status} error: ${error.statusText}`);
+    });
+}
+
+export async function signUp(
+  body: ISignUpBody
+): Promise<IUser | IBadRequest | IInternalServerError | void> {
+  await fetch(`${remoteServerURL}/signup`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+    .then(async (response) => {
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log('data:IUser : ', data);
+      }
+      if (response.status === 409) {
+        console.log('User login already exists!');
+        console.log('data:IInternalServerError : ', data);
+      }
+      if (response.status === 400) {
+        console.log('Found empty field!');
+        console.log('data:IBadRequest : ', data);
+      }
+
+      return data;
     })
     .catch((error) => {
       throw new Error(`${error.status} error: ${error.statusText}`);

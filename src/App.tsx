@@ -1,48 +1,33 @@
 import React from 'react';
-import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import './App.css';
-import About from './components/pages/About';
-import Board from './components/pages/Board';
-import Login from './components/pages/Login';
+import Layout from './components/Layout';
+import About from './components/pages/Welcome';
+import SignIn from './components/pages/SignIn';
+import SignUp from './components/pages/SignUp';
 import Main from './components/pages/Main';
+import Boards from './components/pages/Boards';
+import Board from './components/pages/Board';
 import NotFound from './components/pages/NotFound';
-import Footer from './components/UI/Footer';
-import Navbar from './components/UI/Navbar';
 
-const App: React.FunctionComponent = () => {
-  const isAuth = true;
-  const PrivateRoute = ({ children }: { children: React.ReactElement | null }) => {
-    return isAuth ? children : <Navigate to="/login" />;
-  };
+function App(): React.ReactElement {
   return (
-    <BrowserRouter>
-      <div className="App">
-        <Navbar />
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <PrivateRoute>
-                <Main />
-              </PrivateRoute>
-            }
-          ></Route>
-          <Route path="/about" element={<About />}></Route>
-          <Route path="/login" element={<Login />}></Route>
-          <Route
-            path="/board/:id"
-            element={
-              <PrivateRoute>
-                <Board />
-              </PrivateRoute>
-            }
-          ></Route>
-          <Route path="*" element={<NotFound />}></Route>
-        </Routes>
-        <Footer />
-      </div>
-    </BrowserRouter>
+    <div id="app">
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Main />} />
+          <Route path="welcome" element={<About />} />
+          <Route path="signin" element={<SignIn />} />
+          <Route path="signup" element={<SignUp />} />
+          <Route path="boards">
+            <Route index element={<Boards />} />
+            <Route path=":id" element={<Board />} />
+          </Route>
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
+    </div>
   );
-};
+}
 
 export default App;

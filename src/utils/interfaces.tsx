@@ -4,8 +4,6 @@ export interface IUser {
   login: string;
 }
 
-export type IGetUsers = IUser[];
-
 export interface IUpdateUser {
   id: string;
   name: string;
@@ -13,11 +11,15 @@ export interface IUpdateUser {
   password: string;
 }
 
-export interface ISignIn {
+export interface ISignInResponse {
   token: string;
 }
 
-export type ISignUp = IUser;
+export interface ISignUpBody {
+  name: string;
+  login: string;
+  password: string;
+}
 
 export interface IBadRequest {
   statusCode: number;
