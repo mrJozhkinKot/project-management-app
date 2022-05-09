@@ -6,9 +6,17 @@ interface Board {
   description?: string;
 }
 
+interface Column {
+  id?: number | Date;
+  name?: string;
+  description?: string;
+}
+
 interface BoardsState {
   boards: Board[];
   board: Board;
+  columns: Column[];
+  column: Column;
   isModalBoard: boolean;
 }
 
@@ -16,6 +24,12 @@ interface BoardsState {
 const initialState: BoardsState = {
   boards: [],
   board: {},
+  columns: [
+    { id: 1, name: 'column1', description: 'description1' },
+    { id: 2, name: 'column2', description: 'description2' },
+    { id: 3, name: 'column3', description: 'description3' },
+  ],
+  column: {},
   isModalBoard: false,
 };
 
