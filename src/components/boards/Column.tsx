@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { useDrag, useDrop } from 'react-dnd';
-import type { Identifier, XYCoord } from 'dnd-core';
+import type { Identifier } from 'dnd-core';
 import { ItemTypes } from './ItemTypes';
 interface Task {
   id: number;
@@ -83,7 +83,7 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
         handlerId: monitor.getHandlerId(),
       };
     },
-    hover(item: DragItem, monitor) {
+    hover(item: DragItem) {
       if (!ref.current) {
         return;
       }

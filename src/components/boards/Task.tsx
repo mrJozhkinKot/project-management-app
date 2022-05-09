@@ -46,7 +46,6 @@ export const Task: React.FC<TaskProps> = ({ task, index, moveTask }) => {
       if (dragIndex === hoverIndex) {
         return;
       }
-
       const hoverBoundingRect = ref.current?.getBoundingClientRect();
       const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
       const clientOffset = monitor.getClientOffset();
