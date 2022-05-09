@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect, useRef } from 'react';
 import update from 'immutability-helper';
 import { Task } from './Task';
 import Button from '@mui/material/Button';
@@ -6,30 +6,39 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { useDrag, useDrop } from 'react-dnd';
+import type { Identifier, XYCoord } from 'dnd-core';
+import { ItemTypes } from './ItemTypes';
 interface Task {
   id: number;
   text: string;
 }
-
-interface Props {
+interface ColumnProps {
   column: {
     id?: number | Date;
     name?: string;
     description?: string;
   };
+  index: number;
+  moveColumn: (dragIndex: number, hoverIndex: number) => void;
+}
+interface DragItem {
+  index: number;
+  id: string;
+  type: string;
 }
 
-const Column: React.FC<Props> = ({ column }) => {
+const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
   const { tasks } = useAppSelector((state) => state.boardsReducer);
-  const { createNewTaskList } = boardsSlice.actions;
+  const { reorderTaskList } = boardsSlice.actions;
   const dispatch = useAppDispatch();
   const [shouldRender, setShouldRender] = useState(false);
   useEffect(() => setShouldRender(true), []);
 
-  const moveCard = useCallback(
+  const moveTask = useCallback(
     (dragIndex: number, hoverIndex: number) => {
       dispatch(
-        createNewTaskList(
+        reorderTaskList(
           update(tasks, {
             $splice: [
               [dragIndex, 1],
@@ -39,6 +48,7 @@ const Column: React.FC<Props> = ({ column }) => {
         )
       );
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [tasks]
   );
 
@@ -65,16 +75,53 @@ const Column: React.FC<Props> = ({ column }) => {
     },
   };
 
+  const ref = useRef<HTMLDivElement>(null);
+  const [{ handlerId }, drop] = useDrop<DragItem, void, { handlerId: Identifier | null }>({
+    accept: ItemTypes.COLUMN,
+    collect(monitor) {
+      return {
+        handlerId: monitor.getHandlerId(),
+      };
+    },
+    hover(item: DragItem, monitor) {
+      if (!ref.current) {
+        return;
+      }
+      const dragIndex = item.index;
+      const hoverIndex = index;
+
+      if (dragIndex === hoverIndex) {
+        return;
+      }
+
+      moveColumn(dragIndex, hoverIndex);
+      item.index = hoverIndex;
+    },
+  });
+
+  const [{ isDragging }, drag] = useDrag({
+    type: ItemTypes.COLUMN,
+    item: () => {
+      const id = column.id;
+      return { id, index };
+    },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+
+  const opacity = isDragging ? 0 : 1;
+  drag(drop(ref));
   return (
     <>
       {shouldRender && (
-        <Box sx={style.container}>
+        <Box ref={ref} sx={{ ...style.container, opacity }} data-handler-id={handlerId}>
           <div style={style.header}>
             <Typography variant="h5">{column.name}</Typography>
             <Typography variant="body1">{column.description}</Typography>
           </div>
           {tasks.map((task, index) => (
-            <Task key={task.id} id={task.id} text={task.text} index={index} moveCard={moveCard} />
+            <Task key={task.id} task={task} index={index} moveTask={moveTask} />
           ))}
           <Button
             variant="contained"

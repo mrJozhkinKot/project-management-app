@@ -61,8 +61,11 @@ export const boardsSlice = createSlice({
     createNewBoard(state, action: PayloadAction<Board[]>) {
       state.boards = [...state.boards, ...action.payload];
     },
-    createNewTaskList(state, action: PayloadAction<Task[]>) {
+    reorderTaskList(state, action: PayloadAction<Task[]>) {
       state.tasks = action.payload;
+    },
+    reorderColumnList(state, action: PayloadAction<Column[]>) {
+      state.columns = action.payload;
     },
   },
 });
