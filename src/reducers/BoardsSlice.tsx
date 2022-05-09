@@ -14,14 +14,7 @@ interface BoardsState {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const initialState: BoardsState = {
-  boards: [
-    { id: 1, name: 'board1', description: 'some description1' },
-    { id: 2, name: 'board2', description: 'some description2' },
-    { id: 3, name: 'board3', description: 'some description3' },
-    { id: 4, name: 'board4', description: 'some description4' },
-    { id: 5, name: 'board5', description: 'some description5' },
-    { id: 6, name: 'board6', description: 'some description6' },
-  ],
+  boards: [],
   board: {},
   isModalBoard: false,
 };

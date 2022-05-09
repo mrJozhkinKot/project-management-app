@@ -28,8 +28,19 @@ const Board: React.FC<Props> = ({ board }) => {
     dispatch(deleteBoard(board.id));
   };
 
+  const style = {
+    card: {
+      background: 'linear-gradient(32deg, rgba(69,67,65,1) 23%, rgba(240,237,233,1) 71%)',
+      padding: '1rem',
+      color: '#fff',
+    },
+    btn: {
+      backgroundColor: '#e86842',
+    },
+  };
+
   return (
-    <Card sx={{ minWidth: 275 }} style={{ backgroundColor: '#f0ede9', padding: '1rem' }}>
+    <Card sx={{ minWidth: 275 }} style={style.card}>
       <CardActionArea
         onClick={() => {
           navigate(`/boards/:${board.id}`);
@@ -41,12 +52,7 @@ const Board: React.FC<Props> = ({ board }) => {
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button
-          variant="contained"
-          size="small"
-          style={{ backgroundColor: '#e86842' }}
-          onClick={onClickDeleteBtn}
-        >
+        <Button variant="contained" size="small" style={style.btn} onClick={onClickDeleteBtn}>
           Delete
         </Button>
       </CardActions>
