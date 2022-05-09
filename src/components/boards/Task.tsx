@@ -13,9 +13,8 @@ const style: CSSProperties = {
   cursor: 'move',
 };
 
-export interface CardProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  id: any;
+export interface TaskProps {
+  id: number;
   text: string;
   index: number;
   moveCard: (dragIndex: number, hoverIndex: number) => void;
@@ -27,7 +26,7 @@ interface DragItem {
   type: string;
 }
 
-export const Task: FC<CardProps> = ({ id, text, index, moveCard }) => {
+export const Task: FC<TaskProps> = ({ text, id, index, moveCard }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [{ handlerId }, drop] = useDrop<DragItem, void, { handlerId: Identifier | null }>({
     accept: ItemTypes.TASK,
@@ -47,7 +46,6 @@ export const Task: FC<CardProps> = ({ id, text, index, moveCard }) => {
       if (dragIndex === hoverIndex) {
         return;
       }
-
       // Determine rectangle on screen
       const hoverBoundingRect = ref.current?.getBoundingClientRect();
 
@@ -90,8 +88,7 @@ export const Task: FC<CardProps> = ({ id, text, index, moveCard }) => {
     item: () => {
       return { id, index };
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    collect: (monitor: any) => ({
+    collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
   });

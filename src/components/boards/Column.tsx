@@ -4,6 +4,8 @@ import { Task } from './Task';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import { boardsSlice } from '../../reducers/BoardsSlice';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 interface Task {
   id: number;
   text: string;
@@ -18,26 +20,27 @@ interface Props {
 }
 
 const Column: React.FC<Props> = ({ column }) => {
-  const [cards, setCards] = useState([
-    { id: 1, text: 'task1' },
-    { id: 2, text: 'task2' },
-    { id: 3, text: 'task3' },
-    { id: 4, text: 'task4' },
-    { id: 5, text: 'task5' },
-  ]);
+  const { tasks } = useAppSelector((state) => state.boardsReducer);
+  const { createNewTaskList } = boardsSlice.actions;
+  const dispatch = useAppDispatch();
   const [shouldRender, setShouldRender] = useState(false);
   useEffect(() => setShouldRender(true), []);
 
-  const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
-    setCards((prevCards: Task[]) =>
-      update(prevCards, {
-        $splice: [
-          [dragIndex, 1],
-          [hoverIndex, 0, prevCards[dragIndex] as Task],
-        ],
-      })
-    );
-  }, []);
+  const moveCard = useCallback(
+    (dragIndex: number, hoverIndex: number) => {
+      dispatch(
+        createNewTaskList(
+          update(tasks, {
+            $splice: [
+              [dragIndex, 1],
+              [hoverIndex, 0, tasks[dragIndex] as Task],
+            ],
+          })
+        )
+      );
+    },
+    [tasks]
+  );
 
   const style = {
     container: {
@@ -70,7 +73,7 @@ const Column: React.FC<Props> = ({ column }) => {
             <Typography variant="h5">{column.name}</Typography>
             <Typography variant="body1">{column.description}</Typography>
           </div>
-          {cards.map((task, index) => (
+          {tasks.map((task, index) => (
             <Task key={task.id} id={task.id} text={task.text} index={index} moveCard={moveCard} />
           ))}
           <Button
