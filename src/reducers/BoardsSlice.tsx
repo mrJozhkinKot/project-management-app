@@ -22,6 +22,7 @@ interface BoardsState {
   tasks: Task[];
   task: Task;
   isModalBoard: boolean;
+  isModalTask: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -46,6 +47,7 @@ const initialState: BoardsState = {
     text: '',
   },
   isModalBoard: false,
+  isModalTask: false,
 };
 
 export const boardsSlice = createSlice({
@@ -58,6 +60,9 @@ export const boardsSlice = createSlice({
     setIsModalBoard(state, action: PayloadAction<boolean>) {
       state.isModalBoard = action.payload;
     },
+    setIsModalTask(state, action: PayloadAction<boolean>) {
+      state.isModalTask = action.payload;
+    },
     createNewBoard(state, action: PayloadAction<Board[]>) {
       state.boards = [...state.boards, ...action.payload];
     },
@@ -66,6 +71,9 @@ export const boardsSlice = createSlice({
     },
     reorderColumnList(state, action: PayloadAction<Column[]>) {
       state.columns = action.payload;
+    },
+    createNewTask(state, action: PayloadAction<Task[]>) {
+      state.tasks = [...state.tasks, ...action.payload];
     },
   },
 });

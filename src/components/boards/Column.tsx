@@ -30,7 +30,7 @@ interface DragItem {
 
 const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
   const { tasks } = useAppSelector((state) => state.boardsReducer);
-  const { reorderTaskList } = boardsSlice.actions;
+  const { reorderTaskList, setIsModalTask } = boardsSlice.actions;
   const dispatch = useAppDispatch();
   const [shouldRender, setShouldRender] = useState(false);
   useEffect(() => setShouldRender(true), []);
@@ -51,6 +51,10 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [tasks]
   );
+
+  const onClickCreateBtn = () => {
+    dispatch(setIsModalTask(true));
+  };
 
   const style = {
     container: {
@@ -123,13 +127,7 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
           {tasks.map((task, index) => (
             <Task key={task.id} task={task} index={index} moveTask={moveTask} />
           ))}
-          <Button
-            variant="contained"
-            sx={style.btn}
-            onClick={() => {
-              console.log('create task');
-            }}
-          >
+          <Button variant="contained" sx={style.btn} onClick={onClickCreateBtn}>
             +
           </Button>
         </Box>

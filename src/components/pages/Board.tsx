@@ -1,6 +1,7 @@
 import Button from '@mui/material/Button';
 import React, { Fragment } from 'react';
 import ColumnList from '../boards/ColumnList';
+import ModalTask from '../modal/ModalTask';
 
 const Board: React.FC = () => {
   const style = {
@@ -23,6 +24,7 @@ const Board: React.FC = () => {
         Create Column
       </Button>
       <ColumnList />
+      <ModalTask />
     </Fragment>
   );
 };
