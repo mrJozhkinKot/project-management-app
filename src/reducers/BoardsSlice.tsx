@@ -5,18 +5,22 @@ interface Board {
   name?: string;
   description?: string;
 }
-
 interface Column {
   id?: number | Date;
   name?: string;
   description?: string;
 }
-
+interface Task {
+  id: number;
+  text: string;
+}
 interface BoardsState {
   boards: Board[];
   board: Board;
   columns: Column[];
   column: Column;
+  tasks: Task[];
+  task: Task;
   isModalBoard: boolean;
 }
 
@@ -30,6 +34,17 @@ const initialState: BoardsState = {
     { id: 3, name: 'column3', description: 'description3' },
   ],
   column: {},
+  tasks: [
+    { id: 1, text: 'task1' },
+    { id: 2, text: 'task2' },
+    { id: 3, text: 'task3' },
+    { id: 4, text: 'task4' },
+    { id: 5, text: 'task5' },
+  ],
+  task: {
+    id: 0,
+    text: '',
+  },
   isModalBoard: false,
 };
 
@@ -45,6 +60,9 @@ export const boardsSlice = createSlice({
     },
     createNewBoard(state, action: PayloadAction<Board[]>) {
       state.boards = [...state.boards, ...action.payload];
+    },
+    createNewTaskList(state, action: PayloadAction<Task[]>) {
+      state.tasks = action.payload;
     },
   },
 });
