@@ -71,16 +71,14 @@ const ModalBoard = () => {
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset(defaultValues);
-      console.log('reset');
     }
   }, [isSubmitSuccessful, reset]);
 
   const onSubmit = () => {
     dispatch(
-      createNewBoard([{ id: Number(new Date()), name: valueName, description: valueDescription }])
+      createNewBoard([{ id: String(new Date()), name: valueName, description: valueDescription }])
     );
     handleClose();
-    console.log('submit');
   };
 
   return (

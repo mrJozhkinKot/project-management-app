@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface Board {
-  id?: number | Date;
+  id?: string;
   name?: string;
   description?: string;
 }
@@ -23,7 +23,7 @@ export const boardsSlice = createSlice({
   name: 'boards',
   initialState,
   reducers: {
-    deleteBoard(state, action: PayloadAction<number | Date | undefined>) {
+    deleteBoard(state, action: PayloadAction<string | undefined>) {
       state.boards = state.boards.filter((board) => board.id !== action.payload);
     },
     setIsModalBoard(state, action: PayloadAction<boolean>) {
