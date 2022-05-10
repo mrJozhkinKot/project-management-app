@@ -89,9 +89,9 @@ export const Task: React.FC<TaskProps> = ({ task, index, moveTask, column }) => 
         return;
       }
 
+      dispatch(setColumn(column));
       moveTask(dragIndex, hoverIndex);
       item.index = hoverIndex;
-      dispatch(setColumn(column));
     },
   });
 
