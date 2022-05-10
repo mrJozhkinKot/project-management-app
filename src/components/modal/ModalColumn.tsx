@@ -11,7 +11,7 @@ import { useForm } from 'react-hook-form';
 import { createTheme, ThemeProvider } from '@mui/material';
 
 const defaultValues = {
-  text: '',
+  title: '',
 };
 
 const theme = createTheme({
@@ -49,11 +49,11 @@ const style = {
   },
 };
 
-const ModalTask = () => {
+const ModalColumn = () => {
   const [valueText, setValueText] = useState('');
-  const { setIsModalTask, createNewTask } = boardsSlice.actions;
+  const { setIsModalColumn, createNewColumn } = boardsSlice.actions;
   const dispatch = useAppDispatch();
-  const { isModalTask } = useAppSelector((state) => state.boardsReducer);
+  const { isModalColumn } = useAppSelector((state) => state.boardsReducer);
 
   const {
     register,
@@ -63,7 +63,7 @@ const ModalTask = () => {
   } = useForm({ defaultValues });
 
   const handleClose = () => {
-    dispatch(setIsModalTask(false));
+    dispatch(setIsModalColumn(false));
   };
 
   useEffect(() => {
@@ -73,7 +73,7 @@ const ModalTask = () => {
   }, [isSubmitSuccessful, reset]);
 
   const onSubmit = () => {
-    dispatch(createNewTask([{ id: String(new Date()), title: valueText }]));
+    dispatch(createNewColumn([{ id: String(new Date()), title: valueText, order: 1, tasks: [] }]));
     handleClose();
   };
 
@@ -81,23 +81,23 @@ const ModalTask = () => {
     <div>
       <ThemeProvider theme={theme}>
         <Modal
-          open={isModalTask}
+          open={isModalColumn}
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
           <Box sx={style.box}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              Create a new task:
+              Create a new column:
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)}>
               <TextField
                 id="descrtption_input"
-                label="new task"
+                label="new column"
                 multiline
                 rows={2}
                 sx={style.input}
-                {...register('text', { required: 'Enter the description' })}
+                {...register('title', { required: 'Enter the description' })}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setValueText(event.target.value);
                 }}
@@ -113,4 +113,4 @@ const ModalTask = () => {
   );
 };
 
-export default ModalTask;
+export default ModalColumn;

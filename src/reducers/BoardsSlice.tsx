@@ -32,6 +32,7 @@ interface BoardsState {
   task: TaskDraftInterface;
   isModalBoard: boolean;
   isModalTask: boolean;
+  isModalColumn: boolean;
 }
 
 const initialState: BoardsState = {
@@ -84,6 +85,7 @@ const initialState: BoardsState = {
   },
   isModalBoard: false,
   isModalTask: false,
+  isModalColumn: false,
 };
 
 export const boardsSlice = createSlice({
@@ -98,6 +100,9 @@ export const boardsSlice = createSlice({
     },
     setIsModalTask(state, action: PayloadAction<boolean>) {
       state.isModalTask = action.payload;
+    },
+    setIsModalColumn(state, action: PayloadAction<boolean>) {
+      state.isModalColumn = action.payload;
     },
     createNewBoard(state, action: PayloadAction<Board[]>) {
       state.boards = [...state.boards, ...action.payload];
@@ -123,6 +128,9 @@ export const boardsSlice = createSlice({
     },
     setColumn(state, action: PayloadAction<Column>) {
       state.column = action.payload;
+    },
+    createNewColumn(state, action: PayloadAction<Column[]>) {
+      state.columns = [...state.columns, ...action.payload];
     },
   },
 });
