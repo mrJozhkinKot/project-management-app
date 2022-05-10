@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface Board {
-  id?: number;
+  id?: string;
   name?: string;
   description?: string;
 }
@@ -12,6 +12,7 @@ interface BoardsState {
   isModalBoard: boolean;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const initialState: BoardsState = {
   boards: [],
   board: {},
@@ -22,8 +23,14 @@ export const boardsSlice = createSlice({
   name: 'boards',
   initialState,
   reducers: {
-    deleteBoard(state, action: PayloadAction<number | undefined>) {
+    deleteBoard(state, action: PayloadAction<string | undefined>) {
       state.boards = state.boards.filter((board) => board.id !== action.payload);
+    },
+    setIsModalBoard(state, action: PayloadAction<boolean>) {
+      state.isModalBoard = action.payload;
+    },
+    createNewBoard(state, action: PayloadAction<Board[]>) {
+      state.boards = [...state.boards, ...action.payload];
     },
   },
 });
