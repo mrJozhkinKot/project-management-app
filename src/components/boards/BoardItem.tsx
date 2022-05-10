@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import CardHeader from '@mui/material/CardHeader';
 import { CardActionArea } from '@mui/material';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useAppDispatch } from '../../hooks/redux';
 
@@ -35,11 +35,15 @@ const Board: React.FC<Props> = ({ board }) => {
     btn: {
       backgroundColor: '#e86842',
     },
+    link: {
+      textDecoration: 'none',
+      color: '#fff',
+    },
   };
 
   return (
     <Card sx={{ minWidth: 275 }} style={style.card}>
-      <NavLink to={`${board.id}`}>
+      <NavLink to={`${board.id}`} style={style.link}>
         <CardActionArea>
           <CardHeader title={board.name} />
           <CardContent>

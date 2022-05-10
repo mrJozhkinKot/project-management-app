@@ -2,7 +2,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
 import Layout from './components/Layout';
-import About from './components/pages/Welcome';
+import Welcome from './components/pages/Welcome';
 import SignIn from './components/pages/SignIn';
 import SignUp from './components/pages/SignUp';
 import Main from './components/pages/Main';
@@ -19,7 +19,7 @@ function App(): React.ReactElement {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Main />} />
-            <Route path="welcome" element={<About />} />
+            <Route path="welcome" element={<Welcome />} />
             <Route path="signin" element={<SignIn />} />
             <Route path="signup" element={<SignUp />} />
             <Route path="boards">

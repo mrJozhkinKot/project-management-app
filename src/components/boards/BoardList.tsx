@@ -17,7 +17,7 @@ const BoardList = () => {
     <div>
       <Grid sx={style.container} container spacing={4} pl={4} pr={4}>
         {boards.map((board) => (
-          <Grid key={Number(board.id)} item xs={12} sm={6} md={4} lg={3}>
+          <Grid key={String(board.id)} item xs={12} sm={6} md={4} lg={3}>
             <Board board={board} />
           </Grid>
         ))}
