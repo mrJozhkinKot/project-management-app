@@ -1,108 +1,108 @@
-export interface IUser {
+export interface UserInterface {
   id: string;
   name: string;
   login: string;
 }
 
-export interface IUpdateUser {
+export interface UpdateUserInterface {
   id: string;
   name: string;
   login: string;
   password: string;
 }
 
-export interface ISignUpBody {
+export interface SignUpBodyInterface {
   name: string;
   login: string;
   password: string;
 }
 
-export interface ISignInBody {
+export interface SignInBodyInterface {
   login: string;
   password: string;
 }
 
-export interface ISignInResponse {
+export interface SignInResponseInterface {
   token: string;
 }
 
-export interface IBadRequest {
+export interface BadRequestInterface {
   statusCode: number;
   message: string;
   error: string;
 }
 
-export interface IInternalServerError {
+export interface InternalServerErrorInterface {
   statusCode: number;
   message: string;
 }
 
-export interface IBoardDraft {
+export interface BoardDraftInterface {
   id: string;
   title: string;
 }
 
-export interface IBoard {
+export interface BoardInterface {
   id: string;
   title: string;
-  columns: IColumn[];
+  columns: ColumnInterface[];
 }
 
-export interface IColumnBody {
+export interface ColumnBodyInterface {
   title: string;
   order: number;
 }
 
-export interface IColumnDraft {
+export interface ColumnDraftInterface {
   id: string;
   title: string;
   order: number;
 }
 
-export interface IColumn {
+export interface ColumnInterface {
   id: string;
   title: string;
   order: number;
-  tasks: ITaskDraft[];
+  tasks: TaskDraftInterface[];
 }
 
-export interface ITaskCreateBody {
-  title: string;
-  order: number;
-  description: string;
-  userId: string;
-}
-
-export interface ITaskDraft {
-  id: string;
+export interface TaskCreateBodyInterface {
   title: string;
   order: number;
   description: string;
   userId: string;
-  files: IFile[];
 }
 
-export interface ITask {
+export interface TaskDraftInterface {
   id: string;
   title: string;
   order: number;
   description: string;
   userId: string;
-  boardId: string;
-  columnId: string;
-  files?: IFile[];
+  files: FileInterface[];
 }
 
-export interface ITaskUpdateBody {
+export interface TaskInterface {
+  id: string;
   title: string;
   order: number;
   description: string;
   userId: string;
   boardId: string;
   columnId: string;
+  files?: FileInterface[];
 }
 
-export interface IFile {
+export interface TaskUpdateBodyInterface {
+  title: string;
+  order: number;
+  description: string;
+  userId: string;
+  boardId: string;
+  columnId: string;
+}
+
+export interface FileInterface {
   filename: string;
   fileSize: number;
 }

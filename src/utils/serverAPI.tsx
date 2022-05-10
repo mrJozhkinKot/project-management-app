@@ -1,19 +1,19 @@
 import {
-  IUser,
-  ISignInResponse,
-  ISignUpBody,
-  ISignInBody,
-  IUpdateUser,
-  IBadRequest,
-  IInternalServerError,
-  IBoardDraft,
-  IBoard,
-  IColumnBody,
-  IColumnDraft,
-  IColumn,
-  ITaskCreateBody,
-  ITaskUpdateBody,
-  ITask,
+  UserInterface,
+  SignInResponseInterface,
+  SignUpBodyInterface,
+  SignInBodyInterface,
+  UpdateUserInterface,
+  BadRequestInterface,
+  InternalServerErrorInterface,
+  BoardDraftInterface,
+  BoardInterface,
+  ColumnBodyInterface,
+  ColumnDraftInterface,
+  ColumnInterface,
+  TaskCreateBodyInterface,
+  TaskUpdateBodyInterface,
+  TaskInterface,
 } from './interfaces';
 
 // TODO: Add 401 error everywhere
@@ -22,7 +22,7 @@ const remoteServerURL = 'https://serene-inlet-66010.herokuapp.com';
 const token =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhNGQwNWExNy04YTEyLTQwOWMtYjcwZS0xN2Q5ZGFkNzU1Y2UiLCJsb2dpbiI6InVzZXIwMDEiLCJpYXQiOjE2NTE4NzE5MTh9.4pGFpqAg1EqW4ZjVUd0RGViqdmRPlzPN1sigO25zXl8';
 
-export async function getUsers(): Promise<IUser[] | void> {
+export async function getUsers(): Promise<UserInterface[] | void> {
   await fetch(`${remoteServerURL}/users`, {
     method: 'GET',
     headers: {
@@ -34,7 +34,7 @@ export async function getUsers(): Promise<IUser[] | void> {
       const data = await response.json();
 
       if (response.ok) {
-        console.log('data:IUser[] : ', data);
+        console.log('data:UserInterface[] : ', data);
       } else {
         console.log('Something has gone wrong while getUsers()');
       }
@@ -46,7 +46,7 @@ export async function getUsers(): Promise<IUser[] | void> {
     });
 }
 
-export async function getUser(userID: string): Promise<IUser | IBadRequest | void> {
+export async function getUser(userID: string): Promise<UserInterface | BadRequestInterface | void> {
   await fetch(`${remoteServerURL}/users/${userID}`, {
     method: 'GET',
     headers: {
@@ -58,7 +58,7 @@ export async function getUser(userID: string): Promise<IUser | IBadRequest | voi
       const data = await response.json();
 
       if (response.ok) {
-        console.log('data:IUser : ', data);
+        console.log('data:UserInterface : ', data);
       } else {
         console.log('Something has gone wrong while getUser()');
       }
@@ -70,7 +70,7 @@ export async function getUser(userID: string): Promise<IUser | IBadRequest | voi
     });
 }
 
-export async function deleteUser(userID: string): Promise<IBadRequest | void> {
+export async function deleteUser(userID: string): Promise<BadRequestInterface | void> {
   await fetch(`${remoteServerURL}/users/${userID}`, {
     method: 'DELETE',
     headers: {
@@ -81,7 +81,7 @@ export async function deleteUser(userID: string): Promise<IBadRequest | void> {
     .then(async (response) => {
       if (!response.ok) {
         const data = await response.json();
-        console.log('data:IBadRequest : ', data);
+        console.log('data:BadRequestInterface : ', data);
         return data;
       } else {
         console.log('User deleted successfully!');
@@ -94,8 +94,8 @@ export async function deleteUser(userID: string): Promise<IBadRequest | void> {
 
 export async function updateUser(
   userID: string,
-  body: IUser
-): Promise<IUpdateUser | IBadRequest | IInternalServerError | void> {
+  body: UserInterface
+): Promise<UpdateUserInterface | BadRequestInterface | InternalServerErrorInterface | void> {
   await fetch(`${remoteServerURL}/users/${userID}`, {
     method: 'PUT',
     headers: {
@@ -109,15 +109,15 @@ export async function updateUser(
       const data = await response.json();
 
       if (response.ok) {
-        console.log('data:IUpdateUser : ', data);
+        console.log('data:UpdateUserInterface : ', data);
       }
       if (response.status === 400 || response.status === 404) {
         console.log('User was not found (invalid ID)!');
-        console.log('data:IBadRequest : ', data);
+        console.log('data:BadRequestInterface : ', data);
       }
       if (response.status === 500) {
         console.log('User login already exists!');
-        console.log('data:IInternalServerError : ', data);
+        console.log('data:InternalServerErrorInterface : ', data);
       } else {
         console.log('Something has gone wrong while updateUser()');
       }
@@ -130,8 +130,8 @@ export async function updateUser(
 }
 
 export async function signUp(
-  body: ISignUpBody
-): Promise<IUser | IBadRequest | IInternalServerError | void> {
+  body: SignUpBodyInterface
+): Promise<UserInterface | BadRequestInterface | InternalServerErrorInterface | void> {
   await fetch(`${remoteServerURL}/signup`, {
     method: 'POST',
     headers: {
@@ -144,15 +144,15 @@ export async function signUp(
       const data = await response.json();
 
       if (response.ok) {
-        console.log('data:IUser : ', data);
+        console.log('data:UserInterface : ', data);
       }
       if (response.status === 400) {
         console.log('Found empty field!');
-        console.log('data:IBadRequest : ', data);
+        console.log('data:BadRequestInterface : ', data);
       }
       if (response.status === 409) {
         console.log('User login already exists!');
-        console.log('data:IInternalServerError : ', data);
+        console.log('data:InternalServerErrorInterface : ', data);
       } else {
         console.log('Something has gone wrong while signUp()');
       }
@@ -165,8 +165,8 @@ export async function signUp(
 }
 
 export async function signIn(
-  body: ISignInBody
-): Promise<ISignInResponse | IInternalServerError | void> {
+  body: SignInBodyInterface
+): Promise<SignInResponseInterface | InternalServerErrorInterface | void> {
   await fetch(`${remoteServerURL}/signup`, {
     method: 'POST',
     headers: {
@@ -179,11 +179,11 @@ export async function signIn(
       const data = await response.json();
 
       if (response.ok) {
-        console.log('data:ISignInResponse : ', data);
+        console.log('data:SignInResponseInterface : ', data);
       }
       if (response.status === 403) {
         console.log('User was not found or password was wrong!');
-        console.log('data:IInternalServerError : ', data);
+        console.log('data:InternalServerErrorInterface : ', data);
       } else {
         console.log('Something has gone wrong while signIn()');
       }
@@ -195,7 +195,7 @@ export async function signIn(
     });
 }
 
-export async function getBoards(): Promise<IBoardDraft[] | void> {
+export async function getBoards(): Promise<BoardDraftInterface[] | void> {
   await fetch(`${remoteServerURL}/boards`, {
     method: 'GET',
     headers: {
@@ -207,7 +207,7 @@ export async function getBoards(): Promise<IBoardDraft[] | void> {
       const data = await response.json();
 
       if (response.ok) {
-        console.log('data:IBoardDraft[] : ', data);
+        console.log('data:BoardDraftInterface[] : ', data);
       } else {
         console.log('Something has gone wrong while getBoards()');
       }
@@ -219,7 +219,9 @@ export async function getBoards(): Promise<IBoardDraft[] | void> {
     });
 }
 
-export async function getBoard(boardID: string): Promise<IBoard | IBadRequest | void> {
+export async function getBoard(
+  boardID: string
+): Promise<BoardInterface | BadRequestInterface | void> {
   await fetch(`${remoteServerURL}/boards/${boardID}`, {
     method: 'GET',
     headers: {
@@ -231,11 +233,11 @@ export async function getBoard(boardID: string): Promise<IBoard | IBadRequest | 
       const data = await response.json();
 
       if (response.ok) {
-        console.log('data:IBoard : ', data);
+        console.log('data:BoardInterface : ', data);
       }
       if (response.status === 400) {
         console.log('Incorrect boardID');
-        console.log('data:IBadRequest : ', data);
+        console.log('data:BadRequestInterface : ', data);
       } else {
         console.log('Something has gone wrong while getBoard()');
       }
@@ -247,7 +249,7 @@ export async function getBoard(boardID: string): Promise<IBoard | IBadRequest | 
     });
 }
 
-export async function createBoard(title: string): Promise<IBoardDraft | void> {
+export async function createBoard(title: string): Promise<BoardDraftInterface | void> {
   await fetch(`${remoteServerURL}/boards`, {
     method: 'POST',
     headers: {
@@ -261,10 +263,10 @@ export async function createBoard(title: string): Promise<IBoardDraft | void> {
       const data = await response.json();
 
       if (response.ok) {
-        console.log('data:IBoardDraft : ', data);
+        console.log('data:BoardDraftInterface : ', data);
       } else {
         console.log('Something has gone wrong while createBoard()');
-        console.log('data:IInternalServerError : ', data);
+        console.log('data:InternalServerErrorInterface : ', data);
       }
 
       return data;
@@ -274,7 +276,7 @@ export async function createBoard(title: string): Promise<IBoardDraft | void> {
     });
 }
 
-export async function deleteBoard(boardID: string): Promise<IInternalServerError | void> {
+export async function deleteBoard(boardID: string): Promise<InternalServerErrorInterface | void> {
   await fetch(`${remoteServerURL}/boards/${boardID}`, {
     method: 'DELETE',
     headers: {
@@ -285,7 +287,7 @@ export async function deleteBoard(boardID: string): Promise<IInternalServerError
     .then(async (response) => {
       if (!response.ok) {
         const data = await response.json();
-        console.log('data:IInternalServerError : ', data);
+        console.log('data:InternalServerErrorInterface : ', data);
         return data;
       } else {
         console.log('Board deleted successfully!');
@@ -299,7 +301,7 @@ export async function deleteBoard(boardID: string): Promise<IInternalServerError
 export async function updateBoard(
   boardID: string,
   title: string
-): Promise<IBoardDraft | IBadRequest | void> {
+): Promise<BoardDraftInterface | BadRequestInterface | void> {
   await fetch(`${remoteServerURL}/boards/${boardID}`, {
     method: 'PUT',
     headers: {
@@ -313,11 +315,11 @@ export async function updateBoard(
       const data = await response.json();
 
       if (response.ok) {
-        console.log('data:IBoardDraft : ', data);
+        console.log('data:BoardDraftInterface : ', data);
       }
       if (response.status === 400 || response.status === 404) {
         console.log('Board was not found (invalid ID)!');
-        console.log('data:IBadRequest : ', data);
+        console.log('data:BadRequestInterface : ', data);
       } else {
         console.log('Something has gone wrong while updateBoard()');
       }
@@ -329,7 +331,9 @@ export async function updateBoard(
     });
 }
 
-export async function getColumns(boardID: string): Promise<IColumnDraft[] | IBadRequest | void> {
+export async function getColumns(
+  boardID: string
+): Promise<ColumnDraftInterface[] | BadRequestInterface | void> {
   await fetch(`${remoteServerURL}/boards/${boardID}/columns`, {
     method: 'GET',
     headers: {
@@ -341,11 +345,11 @@ export async function getColumns(boardID: string): Promise<IColumnDraft[] | IBad
       const data = await response.json();
 
       if (response.ok) {
-        console.log('data:IColumnDraft : ', data);
+        console.log('data:ColumnDraftInterface : ', data);
       }
       if (response.status === 400 || response.status === 404) {
         console.log('Invalid boardID!');
-        console.log('data:IBadRequest : ', data);
+        console.log('data:BadRequestInterface : ', data);
       } else {
         console.log('Something has gone wrong while getColumns()');
       }
@@ -360,7 +364,7 @@ export async function getColumns(boardID: string): Promise<IColumnDraft[] | IBad
 export async function getColumn(
   boardID: string,
   columnID: string
-): Promise<IColumn | IBadRequest | void> {
+): Promise<ColumnInterface | BadRequestInterface | void> {
   await fetch(`${remoteServerURL}/boards/${boardID}/columns/${columnID}`, {
     method: 'GET',
     headers: {
@@ -372,11 +376,11 @@ export async function getColumn(
       const data = await response.json();
 
       if (response.ok) {
-        console.log('data:IColumn : ', data);
+        console.log('data:ColumnInterface : ', data);
       }
       if (response.status === 400 || response.status === 404) {
         console.log('Invalid boardID!');
-        console.log('data:IBadRequest : ', data);
+        console.log('data:BadRequestInterface : ', data);
       } else {
         console.log('Something has gone wrong while getColumn()');
       }
@@ -390,8 +394,8 @@ export async function getColumn(
 
 export async function createColumn(
   boardID: string,
-  body: IColumnBody
-): Promise<IColumnDraft | IInternalServerError | void> {
+  body: ColumnBodyInterface
+): Promise<ColumnDraftInterface | InternalServerErrorInterface | void> {
   await fetch(`${remoteServerURL}/boards/${boardID}`, {
     method: 'POST',
     headers: {
@@ -405,11 +409,11 @@ export async function createColumn(
       const data = await response.json();
 
       if (response.ok) {
-        console.log('data:IColumnDraft : ', data);
+        console.log('data:ColumnDraftInterface : ', data);
       }
       if (response.status === 500) {
         console.log('Column with this order № already exists!');
-        console.log('data:IInternalServerError : ', data);
+        console.log('data:InternalServerErrorInterface : ', data);
       } else {
         console.log('Something has gone wrong while createColumn()');
       }
@@ -424,7 +428,7 @@ export async function createColumn(
 export async function deleteColumn(
   boardID: string,
   columnID: string
-): Promise<IInternalServerError | IBadRequest | void> {
+): Promise<InternalServerErrorInterface | BadRequestInterface | void> {
   await fetch(`${remoteServerURL}/boards/${boardID}/columns/${columnID}`, {
     method: 'DELETE',
     headers: {
@@ -437,7 +441,7 @@ export async function deleteColumn(
         const data = await response.json();
         if (response.status === 400 || response.status === 404) {
           console.log('Column or Board id was not found!');
-          console.log('data:IInternalServerError | IBadRequest : ', data);
+          console.log('data:InternalServerErrorInterface | BadRequestInterface : ', data);
         }
         return data;
       } else {
@@ -452,8 +456,8 @@ export async function deleteColumn(
 export async function updateColumn(
   boardID: string,
   columnID: string,
-  body: IColumnBody
-): Promise<IBoardDraft | IInternalServerError | IBadRequest | void> {
+  body: ColumnBodyInterface
+): Promise<BoardDraftInterface | InternalServerErrorInterface | BadRequestInterface | void> {
   await fetch(`${remoteServerURL}/boards/${boardID}/columns/${columnID}`, {
     method: 'PUT',
     headers: {
@@ -467,15 +471,15 @@ export async function updateColumn(
       const data = await response.json();
 
       if (response.ok) {
-        console.log('data:IBoardDraft : ', data);
+        console.log('data:BoardDraftInterface : ', data);
       }
       if (response.status === 400 || response.status === 404) {
         console.log('Board or Column was not found (invalid ID)!');
-        console.log('data:IInternalServerError : ', data);
+        console.log('data:InternalServerErrorInterface : ', data);
       }
       if (response.status === 500) {
         console.log('This order was already used before!');
-        console.log('data:IBadRequest : ', data);
+        console.log('data:BadRequestInterface : ', data);
       } else {
         console.log('Something has gone wrong while updateColumn()');
       }
@@ -490,7 +494,7 @@ export async function updateColumn(
 export async function getTasks(
   boardID: string,
   columnID: string
-): Promise<ITask[] | IBadRequest | void> {
+): Promise<TaskInterface[] | BadRequestInterface | void> {
   await fetch(`${remoteServerURL}/boards/${boardID}/columns/${columnID}/tasks`, {
     method: 'GET',
     headers: {
@@ -502,11 +506,11 @@ export async function getTasks(
       const data = await response.json();
 
       if (response.ok) {
-        console.log('data:ITask[] : ', data);
+        console.log('data:TaskInterface[] : ', data);
       }
       if (response.status === 400 || response.status === 404) {
         console.log('Invalid boardID or columnID!');
-        console.log('data:IBadRequest : ', data);
+        console.log('data:BadRequestInterface : ', data);
       } else {
         console.log('Something has gone wrong while getTasks()');
       }
@@ -522,7 +526,7 @@ export async function getTask(
   boardID: string,
   columnID: string,
   taskID: string
-): Promise<ITask | IBadRequest | void> {
+): Promise<TaskInterface | BadRequestInterface | void> {
   await fetch(`${remoteServerURL}/boards/${boardID}/columns/${columnID}/tasks/${taskID}`, {
     method: 'GET',
     headers: {
@@ -534,11 +538,11 @@ export async function getTask(
       const data = await response.json();
 
       if (response.ok) {
-        console.log('data:ITask : ', data);
+        console.log('data:TaskInterface : ', data);
       }
       if (response.status === 400 || response.status === 404) {
         console.log('Invalid boardID, columnID or taskID!');
-        console.log('data:IBadRequest : ', data);
+        console.log('data:BadRequestInterface : ', data);
       } else {
         console.log('Something has gone wrong while getTask()');
       }
@@ -553,8 +557,8 @@ export async function getTask(
 export async function createTask(
   boardID: string,
   columnID: string,
-  body: ITaskCreateBody
-): Promise<ITask | IBadRequest | IInternalServerError | void> {
+  body: TaskCreateBodyInterface
+): Promise<TaskInterface | BadRequestInterface | InternalServerErrorInterface | void> {
   await fetch(`${remoteServerURL}/boards/${boardID}/columns/${columnID}/tasks`, {
     method: 'POST',
     headers: {
@@ -568,15 +572,15 @@ export async function createTask(
       const data = await response.json();
 
       if (response.ok) {
-        console.log('data:ITask : ', data);
+        console.log('data:TaskInterface : ', data);
       }
       if (response.status === 400 || response.status === 404) {
         console.log('Invalid boardID, columnID or ITaskCreateBody!');
-        console.log('data:IBadRequest : ', data);
+        console.log('data:BadRequestInterface : ', data);
       }
       if (response.status === 500) {
         console.log('Invalid userID!');
-        console.log('data:IInternalServerError : ', data);
+        console.log('data:InternalServerErrorInterface : ', data);
       } else {
         console.log('Something has gone wrong while createTask()');
       }
@@ -592,7 +596,7 @@ export async function deleteTask(
   boardID: string,
   columnID: string,
   taskID: string
-): Promise<IInternalServerError | IBadRequest | void> {
+): Promise<InternalServerErrorInterface | BadRequestInterface | void> {
   await fetch(`${remoteServerURL}/boards/${boardID}/columns/${columnID}/tasks/${taskID}`, {
     method: 'DELETE',
     headers: {
@@ -605,7 +609,7 @@ export async function deleteTask(
         const data = await response.json();
         if (response.status === 400 || response.status === 404) {
           console.log('boardID, columnID or taskID was not found!');
-          console.log('data:IInternalServerError | IBadRequest : ', data);
+          console.log('data:InternalServerErrorInterface | BadRequestInterface : ', data);
         }
         return data;
       } else {
@@ -621,8 +625,8 @@ export async function updateTask(
   boardID: string,
   columnID: string,
   taskID: string,
-  body: ITaskUpdateBody
-): Promise<ITask | IBadRequest | IInternalServerError | void> {
+  body: TaskUpdateBodyInterface
+): Promise<TaskInterface | BadRequestInterface | InternalServerErrorInterface | void> {
   await fetch(`${remoteServerURL}/boards/${boardID}/columns/${columnID}/tasks/${taskID}`, {
     method: 'PUT',
     headers: {
@@ -636,15 +640,15 @@ export async function updateTask(
       const data = await response.json();
 
       if (response.ok) {
-        console.log('data:ITask : ', data);
+        console.log('data:TaskInterface : ', data);
       }
       if (response.status === 400 || response.status === 404) {
         console.log('Invalid boardID, columnID or taskID!');
-        console.log('data:IBadRequest : ', data);
+        console.log('data:BadRequestInterface : ', data);
       }
       if (response.status === 500) {
         console.log('There is wrong data in ITaskUpdateBody (probably userId/boardId/columnId)!');
-        console.log('data:IInternalServerError : ', data);
+        console.log('data:InternalServerErrorInterface : ', data);
       } else {
         console.log('Something has gone wrong while updateTask()');
       }
@@ -659,7 +663,7 @@ export async function updateTask(
 export async function uploadFile(
   taskID: string,
   file: File
-): Promise<string | IInternalServerError | void> {
+): Promise<string | InternalServerErrorInterface | void> {
   const formData: FormData = new FormData();
   formData.append('taskId', taskID);
   formData.append('file', file);
@@ -683,10 +687,10 @@ export async function uploadFile(
         data = await response.json();
         if (response.status === 409) {
           console.log('file already exists or incorrect MIME type');
-          console.log('data:IInternalServerError : ', data);
+          console.log('data:InternalServerErrorInterface : ', data);
         } else {
           console.log('Something has gone wrong while uploadFile()');
-          console.log('data:IInternalServerError : ', data);
+          console.log('data:InternalServerErrorInterface : ', data);
         }
       }
 
@@ -700,7 +704,7 @@ export async function uploadFile(
 export async function downloadFile(
   taskID: string,
   fileName: string
-): Promise<Blob | IInternalServerError | void> {
+): Promise<Blob | InternalServerErrorInterface | void> {
   await fetch(`${remoteServerURL}/file/${taskID}/${fileName}`, {
     method: 'GET',
     headers: {
@@ -717,7 +721,7 @@ export async function downloadFile(
       } else {
         data = await response.json();
         console.log('Something has gone wrong while downloadFile()');
-        console.log('data:IInternalServerError : ', data);
+        console.log('data:InternalServerErrorInterface : ', data);
       }
 
       return data;
