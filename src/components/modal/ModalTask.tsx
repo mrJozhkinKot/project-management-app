@@ -73,7 +73,7 @@ const ModalTask = () => {
   }, [isSubmitSuccessful, reset]);
 
   const onSubmit = () => {
-    dispatch(createNewTask([{ id: Number(new Date()), text: valueText }]));
+    dispatch(createNewTask([{ id: String(new Date()), title: valueText }]));
     handleClose();
   };
 

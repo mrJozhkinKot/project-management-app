@@ -76,7 +76,7 @@ const ModalBoard = () => {
 
   const onSubmit = () => {
     dispatch(
-      createNewBoard([{ id: Number(new Date()), name: valueName, description: valueDescription }])
+      createNewBoard([{ id: String(new Date()), name: valueName, description: valueDescription }])
     );
     handleClose();
   };

@@ -6,13 +6,13 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import CardHeader from '@mui/material/CardHeader';
 import { CardActionArea } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useAppDispatch } from '../../hooks/redux';
 
 interface Props {
   board: {
-    id?: number | Date;
+    id?: string;
     name?: string;
     description?: string;
   };
@@ -21,8 +21,6 @@ interface Props {
 const Board: React.FC<Props> = ({ board }) => {
   const { deleteBoard } = boardsSlice.actions;
   const dispatch = useAppDispatch();
-
-  const navigate = useNavigate();
 
   const onClickDeleteBtn = () => {
     dispatch(deleteBoard(board.id));
@@ -41,16 +39,14 @@ const Board: React.FC<Props> = ({ board }) => {
 
   return (
     <Card sx={{ minWidth: 275 }} style={style.card}>
-      <CardActionArea
-        onClick={() => {
-          navigate(`/boards/:${board.id}`);
-        }}
-      >
-        <CardHeader title={board.name} />
-        <CardContent>
-          <Typography variant="body1">{board.description}</Typography>
-        </CardContent>
-      </CardActionArea>
+      <NavLink to={`${board.id}`}>
+        <CardActionArea>
+          <CardHeader title={board.name} />
+          <CardContent>
+            <Typography variant="body1">{board.description}</Typography>
+          </CardContent>
+        </CardActionArea>
+      </NavLink>
       <CardActions>
         <Button variant="contained" size="small" style={style.btn} onClick={onClickDeleteBtn}>
           Delete

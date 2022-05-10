@@ -9,15 +9,24 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { useDrag, useDrop } from 'react-dnd';
 import type { Identifier } from 'dnd-core';
 import { ItemTypes } from './ItemTypes';
-interface Task {
-  id: number;
-  text: string;
+interface TaskDraftInterface {
+  id: string;
+  title: string;
+  order?: number;
+  description?: string;
+  userId?: string;
+  files?: FileInterface[];
+}
+export interface FileInterface {
+  filename: string;
+  fileSize: number;
 }
 interface ColumnProps {
   column: {
-    id?: number | Date;
-    name?: string;
-    description?: string;
+    id: string;
+    title: string;
+    order: number;
+    tasks: TaskDraftInterface[];
   };
   index: number;
   moveColumn: (dragIndex: number, hoverIndex: number) => void;
@@ -29,12 +38,12 @@ interface DragItem {
 }
 
 const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
-  const { tasks } = useAppSelector((state) => state.boardsReducer);
-  const { reorderTaskList, setIsModalTask } = boardsSlice.actions;
+  const { columns } = useAppSelector((state) => state.boardsReducer);
+  const { reorderTaskList, setIsModalTask, setColumn } = boardsSlice.actions;
   const dispatch = useAppDispatch();
   const [shouldRender, setShouldRender] = useState(false);
   useEffect(() => setShouldRender(true), []);
-
+  const tasks = columns[index].tasks;
   const moveTask = useCallback(
     (dragIndex: number, hoverIndex: number) => {
       dispatch(
@@ -42,18 +51,18 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
           update(tasks, {
             $splice: [
               [dragIndex, 1],
-              [hoverIndex, 0, tasks[dragIndex] as Task],
+              [hoverIndex, 0, tasks[dragIndex] as TaskDraftInterface],
             ],
           })
         )
       );
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [tasks]
+    [tasks, reorderTaskList, dispatch]
   );
 
   const onClickCreateBtn = () => {
     dispatch(setIsModalTask(true));
+    dispatch(setColumn(column));
   };
 
   const style = {
@@ -65,6 +74,7 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
       flexDirection: 'column',
       justifyContent: 'flex-end',
       backgroundColor: '#d3e3e3',
+      cursor: 'move',
     },
     header: {
       color: '#323535',
@@ -121,11 +131,10 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
       {shouldRender && (
         <Box ref={ref} sx={{ ...style.container, opacity }} data-handler-id={handlerId}>
           <div style={style.header}>
-            <Typography variant="h5">{column.name}</Typography>
-            <Typography variant="body1">{column.description}</Typography>
+            <Typography variant="h5">{column.title}</Typography>
           </div>
           {tasks.map((task, index) => (
-            <Task key={task.id} task={task} index={index} moveTask={moveTask} />
+            <Task key={task.id} task={task} index={index} moveTask={moveTask} column={column} />
           ))}
           <Button variant="contained" sx={style.btn} onClick={onClickCreateBtn}>
             +

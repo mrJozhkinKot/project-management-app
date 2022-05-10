@@ -6,9 +6,22 @@ import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 
 interface Column {
-  id?: number | Date;
-  name?: string;
+  id: string;
+  title: string;
+  order: number;
+  tasks: TaskDraftInterface[];
+}
+interface TaskDraftInterface {
+  id: string;
+  title: string;
+  order?: number;
   description?: string;
+  userId?: string;
+  files?: FileInterface[];
+}
+export interface FileInterface {
+  filename: string;
+  fileSize: number;
 }
 
 const ColumnList = () => {
