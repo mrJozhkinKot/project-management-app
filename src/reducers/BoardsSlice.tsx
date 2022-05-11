@@ -132,6 +132,11 @@ export const boardsSlice = createSlice({
     createNewColumn(state, action: PayloadAction<Column[]>) {
       state.columns = [...state.columns, ...action.payload];
     },
+    deleteTask(state, action: PayloadAction<string | undefined>) {
+      state.columns.forEach((col) => {
+        col.tasks = col.tasks.filter((task) => task.id !== action.payload);
+      });
+    },
   },
 });
 

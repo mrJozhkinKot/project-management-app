@@ -5,15 +5,23 @@ import { useDrag, useDrop } from 'react-dnd';
 import { ItemTypes } from './ItemTypes';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useAppDispatch } from '../../hooks/redux';
+import ClearIcon from '@mui/icons-material/Clear';
 
-const style: CSSProperties = {
-  border: '1px dashed gray',
-  padding: '0.5rem 1rem',
-  marginBottom: '.5rem',
-  backgroundColor: 'white',
-  cursor: 'move',
+const style = {
+  task: {
+    border: '1px dashed gray',
+    padding: '0.5rem 1rem',
+    marginBottom: '.5rem',
+    backgroundColor: 'white',
+    cursor: 'move',
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  icon: {
+    color: '#d0d6d4',
+    cursor: 'pointer',
+  },
 };
-
 export interface TaskProps {
   task: {
     id: string;
@@ -57,8 +65,12 @@ interface DragItem {
 }
 
 export const Task: React.FC<TaskProps> = ({ task, index, moveTask, column }) => {
-  const { setColumn } = boardsSlice.actions;
+  const { setColumn, deleteTask } = boardsSlice.actions;
   const dispatch = useAppDispatch();
+
+  const onClickDeleteBtn = (id: string) => {
+    dispatch(deleteTask(id));
+  };
   const ref = useRef<HTMLDivElement>(null);
   const [{ handlerId }, drop] = useDrop<DragItem, void, { handlerId: Identifier | null }>({
     accept: ItemTypes.TASK,
@@ -109,8 +121,16 @@ export const Task: React.FC<TaskProps> = ({ task, index, moveTask, column }) => 
   const opacity = isDragging ? 0 : 1;
   drag(drop(ref));
   return (
-    <div ref={ref} style={{ ...style, opacity }} data-handler-id={handlerId}>
+    <div ref={ref} style={{ ...style.task, opacity }} data-handler-id={handlerId}>
       {task.title}
+      <ClearIcon
+        fontSize="small"
+        style={style.icon}
+        onClick={(e) => {
+          e.stopPropagation();
+          onClickDeleteBtn(task.id);
+        }}
+      />
     </div>
   );
 };
