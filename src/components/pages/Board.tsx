@@ -4,6 +4,7 @@ import { useAppDispatch } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import ColumnList from '../boards/ColumnList';
 import ModalColumn from '../modal/ModalColumn';
+import ModalEditTask from '../modal/ModalEditTask';
 import ModalTask from '../modal/ModalTask';
 
 const Board: React.FC = () => {
@@ -32,6 +33,7 @@ const Board: React.FC = () => {
       <ColumnList />
       <ModalColumn />
       <ModalTask />
+      <ModalEditTask />
     </Fragment>
   );
 };

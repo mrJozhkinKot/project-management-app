@@ -11,8 +11,7 @@ import { useForm } from 'react-hook-form';
 import { createTheme, ThemeProvider } from '@mui/material';
 
 const defaultValues = {
-  name: '',
-  description: '',
+  title: '',
 };
 
 const theme = createTheme({
@@ -52,7 +51,6 @@ const style = {
 
 const ModalBoard = () => {
   const [valueName, setValueName] = useState('');
-  const [valueDescription, setValueDescription] = useState('');
   const { setIsModalBoard, createNewBoard } = boardsSlice.actions;
   const dispatch = useAppDispatch();
   const { isModalBoard } = useAppSelector((state) => state.boardsReducer);
@@ -61,7 +59,7 @@ const ModalBoard = () => {
     register,
     handleSubmit,
     reset,
-    formState: { isSubmitSuccessful, isDirty },
+    formState: { isSubmitSuccessful },
   } = useForm({ defaultValues });
 
   const handleClose = () => {
@@ -74,11 +72,9 @@ const ModalBoard = () => {
     }
   }, [isSubmitSuccessful, reset]);
 
-  const onSubmit = () => {
-    dispatch(
-      createNewBoard([{ id: String(new Date()), name: valueName, description: valueDescription }])
-    );
-    handleClose();
+  const onSubmit = async () => {
+    dispatch(setIsModalBoard(false));
+    dispatch(createNewBoard([{ id: String(new Date()), title: valueName, columns: [] }]));
   };
 
   return (
@@ -98,32 +94,13 @@ const ModalBoard = () => {
               <TextField
                 id="name_input"
                 label="Enter name"
-                {...register('name', { required: 'Enter the name' })}
-                multiline
-                rows={1}
+                {...register('title', { required: 'Enter the name' })}
                 sx={style.input}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setValueName(event.target.value);
                 }}
               />
-              <TextField
-                id="descrtption_input"
-                label="Enter description"
-                multiline
-                rows={4}
-                sx={style.input}
-                {...register('description', { required: 'Enter the description' })}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  setValueDescription(event.target.value);
-                }}
-              />
-              <Button
-                type="submit"
-                variant="contained"
-                size="small"
-                style={style.btn}
-                disabled={!isDirty}
-              >
+              <Button type="submit" variant="contained" size="small" style={style.btn}>
                 CREATE
               </Button>
             </form>

@@ -1,53 +1,28 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { BoardInterface, ColumnInterface, TaskDraftInterface } from '../utils/interfaces';
 
-interface Board {
-  id?: string;
-  name?: string;
-  description?: string;
-}
-interface TaskDraftInterface {
-  id: string;
-  title: string;
-  order?: number;
-  description?: string;
-  userId?: string;
-  files?: FileInterface[];
-}
-export interface FileInterface {
-  filename: string;
-  fileSize: number;
-}
-
-interface Column {
-  id: string;
-  title: string;
-  order: number;
-  tasks: TaskDraftInterface[];
-}
 interface BoardsState {
-  boards: Board[];
-  board: Board;
-  columns: Column[];
-  column: Column;
-  task: TaskDraftInterface;
+  boards: BoardInterface[];
+  columns: ColumnInterface[];
+  column: ColumnInterface;
   isModalBoard: boolean;
   isModalTask: boolean;
+  isModalEditTask: boolean;
   isModalColumn: boolean;
 }
 
 const initialState: BoardsState = {
   boards: [],
-  board: {},
   columns: [
     {
       id: '12323',
       title: 'column1',
       order: 0,
       tasks: [
-        { id: '1', title: 'task1' },
-        { id: '2', title: 'task2' },
-        { id: '3', title: 'task3' },
-        { id: '4', title: 'task4' },
+        { id: '1', title: 'task1', description: '', order: 1, userId: '', files: [] },
+        { id: '2', title: 'task2', description: '', order: 1, userId: '', files: [] },
+        { id: '3', title: 'task3', description: '', order: 1, userId: '', files: [] },
+        { id: '4', title: 'task4', description: '', order: 1, userId: '', files: [] },
       ],
     },
     {
@@ -55,10 +30,10 @@ const initialState: BoardsState = {
       title: 'column2',
       order: 1,
       tasks: [
-        { id: '11', title: 'task11' },
-        { id: '12', title: 'task12' },
-        { id: '13', title: 'task13' },
-        { id: '14', title: 'task14' },
+        { id: '11', title: 'task11', description: '', order: 1, userId: '', files: [] },
+        { id: '12', title: 'task12', description: '', order: 1, userId: '', files: [] },
+        { id: '13', title: 'task13', description: '', order: 1, userId: '', files: [] },
+        { id: '14', title: 'task14', description: '', order: 1, userId: '', files: [] },
       ],
     },
     {
@@ -66,10 +41,10 @@ const initialState: BoardsState = {
       title: 'column3',
       order: 2,
       tasks: [
-        { id: '21', title: 'task21' },
-        { id: '22', title: 'task22' },
-        { id: '23', title: 'task23' },
-        { id: '24', title: 'task24' },
+        { id: '21', title: 'task21', description: '', order: 1, userId: '', files: [] },
+        { id: '22', title: 'task22', description: '', order: 1, userId: '', files: [] },
+        { id: '23', title: 'task23', description: '', order: 1, userId: '', files: [] },
+        { id: '24', title: 'task24', description: '', order: 1, userId: '', files: [] },
       ],
     },
   ],
@@ -79,13 +54,10 @@ const initialState: BoardsState = {
     order: 0,
     tasks: [],
   },
-  task: {
-    id: '0',
-    title: '',
-  },
   isModalBoard: false,
   isModalTask: false,
   isModalColumn: false,
+  isModalEditTask: false,
 };
 
 export const boardsSlice = createSlice({
@@ -95,16 +67,22 @@ export const boardsSlice = createSlice({
     deleteBoard(state, action: PayloadAction<string | undefined>) {
       state.boards = state.boards.filter((board) => board.id !== action.payload);
     },
+    deleteColumn(state, action: PayloadAction<string | undefined>) {
+      state.columns = state.columns.filter((column) => column.id !== action.payload);
+    },
     setIsModalBoard(state, action: PayloadAction<boolean>) {
       state.isModalBoard = action.payload;
     },
     setIsModalTask(state, action: PayloadAction<boolean>) {
       state.isModalTask = action.payload;
     },
+    setIsModalEditTask(state, action: PayloadAction<boolean>) {
+      state.isModalEditTask = action.payload;
+    },
     setIsModalColumn(state, action: PayloadAction<boolean>) {
       state.isModalColumn = action.payload;
     },
-    createNewBoard(state, action: PayloadAction<Board[]>) {
+    createNewBoard(state, action: PayloadAction<BoardInterface[]>) {
       state.boards = [...state.boards, ...action.payload];
     },
     reorderTaskList(state, action: PayloadAction<TaskDraftInterface[]>) {
@@ -114,22 +92,20 @@ export const boardsSlice = createSlice({
         }
       });
     },
-    reorderColumnList(state, action: PayloadAction<Column[]>) {
+    reorderColumnList(state, action: PayloadAction<ColumnInterface[]>) {
       state.columns = action.payload;
     },
     createNewTask(state, action: PayloadAction<TaskDraftInterface[]>) {
-      state.columns.forEach((col, index) => {
+      state.columns.forEach((col) => {
         if (col.id === state.column.id) {
-          console.log(index);
-          console.log(col.id);
           col.tasks = [...col.tasks, ...action.payload];
         }
       });
     },
-    setColumn(state, action: PayloadAction<Column>) {
+    setColumn(state, action: PayloadAction<ColumnInterface>) {
       state.column = action.payload;
     },
-    createNewColumn(state, action: PayloadAction<Column[]>) {
+    createNewColumn(state, action: PayloadAction<ColumnInterface[]>) {
       state.columns = [...state.columns, ...action.payload];
     },
     deleteTask(state, action: PayloadAction<string | undefined>) {

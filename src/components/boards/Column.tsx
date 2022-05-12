@@ -9,18 +9,10 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { useDrag, useDrop } from 'react-dnd';
 import type { Identifier } from 'dnd-core';
 import { ItemTypes } from './ItemTypes';
-interface TaskDraftInterface {
-  id: string;
-  title: string;
-  order?: number;
-  description?: string;
-  userId?: string;
-  files?: FileInterface[];
-}
-export interface FileInterface {
-  filename: string;
-  fileSize: number;
-}
+import { TaskDraftInterface } from '../../utils/interfaces';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+
 interface ColumnProps {
   column: {
     id: string;
@@ -39,7 +31,7 @@ interface DragItem {
 
 const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
   const { columns } = useAppSelector((state) => state.boardsReducer);
-  const { reorderTaskList, setIsModalTask, setColumn } = boardsSlice.actions;
+  const { reorderTaskList, setIsModalTask, setColumn, deleteColumn } = boardsSlice.actions;
   const dispatch = useAppDispatch();
   const [shouldRender, setShouldRender] = useState(false);
   useEffect(() => setShouldRender(true), []);
@@ -65,6 +57,10 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
     dispatch(setColumn(column));
   };
 
+  const onClickDeleteBtn = () => {
+    dispatch(deleteColumn(column.id));
+  };
+
   const style = {
     container: {
       maxWidth: '300px',
@@ -79,13 +75,18 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
     header: {
       color: '#323535',
     },
+    btnContainer: {
+      display: 'flex',
+      justifyContent: 'space-between',
+    },
     btn: {
-      backgroundColor: '#797E7D',
+      color: '#797E7D',
       '&:hover': {
-        backgroundColor: '#1C9D86',
+        color: '#1C9D86',
       },
       alignSelf: 'flex-end',
       padding: 0,
+      cursor: 'pointer',
     },
   };
 
@@ -136,9 +137,18 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
           {tasks.map((task, index) => (
             <Task key={task.id} task={task} index={index} moveTask={moveTask} column={column} />
           ))}
-          <Button variant="contained" sx={style.btn} onClick={onClickCreateBtn}>
-            +
-          </Button>
+          <div style={style.btnContainer}>
+            <DeleteForeverIcon
+              sx={{
+                ...style.btn,
+                '&:hover': {
+                  color: '#E36655',
+                },
+              }}
+              onClick={onClickDeleteBtn}
+            />
+            <AddBoxIcon sx={style.btn} onClick={onClickCreateBtn} />
+          </div>
         </Box>
       )}
     </>

@@ -12,6 +12,7 @@ import { createTheme, ThemeProvider } from '@mui/material';
 
 const defaultValues = {
   title: '',
+  description: '',
 };
 
 const theme = createTheme({
@@ -49,11 +50,12 @@ const style = {
   },
 };
 
-const ModalColumn = () => {
-  const [valueText, setValueText] = useState('');
-  const { setIsModalColumn, createNewColumn } = boardsSlice.actions;
+const ModalEditTask = () => {
+  const { setIsModalEditTask } = boardsSlice.actions;
   const dispatch = useAppDispatch();
-  const { isModalColumn } = useAppSelector((state) => state.boardsReducer);
+  const { isModalEditTask } = useAppSelector((state) => state.boardsReducer);
+  const [valueTitle, setValueTitle] = useState('');
+  const [valueDescription, setValueDescription] = useState('');
 
   const {
     register,
@@ -63,7 +65,7 @@ const ModalColumn = () => {
   } = useForm({ defaultValues });
 
   const handleClose = () => {
-    dispatch(setIsModalColumn(false));
+    dispatch(setIsModalEditTask(false));
   };
 
   useEffect(() => {
@@ -73,7 +75,10 @@ const ModalColumn = () => {
   }, [isSubmitSuccessful, reset]);
 
   const onSubmit = () => {
-    dispatch(createNewColumn([{ id: String(new Date()), title: valueText, order: 1, tasks: [] }]));
+    // dispatch(
+    //   createNewTask([{ id: String(new Date()), title: valueTitle, description: valueDescription }])
+    // );
+    console.log('update card');
     handleClose();
   };
 
@@ -81,27 +86,41 @@ const ModalColumn = () => {
     <div>
       <ThemeProvider theme={theme}>
         <Modal
-          open={isModalColumn}
+          open={isModalEditTask}
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
           <Box sx={style.box}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              Create a new column:
+              Create a new task:
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)}>
               <TextField
-                id="descrtption_input"
-                label="new column"
+                id="title_input"
+                label="new task"
+                value={valueTitle}
+                rows={2}
                 sx={style.input}
                 {...register('title', { required: 'Enter the description' })}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  setValueText(event.target.value);
+                  setValueTitle(event.target.value);
+                }}
+              />
+              <TextField
+                id="descrtption_input"
+                label="Enter description"
+                value={valueDescription}
+                multiline
+                rows={4}
+                sx={style.input}
+                {...register('description')}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  setValueDescription(event.target.value);
                 }}
               />
               <Button type="submit" variant="contained" size="small" style={style.btn}>
-                CREATE
+                EDIT
               </Button>
             </form>
           </Box>
@@ -111,4 +130,4 @@ const ModalColumn = () => {
   );
 };
 
-export default ModalColumn;
+export default ModalEditTask;

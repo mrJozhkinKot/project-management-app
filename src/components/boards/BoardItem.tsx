@@ -1,21 +1,15 @@
 import * as React from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import CardHeader from '@mui/material/CardHeader';
 import { CardActionArea } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useAppDispatch } from '../../hooks/redux';
-
+import { BoardInterface } from '../../utils/interfaces';
 interface Props {
-  board: {
-    id?: string;
-    name?: string;
-    description?: string;
-  };
+  board: BoardInterface;
 }
 
 const Board: React.FC<Props> = ({ board }) => {
@@ -45,10 +39,7 @@ const Board: React.FC<Props> = ({ board }) => {
     <Card sx={{ minWidth: 275 }} style={style.card}>
       <NavLink to={`${board.id}`} style={style.link}>
         <CardActionArea>
-          <CardHeader title={board.name} />
-          <CardContent>
-            <Typography variant="body1">{board.description}</Typography>
-          </CardContent>
+          <CardHeader title={board.title} />
         </CardActionArea>
       </NavLink>
       <CardActions>

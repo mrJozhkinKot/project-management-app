@@ -1,4 +1,3 @@
-import type { CSSProperties } from 'react';
 import type { Identifier, XYCoord } from 'dnd-core';
 import { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
@@ -6,6 +5,7 @@ import { ItemTypes } from './ItemTypes';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useAppDispatch } from '../../hooks/redux';
 import ClearIcon from '@mui/icons-material/Clear';
+import { ColumnInterface, TaskDraftInterface } from '../../utils/interfaces';
 
 const style = {
   task: {
@@ -18,45 +18,15 @@ const style = {
     justifyContent: 'space-between',
   },
   icon: {
-    color: '#d0d6d4',
     cursor: 'pointer',
+    color: 'E36655',
   },
 };
 export interface TaskProps {
-  task: {
-    id: string;
-    title: string;
-    order?: number;
-    description?: string;
-    userId?: string;
-    files?: FileInterface[];
-  };
+  task: TaskDraftInterface;
   index: number;
   moveTask: (dragIndex: number, hoverIndex: number) => void;
-  column: Column;
-}
-interface Column {
-  id: string;
-  title: string;
-  order: number;
-  tasks: TaskDraftInterface[];
-}
-interface TaskDraftInterface {
-  id: string;
-  title: string;
-  order?: number;
-  description?: string;
-  userId?: string;
-  files?: FileInterface[];
-}
-export interface FileInterface {
-  filename: string;
-  fileSize: number;
-}
-
-export interface FileInterface {
-  filename: string;
-  fileSize: number;
+  column: ColumnInterface;
 }
 interface DragItem {
   index: number;
@@ -65,12 +35,17 @@ interface DragItem {
 }
 
 export const Task: React.FC<TaskProps> = ({ task, index, moveTask, column }) => {
-  const { setColumn, deleteTask } = boardsSlice.actions;
+  const { setColumn, deleteTask, setIsModalEditTask } = boardsSlice.actions;
   const dispatch = useAppDispatch();
 
   const onClickDeleteBtn = (id: string) => {
     dispatch(deleteTask(id));
   };
+
+  const onClickEditTask = () => {
+    dispatch(setIsModalEditTask(true));
+  };
+
   const ref = useRef<HTMLDivElement>(null);
   const [{ handlerId }, drop] = useDrop<DragItem, void, { handlerId: Identifier | null }>({
     accept: ItemTypes.TASK,
@@ -121,7 +96,14 @@ export const Task: React.FC<TaskProps> = ({ task, index, moveTask, column }) => 
   const opacity = isDragging ? 0 : 1;
   drag(drop(ref));
   return (
-    <div ref={ref} style={{ ...style.task, opacity }} data-handler-id={handlerId}>
+    <div
+      ref={ref}
+      style={{ ...style.task, opacity }}
+      data-handler-id={handlerId}
+      onClick={() => {
+        onClickEditTask();
+      }}
+    >
       {task.title}
       <ClearIcon
         fontSize="small"
