@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 
 function Header(): React.ReactElement {
-  const isAuth = true;
+  const isAuth = false;
   const [lang, setLang] = useState<string>('EN');
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
 
