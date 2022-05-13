@@ -10,7 +10,7 @@ import { createBoardThunk, getBoardsThunk, deleteBoardThunk } from './ActionBoar
 
 interface BoardsState {
   boards: BoardDraftInterface[];
-  board: BoardDraftInterface;
+  board: BoardInterface;
   columns: ColumnInterface[];
   column: ColumnInterface;
   task: TaskInterface;
@@ -26,6 +26,7 @@ const initialState: BoardsState = {
   board: {
     id: '',
     title: '',
+    columns: [],
   },
   columns: [
     {
