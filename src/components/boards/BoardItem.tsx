@@ -8,6 +8,7 @@ import { NavLink } from 'react-router-dom';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useAppDispatch } from '../../hooks/redux';
 import { BoardDraftInterface } from '../../utils/interfaces';
+import { deleteBoardThunk } from '../../reducers/ActionBoardsCreater';
 interface Props {
   board: BoardDraftInterface;
 }
@@ -18,6 +19,7 @@ const Board: React.FC<Props> = ({ board }) => {
 
   const onClickDeleteBtn = () => {
     dispatch(deleteBoard(board.id));
+    dispatch(deleteBoardThunk(board.id));
   };
 
   const style = {

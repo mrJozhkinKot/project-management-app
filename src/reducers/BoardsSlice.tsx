@@ -6,7 +6,7 @@ import {
   TaskDraftInterface,
   TaskInterface,
 } from '../utils/interfaces';
-import { createBoardThunk, getBoardsThunk } from './ActionBoardsCreater';
+import { createBoardThunk, getBoardsThunk, deleteBoardThunk } from './ActionBoardsCreater';
 
 interface BoardsState {
   boards: BoardDraftInterface[];
@@ -164,6 +164,16 @@ export const boardsSlice = createSlice({
       state.isLoading = true;
     },
     [getBoardsThunk.rejected.type]: (state) => {
+      state.isLoading = false;
+    },
+    [deleteBoardThunk.fulfilled.type]: (state, action: PayloadAction<string | undefined>) => {
+      state.isLoading = false;
+      state.boards = state.boards.filter((board) => board.id !== action.payload);
+    },
+    [deleteBoardThunk.pending.type]: (state) => {
+      state.isLoading = true;
+    },
+    [deleteBoardThunk.rejected.type]: (state) => {
       state.isLoading = false;
     },
   },
