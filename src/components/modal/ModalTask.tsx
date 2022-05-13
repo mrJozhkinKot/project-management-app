@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Modal from '@mui/material/Modal';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useEffect, useState } from 'react';
@@ -41,17 +42,31 @@ const style = {
       borderColor: 'orange',
     },
   },
+  btnContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginTop: '1rem',
+    alignItems: 'center',
+  },
+  icon: {
+    color: '#20B298',
+    cursor: 'pointer',
+    marginLeft: '.5rem',
+    '&:hover': {
+      color: '#E36655',
+    },
+  },
   btn: {
     backgroundColor: '#20B298',
     display: 'block',
     padding: '0.5rem 1rem',
-    marginTop: '1rem',
   },
 };
 
 const ModalTask = () => {
   const [valueTitle, setValueTitle] = useState('');
   const [valueDescription, setValueDescription] = useState('');
+  const [valueUserId, setValueUserId] = useState('');
   const { setIsModalTask, createNewTask } = boardsSlice.actions;
   const dispatch = useAppDispatch();
   const { isModalTask } = useAppSelector((state) => state.boardsReducer);
@@ -81,12 +96,16 @@ const ModalTask = () => {
           title: valueTitle,
           description: valueDescription,
           order: 1,
-          userId: '',
+          userId: valueUserId,
           files: [],
         },
       ])
     );
     handleClose();
+  };
+
+  const onClickAddUserBtn = () => {
+    setValueUserId('1');
   };
 
   return (
@@ -120,14 +139,20 @@ const ModalTask = () => {
                 multiline
                 rows={4}
                 sx={style.input}
-                {...register('description', { required: 'Enter the description' })}
+                {...register('description')}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setValueDescription(event.target.value);
                 }}
               />
-              <Button type="submit" variant="contained" size="small" style={style.btn}>
-                CREATE
-              </Button>
+              <div style={style.btnContainer}>
+                <Button type="submit" variant="contained" size="small" style={style.btn}>
+                  CREATE
+                </Button>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  userName
+                  <PersonAddIcon sx={style.icon} onClick={onClickAddUserBtn} />
+                </div>
+              </div>
             </form>
           </Box>
         </Modal>

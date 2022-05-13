@@ -1,10 +1,20 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { BoardInterface, ColumnInterface, TaskDraftInterface } from '../utils/interfaces';
+import {
+  BoardInterface,
+  BoardDraftInterface,
+  ColumnInterface,
+  TaskDraftInterface,
+  TaskInterface,
+} from '../utils/interfaces';
+import { createBoardThunk, getBoardsThunk } from './ActionBoardsCreater';
 
 interface BoardsState {
-  boards: BoardInterface[];
+  boards: BoardDraftInterface[];
+  board: BoardDraftInterface;
   columns: ColumnInterface[];
   column: ColumnInterface;
+  task: TaskInterface;
+  isLoading: boolean;
   isModalBoard: boolean;
   isModalTask: boolean;
   isModalEditTask: boolean;
@@ -13,6 +23,10 @@ interface BoardsState {
 
 const initialState: BoardsState = {
   boards: [],
+  board: {
+    id: '',
+    title: '',
+  },
   columns: [
     {
       id: '12323',
@@ -54,6 +68,17 @@ const initialState: BoardsState = {
     order: 0,
     tasks: [],
   },
+  task: {
+    id: '',
+    title: '',
+    description: '',
+    order: 0,
+    userId: '',
+    files: [],
+    boardId: '',
+    columnId: '',
+  },
+  isLoading: false,
   isModalBoard: false,
   isModalTask: false,
   isModalColumn: false,
@@ -102,9 +127,6 @@ export const boardsSlice = createSlice({
         }
       });
     },
-    setColumn(state, action: PayloadAction<ColumnInterface>) {
-      state.column = action.payload;
-    },
     createNewColumn(state, action: PayloadAction<ColumnInterface[]>) {
       state.columns = [...state.columns, ...action.payload];
     },
@@ -112,6 +134,37 @@ export const boardsSlice = createSlice({
       state.columns.forEach((col) => {
         col.tasks = col.tasks.filter((task) => task.id !== action.payload);
       });
+    },
+    setColumns(state, action: PayloadAction<ColumnInterface[]>) {
+      state.columns = action.payload;
+    },
+    setColumn(state, action: PayloadAction<ColumnInterface>) {
+      state.column = action.payload;
+    },
+    setTask(state, action: PayloadAction<TaskInterface>) {
+      state.task = action.payload;
+    },
+  },
+  extraReducers: {
+    [createBoardThunk.fulfilled.type]: (state, action: PayloadAction<string>) => {
+      state.isLoading = false;
+      state.board = { ...state.board, title: action.payload };
+    },
+    [createBoardThunk.pending.type]: (state) => {
+      state.isLoading = true;
+    },
+    [createBoardThunk.rejected.type]: (state) => {
+      state.isLoading = false;
+    },
+    [getBoardsThunk.fulfilled.type]: (state, action: PayloadAction<BoardDraftInterface[]>) => {
+      state.isLoading = false;
+      state.boards = action.payload;
+    },
+    [getBoardsThunk.pending.type]: (state) => {
+      state.isLoading = true;
+    },
+    [getBoardsThunk.rejected.type]: (state) => {
+      state.isLoading = false;
     },
   },
 });

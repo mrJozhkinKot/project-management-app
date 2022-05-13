@@ -195,30 +195,22 @@ export async function signIn(
     });
 }
 
-export async function getBoards(): Promise<BoardDraftInterface[] | void> {
-  await fetch(`${remoteServerURL}/boards`, {
+export async function getBoards(): Promise<BoardDraftInterface[] | null> {
+  const response: Response = await fetch(`${remoteServerURL}/boards`, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
       Authorization: `Bearer ${token}`,
     },
-  })
-    .then(async (response) => {
-      const data = await response.json();
+  });
+  const isJson = response.headers.get('content-type')?.includes('application/json');
+  const data = isJson ? await response.json() : null;
 
-      if (response.ok) {
-        console.log('data:BoardDraftInterface[] : ', data);
-      } else {
-        console.log('Something has gone wrong while getBoards()');
-      }
-
-      return data;
-    })
-    .catch((error) => {
-      throw Error(`${error.status} error: ${error.statusText}`);
-    });
+  if (!response.ok) {
+    return Promise.reject(data);
+  }
+  return Promise.resolve(data);
 }
-
 export async function getBoard(
   boardID: string
 ): Promise<BoardInterface | BadRequestInterface | void> {

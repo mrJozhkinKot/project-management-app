@@ -9,6 +9,7 @@ import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { createTheme, ThemeProvider } from '@mui/material';
+import { createBoardThunk } from '../../reducers/ActionBoardsCreater';
 
 const defaultValues = {
   title: '',
@@ -75,6 +76,7 @@ const ModalBoard = () => {
   const onSubmit = async () => {
     dispatch(setIsModalBoard(false));
     dispatch(createNewBoard([{ id: String(new Date()), title: valueName, columns: [] }]));
+    dispatch(createBoardThunk(valueName));
   };
 
   return (

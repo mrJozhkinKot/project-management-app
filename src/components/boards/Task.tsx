@@ -5,21 +5,21 @@ import { ItemTypes } from './ItemTypes';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useAppDispatch } from '../../hooks/redux';
 import ClearIcon from '@mui/icons-material/Clear';
-import { ColumnInterface, TaskDraftInterface } from '../../utils/interfaces';
+import { ColumnInterface, TaskInterface, TaskDraftInterface } from '../../utils/interfaces';
 
 const style = {
   task: {
     border: '1px dashed gray',
     padding: '0.5rem 1rem',
     marginBottom: '.5rem',
-    backgroundColor: 'white',
+    backgroundColor: '#fff',
     cursor: 'move',
     display: 'flex',
     justifyContent: 'space-between',
   },
   icon: {
     cursor: 'pointer',
-    color: 'E36655',
+    color: '#E36655',
   },
 };
 export interface TaskProps {
@@ -35,7 +35,7 @@ interface DragItem {
 }
 
 export const Task: React.FC<TaskProps> = ({ task, index, moveTask, column }) => {
-  const { setColumn, deleteTask, setIsModalEditTask } = boardsSlice.actions;
+  const { setColumn, deleteTask, setIsModalEditTask, setTask } = boardsSlice.actions;
   const dispatch = useAppDispatch();
 
   const onClickDeleteBtn = (id: string) => {
@@ -43,6 +43,7 @@ export const Task: React.FC<TaskProps> = ({ task, index, moveTask, column }) => 
   };
 
   const onClickEditTask = () => {
+    dispatch(setTask({ ...task, boardId: '', columnId: column.id }));
     dispatch(setIsModalEditTask(true));
   };
 
@@ -100,9 +101,7 @@ export const Task: React.FC<TaskProps> = ({ task, index, moveTask, column }) => 
       ref={ref}
       style={{ ...style.task, opacity }}
       data-handler-id={handlerId}
-      onClick={() => {
-        onClickEditTask();
-      }}
+      onClick={onClickEditTask}
     >
       {task.title}
       <ClearIcon

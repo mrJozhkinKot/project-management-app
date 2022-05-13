@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Modal from '@mui/material/Modal';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useEffect, useState } from 'react';
@@ -42,20 +43,33 @@ const style = {
       borderColor: 'orange',
     },
   },
+  btnContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginTop: '1rem',
+    alignItems: 'center',
+  },
+  icon: {
+    color: '#20B298',
+    cursor: 'pointer',
+    marginLeft: '.5rem',
+    '&:hover': {
+      color: '#E36655',
+    },
+  },
   btn: {
     backgroundColor: '#20B298',
     display: 'block',
     padding: '0.5rem 1rem',
-    marginTop: '1rem',
   },
 };
 
 const ModalEditTask = () => {
-  const { setIsModalEditTask } = boardsSlice.actions;
+  const { setIsModalEditTask, setTask, setColumns } = boardsSlice.actions;
   const dispatch = useAppDispatch();
-  const { isModalEditTask } = useAppSelector((state) => state.boardsReducer);
-  const [valueTitle, setValueTitle] = useState('');
-  const [valueDescription, setValueDescription] = useState('');
+  const { isModalEditTask, task, columns } = useAppSelector((state) => state.boardsReducer);
+  const [valueTitle, setValueTitle] = useState(task.title);
+  const [valueDescription, setValueDescription] = useState(task.description);
 
   const {
     register,
@@ -68,17 +82,55 @@ const ModalEditTask = () => {
     dispatch(setIsModalEditTask(false));
   };
 
+  const onClickAddUserBtn = () => {
+    dispatch(
+      setColumns(
+        columns.map((col) => {
+          if (col.id === task.columnId) {
+            return {
+              ...col,
+              tasks: col.tasks.map((t) => (t.id === task.id ? { ...t, userId: task.userId } : t)),
+            };
+          } else {
+            return col;
+          }
+        })
+      )
+    );
+  };
+
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset(defaultValues);
     }
   }, [isSubmitSuccessful, reset]);
 
+  useEffect(() => {
+    setValueTitle(task.title);
+    setValueDescription(task.description);
+  }, [task.title, task.description]);
+
+  useEffect(() => {
+    dispatch(
+      setColumns(
+        columns.map((col) => {
+          if (col.id === task.columnId) {
+            return {
+              ...col,
+              tasks: col.tasks.map((t) =>
+                t.id === task.id ? { ...t, title: task.title, description: task.description } : t
+              ),
+            };
+          } else {
+            return col;
+          }
+        })
+      )
+    );
+  }, [task.title, task.description]);
+
   const onSubmit = () => {
-    // dispatch(
-    //   createNewTask([{ id: String(new Date()), title: valueTitle, description: valueDescription }])
-    // );
-    console.log('update card');
+    dispatch(setTask({ ...task, title: valueTitle, description: valueDescription }));
     handleClose();
   };
 
@@ -93,7 +145,7 @@ const ModalEditTask = () => {
         >
           <Box sx={style.box}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              Create a new task:
+              Edit task:
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)}>
               <TextField
@@ -102,7 +154,7 @@ const ModalEditTask = () => {
                 value={valueTitle}
                 rows={2}
                 sx={style.input}
-                {...register('title', { required: 'Enter the description' })}
+                {...register('title')}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setValueTitle(event.target.value);
                 }}
@@ -119,9 +171,15 @@ const ModalEditTask = () => {
                   setValueDescription(event.target.value);
                 }}
               />
-              <Button type="submit" variant="contained" size="small" style={style.btn}>
-                EDIT
-              </Button>
+              <div style={style.btnContainer}>
+                <Button type="submit" variant="contained" size="small" style={style.btn}>
+                  SAVE
+                </Button>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  userName
+                  <PersonAddIcon sx={style.icon} onClick={onClickAddUserBtn} />
+                </div>
+              </div>
             </form>
           </Box>
         </Modal>

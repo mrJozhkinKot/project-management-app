@@ -7,9 +7,9 @@ import { CardActionArea } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useAppDispatch } from '../../hooks/redux';
-import { BoardInterface } from '../../utils/interfaces';
+import { BoardDraftInterface } from '../../utils/interfaces';
 interface Props {
-  board: BoardInterface;
+  board: BoardDraftInterface;
 }
 
 const Board: React.FC<Props> = ({ board }) => {
