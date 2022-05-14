@@ -4,7 +4,6 @@ import {
   SignUpBodyInterface,
   SignInBodyInterface,
   UpdateUserInterface,
-  BadRequestInterface,
   InternalServerErrorInterface,
   BoardDraftInterface,
   BoardInterface,
@@ -318,7 +317,7 @@ export async function createColumn(
   boardID: string,
   body: ColumnBodyInterface
 ): Promise<ColumnDraftInterface | null> {
-  const response: Response = await fetch(`${remoteServerURL}/boards/${boardID}`, {
+  const response: Response = await fetch(`${remoteServerURL}/boards/${boardID}/columns`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
