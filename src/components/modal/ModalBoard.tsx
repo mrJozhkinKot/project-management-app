@@ -9,7 +9,7 @@ import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { createTheme, ThemeProvider } from '@mui/material';
-import { createBoardThunk } from '../../reducers/ActionBoardsCreater';
+import { boardsAPI } from '../../utils/boardService';
 
 const defaultValues = {
   title: '',
@@ -52,10 +52,10 @@ const style = {
 
 const ModalBoard = () => {
   const [valueName, setValueName] = useState('');
-  const { setIsModalBoard, createNewBoard } = boardsSlice.actions;
+  const { setIsModalBoard } = boardsSlice.actions;
   const dispatch = useAppDispatch();
   const { isModalBoard } = useAppSelector((state) => state.boardsReducer);
-
+  const [createBoard, {}] = boardsAPI.useCreateBoardMutation();
   const {
     register,
     handleSubmit,
@@ -75,8 +75,7 @@ const ModalBoard = () => {
 
   const onSubmit = async () => {
     dispatch(setIsModalBoard(false));
-    dispatch(createNewBoard([{ id: String(new Date()), title: valueName, columns: [] }]));
-    dispatch(createBoardThunk(valueName));
+    createBoard({ title: valueName });
   };
 
   return (

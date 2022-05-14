@@ -29,7 +29,7 @@ export interface SignInResponseInterface {
 export interface BadRequestInterface {
   statusCode: number;
   message: string;
-  error: string;
+  error?: string;
 }
 
 export interface InternalServerErrorInterface {

@@ -6,27 +6,8 @@ import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { ColumnInterface } from '../../utils/interfaces';
 
-interface Column {
-  id: string;
-  title: string;
-  order: number;
-  tasks: TaskDraftInterface[];
-}
-interface TaskDraftInterface {
-  id: string;
-  title: string;
-  order?: number;
-  description?: string;
-  userId?: string;
-  files?: FileInterface[];
-}
-export interface FileInterface {
-  filename: string;
-  fileSize: number;
-}
-
 const ColumnList = () => {
-  const { columns } = useAppSelector((state) => state.boardsReducer);
+  const { columns, columnsDraft } = useAppSelector((state) => state.boardsReducer);
   const { reorderColumnList } = boardsSlice.actions;
   const dispatch = useAppDispatch();
 

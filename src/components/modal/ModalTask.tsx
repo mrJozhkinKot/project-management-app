@@ -10,6 +10,8 @@ import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { createTheme, ThemeProvider } from '@mui/material';
+import { createTaskThunk } from '../../reducers/ActionBoardsCreater';
+import { useParams } from 'react-router-dom';
 
 const defaultValues = {
   title: '',
@@ -66,10 +68,11 @@ const style = {
 const ModalTask = () => {
   const [valueTitle, setValueTitle] = useState('');
   const [valueDescription, setValueDescription] = useState('');
-  const [valueUserId, setValueUserId] = useState('');
+  const [valueUserId, setValueUserId] = useState('28322c59-b63c-4d3e-88f0-393d70f382b3');
   const { setIsModalTask, createNewTask } = boardsSlice.actions;
   const dispatch = useAppDispatch();
-  const { isModalTask } = useAppSelector((state) => state.boardsReducer);
+  const { isModalTask, column } = useAppSelector((state) => state.boardsReducer);
+  const { id } = useParams();
 
   const {
     register,
@@ -89,18 +92,32 @@ const ModalTask = () => {
   }, [isSubmitSuccessful, reset]);
 
   const onSubmit = () => {
-    dispatch(
-      createNewTask([
-        {
-          id: String(new Date()),
-          title: valueTitle,
-          description: valueDescription,
-          order: 1,
-          userId: valueUserId,
-          files: [],
-        },
-      ])
-    );
+    // dispatch(
+    //   createNewTask([
+    //     {
+    //       id: String(new Date()),
+    //       title: valueTitle,
+    //       description: valueDescription,
+    //       order: 1,
+    //       userId: valueUserId,
+    //       files: [],
+    //     },
+    //   ])
+    // );
+    if (id) {
+      dispatch(
+        createTaskThunk([
+          id,
+          column.id,
+          {
+            title: valueTitle,
+            description: valueDescription,
+            order: 0,
+            userId: valueUserId,
+          },
+        ])
+      );
+    }
     handleClose();
   };
 

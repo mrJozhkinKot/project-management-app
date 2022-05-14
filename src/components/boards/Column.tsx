@@ -12,6 +12,8 @@ import { ItemTypes } from './ItemTypes';
 import { TaskDraftInterface, TaskInterface } from '../../utils/interfaces';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import AddBoxIcon from '@mui/icons-material/AddBox';
+import { deleteColumnThunk } from '../../reducers/ActionBoardsCreater';
+import { useParams } from 'react-router-dom';
 
 interface ColumnProps {
   column: {
@@ -34,6 +36,7 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
   const { reorderTaskList, setIsModalTask, setColumn, deleteColumn } = boardsSlice.actions;
   const dispatch = useAppDispatch();
   const [shouldRender, setShouldRender] = useState(false);
+  const { id } = useParams();
   useEffect(() => setShouldRender(true), []);
   const tasks = columns[index].tasks;
   const moveTask = useCallback(
@@ -59,6 +62,9 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
 
   const onClickDeleteBtn = () => {
     dispatch(deleteColumn(column.id));
+    if (id) {
+      dispatch(deleteColumnThunk([id, column.id]));
+    }
   };
 
   const style = {

@@ -5,21 +5,17 @@ import Button from '@mui/material/Button';
 import CardHeader from '@mui/material/CardHeader';
 import { CardActionArea } from '@mui/material';
 import { NavLink } from 'react-router-dom';
-import { boardsSlice } from '../../reducers/BoardsSlice';
-import { useAppDispatch } from '../../hooks/redux';
 import { BoardDraftInterface } from '../../utils/interfaces';
-import { deleteBoardThunk } from '../../reducers/ActionBoardsCreater';
+import { boardsAPI } from '../../utils/boardService';
+
 interface Props {
   board: BoardDraftInterface;
 }
 
 const Board: React.FC<Props> = ({ board }) => {
-  const { deleteBoard } = boardsSlice.actions;
-  const dispatch = useAppDispatch();
-
+  const [deleteBoard, {}] = boardsAPI.useDeleteBoardMutation();
   const onClickDeleteBtn = () => {
-    dispatch(deleteBoard(board.id));
-    dispatch(deleteBoardThunk(board.id));
+    deleteBoard(board.id);
   };
 
   const style = {

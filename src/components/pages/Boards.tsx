@@ -7,17 +7,22 @@ import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { getBoardsThunk } from '../../reducers/ActionBoardsCreater';
 import Spinner from '../spinner/Spinner';
-import { loadavg } from 'os';
 
-const Boards: React.FC = () => {
+const Boards = () => {
   const { setIsModalBoard } = boardsSlice.actions;
   const dispatch = useAppDispatch();
   const { isLoading } = useAppSelector((state) => state.boardsReducer);
 
   useEffect(() => {
     dispatch(getBoardsThunk());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    console.log('object');
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // useEffect(() => {
+  //   dispatch(getBoardsThunk());
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [boards, dispatch]);
 
   const onClickCreateBtn = () => {
     dispatch(setIsModalBoard(true));
@@ -39,7 +44,7 @@ const Boards: React.FC = () => {
           <Button variant="contained" sx={style} onClick={onClickCreateBtn}>
             Create Board
           </Button>
-          {!isLoading && <BoardList />}
+          <BoardList />
           <ModalBoard />
         </Box>
       </Fragment>

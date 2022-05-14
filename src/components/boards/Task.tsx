@@ -5,7 +5,7 @@ import { ItemTypes } from './ItemTypes';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useAppDispatch } from '../../hooks/redux';
 import ClearIcon from '@mui/icons-material/Clear';
-import { ColumnInterface, TaskInterface, TaskDraftInterface } from '../../utils/interfaces';
+import { ColumnInterface, TaskDraftInterface } from '../../utils/interfaces';
 
 const style = {
   task: {

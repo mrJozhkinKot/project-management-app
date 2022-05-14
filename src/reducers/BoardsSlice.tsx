@@ -3,17 +3,28 @@ import {
   BoardInterface,
   BoardDraftInterface,
   ColumnInterface,
+  ColumnDraftInterface,
   TaskDraftInterface,
   TaskInterface,
 } from '../utils/interfaces';
-import { createBoardThunk, getBoardsThunk, deleteBoardThunk } from './ActionBoardsCreater';
+import {
+  createBoardThunk,
+  getBoardsThunk,
+  deleteBoardThunk,
+  getColumnsThunk,
+  deleteColumnThunk,
+  getTasksThunk,
+  createTaskThunk,
+} from './ActionBoardsCreater';
 
 interface BoardsState {
   boards: BoardDraftInterface[];
   board: BoardInterface;
   columns: ColumnInterface[];
+  columnsDraft: ColumnDraftInterface[];
   column: ColumnInterface;
   task: TaskInterface;
+  tasksDraft: TaskDraftInterface[];
   isLoading: boolean;
   isModalBoard: boolean;
   isModalTask: boolean;
@@ -28,40 +39,41 @@ const initialState: BoardsState = {
     title: '',
     columns: [],
   },
+  columnsDraft: [],
   columns: [
-    {
-      id: '12323',
-      title: 'column1',
-      order: 0,
-      tasks: [
-        { id: '1', title: 'task1', description: '', order: 1, userId: '', files: [] },
-        { id: '2', title: 'task2', description: '', order: 1, userId: '', files: [] },
-        { id: '3', title: 'task3', description: '', order: 1, userId: '', files: [] },
-        { id: '4', title: 'task4', description: '', order: 1, userId: '', files: [] },
-      ],
-    },
-    {
-      id: '34434',
-      title: 'column2',
-      order: 1,
-      tasks: [
-        { id: '11', title: 'task11', description: '', order: 1, userId: '', files: [] },
-        { id: '12', title: 'task12', description: '', order: 1, userId: '', files: [] },
-        { id: '13', title: 'task13', description: '', order: 1, userId: '', files: [] },
-        { id: '14', title: 'task14', description: '', order: 1, userId: '', files: [] },
-      ],
-    },
-    {
-      id: '35535',
-      title: 'column3',
-      order: 2,
-      tasks: [
-        { id: '21', title: 'task21', description: '', order: 1, userId: '', files: [] },
-        { id: '22', title: 'task22', description: '', order: 1, userId: '', files: [] },
-        { id: '23', title: 'task23', description: '', order: 1, userId: '', files: [] },
-        { id: '24', title: 'task24', description: '', order: 1, userId: '', files: [] },
-      ],
-    },
+    // {
+    //   id: '12323',
+    //   title: 'column1',
+    //   order: 0,
+    //   tasks: [
+    //     { id: '1', title: 'task1', description: '', order: 1, userId: '', files: [] },
+    //     { id: '2', title: 'task2', description: '', order: 1, userId: '', files: [] },
+    //     { id: '3', title: 'task3', description: '', order: 1, userId: '', files: [] },
+    //     { id: '4', title: 'task4', description: '', order: 1, userId: '', files: [] },
+    //   ],
+    // },
+    // {
+    //   id: '34434',
+    //   title: 'column2',
+    //   order: 1,
+    //   tasks: [
+    //     { id: '11', title: 'task11', description: '', order: 1, userId: '', files: [] },
+    //     { id: '12', title: 'task12', description: '', order: 1, userId: '', files: [] },
+    //     { id: '13', title: 'task13', description: '', order: 1, userId: '', files: [] },
+    //     { id: '14', title: 'task14', description: '', order: 1, userId: '', files: [] },
+    //   ],
+    // },
+    // {
+    //   id: '35535',
+    //   title: 'column3',
+    //   order: 2,
+    //   tasks: [
+    //     { id: '21', title: 'task21', description: '', order: 1, userId: '', files: [] },
+    //     { id: '22', title: 'task22', description: '', order: 1, userId: '', files: [] },
+    //     { id: '23', title: 'task23', description: '', order: 1, userId: '', files: [] },
+    //     { id: '24', title: 'task24', description: '', order: 1, userId: '', files: [] },
+    //   ],
+    // },
   ],
   column: {
     id: '',
@@ -79,6 +91,7 @@ const initialState: BoardsState = {
     boardId: '',
     columnId: '',
   },
+  tasksDraft: [],
   isLoading: false,
   isModalBoard: false,
   isModalTask: false,
@@ -147,34 +160,48 @@ export const boardsSlice = createSlice({
     },
   },
   extraReducers: {
-    [createBoardThunk.fulfilled.type]: (state, action: PayloadAction<string>) => {
+    [getColumnsThunk.fulfilled.type]: (state, action: PayloadAction<ColumnDraftInterface[]>) => {
       state.isLoading = false;
-      state.board = { ...state.board, title: action.payload };
+      state.columnsDraft = action.payload;
     },
-    [createBoardThunk.pending.type]: (state) => {
+    [getColumnsThunk.pending.type]: (state) => {
       state.isLoading = true;
     },
-    [createBoardThunk.rejected.type]: (state) => {
+    [getColumnsThunk.rejected.type]: (state) => {
       state.isLoading = false;
     },
-    [getBoardsThunk.fulfilled.type]: (state, action: PayloadAction<BoardDraftInterface[]>) => {
+    [getTasksThunk.fulfilled.type]: (state, action: PayloadAction<TaskDraftInterface[]>) => {
       state.isLoading = false;
-      state.boards = action.payload;
+      state.tasksDraft = action.payload;
     },
-    [getBoardsThunk.pending.type]: (state) => {
+    [deleteColumnThunk.fulfilled.type]: (state, action: PayloadAction<string | undefined>) => {
+      state.isLoading = false;
+      state.columns = state.columns.filter((column) => column.id !== action.payload);
+    },
+    [deleteColumnThunk.pending.type]: (state) => {
       state.isLoading = true;
     },
-    [getBoardsThunk.rejected.type]: (state) => {
+    [deleteColumnThunk.rejected.type]: (state) => {
       state.isLoading = false;
     },
-    [deleteBoardThunk.fulfilled.type]: (state, action: PayloadAction<string | undefined>) => {
+    [createTaskThunk.fulfilled.type]: (state, action: PayloadAction<TaskDraftInterface[]>) => {
       state.isLoading = false;
-      state.boards = state.boards.filter((board) => board.id !== action.payload);
+      state.tasksDraft = action.payload;
     },
-    [deleteBoardThunk.pending.type]: (state) => {
+    [getTasksThunk.pending.type]: (state) => {
       state.isLoading = true;
     },
-    [deleteBoardThunk.rejected.type]: (state) => {
+    [getTasksThunk.rejected.type]: (state) => {
+      state.isLoading = false;
+    },
+    [createTaskThunk.fulfilled.type]: (state, action: PayloadAction<TaskInterface>) => {
+      state.isLoading = false;
+      state.task = action.payload;
+    },
+    [createTaskThunk.pending.type]: (state) => {
+      state.isLoading = true;
+    },
+    [createTaskThunk.rejected.type]: (state) => {
       state.isLoading = false;
     },
   },
