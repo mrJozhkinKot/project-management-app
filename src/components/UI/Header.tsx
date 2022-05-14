@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import {
   AppBar,
@@ -18,12 +18,14 @@ import {
 } from '@mui/material';
 
 function Header(): React.ReactElement {
-  const isAuth = true;
+  const isAuth = false;
   const [lang, setLang] = useState<string>('EN');
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
+  const navigate = useNavigate();
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
+    console.log('handleOpenNavMenu event.currentTarget: ', event.currentTarget);
   };
 
   const handleCloseNavMenu = () => {
@@ -123,28 +125,33 @@ function Header(): React.ReactElement {
                   <MenuItem value="RU">RU</MenuItem>
                 </Select>
               </FormControl>
-              <NavLink to="editprofile">
-                <Button
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
-                >
-                  Edit profile
-                </Button>
-              </NavLink>
-              <NavLink to="modalboard">
-                <Button
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
-                >
-                  Create new board
-                </Button>
-              </NavLink>
-            </Box>
-            <NavLink to="welcome">
-              <Button variant="contained" size="small" style={style.buttonContained}>
-                Sign Out
+              <Button
+                onClick={() => {
+                  handleCloseNavMenu();
+                  navigate('/editprofile');
+                }}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                Edit profile
               </Button>
-            </NavLink>
+              <Button
+                onClick={() => {
+                  handleCloseNavMenu();
+                  navigate('/modalboard');
+                }}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                Create new board
+              </Button>
+            </Box>
+            <Button
+              onClick={() => navigate('/welcome')}
+              variant="contained"
+              size="small"
+              style={style.buttonContained}
+            >
+              Sign Out
+            </Button>
           </Toolbar>
         ) : (
           <Toolbar disableGutters>
@@ -161,6 +168,7 @@ function Header(): React.ReactElement {
               </IconButton>
               <Menu
                 id="menu-appbar"
+                role="menubar"
                 anchorEl={anchorElNav}
                 anchorOrigin={{
                   vertical: 'bottom',
@@ -207,21 +215,24 @@ function Header(): React.ReactElement {
                 </Select>
               </FormControl>
             </Box>
-            <NavLink to="signin">
-              <Button
-                variant="contained"
-                size="small"
-                style={style.buttonContained}
-                sx={{ mr: '10px' }}
-              >
-                Sign in
-              </Button>
-            </NavLink>
-            <NavLink to="signup">
-              <Button variant="outlined" size="small" style={style.buttonOutlined}>
-                Sign up
-              </Button>
-            </NavLink>
+
+            <Button
+              onClick={() => navigate('/signin')}
+              variant="contained"
+              size="small"
+              style={style.buttonContained}
+              sx={{ mr: '10px' }}
+            >
+              Sign in
+            </Button>
+            <Button
+              onClick={() => navigate('/signup')}
+              variant="outlined"
+              size="small"
+              style={style.buttonOutlined}
+            >
+              Sign up
+            </Button>
           </Toolbar>
         )}
       </Container>
