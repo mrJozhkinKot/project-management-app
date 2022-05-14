@@ -20,7 +20,7 @@ import {
 
 const remoteServerURL = 'https://serene-inlet-66010.herokuapp.com';
 const token =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhNGQwNWExNy04YTEyLTQwOWMtYjcwZS0xN2Q5ZGFkNzU1Y2UiLCJsb2dpbiI6InVzZXIwMDEiLCJpYXQiOjE2NTE4NzE5MTh9.4pGFpqAg1EqW4ZjVUd0RGViqdmRPlzPN1sigO25zXl8';
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJlYTY5ZDllYi1iYmUxLTQ5ZWYtOTYyOC01YTQ5NDE3NDQwNTQiLCJsb2dpbiI6InRlc3QyIiwiaWF0IjoxNjUyNTQzOTQ2fQ.WJtIq6IU1ha2nXVOVnusrbhRTUxvtjPjjd4l-mXx4dw';
 
 export async function getUsers(): Promise<UserInterface[] | null> {
   const response: Response = await fetch(`${remoteServerURL}/users`, {
