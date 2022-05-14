@@ -6,6 +6,8 @@ import ModalBoard from '../modal/ModalBoard';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { getBoardsThunk } from '../../reducers/ActionBoardsCreater';
+import Spinner from '../spinner/Spinner';
+import { loadavg } from 'os';
 
 const Boards: React.FC = () => {
   const { setIsModalBoard } = boardsSlice.actions;
@@ -28,17 +30,21 @@ const Boards: React.FC = () => {
     },
   };
 
-  return (
-    <Fragment>
-      <Box>
-        <Button variant="contained" sx={style} onClick={onClickCreateBtn}>
-          Create Board
-        </Button>
-        {!isLoading && <BoardList />}
-        <ModalBoard />
-      </Box>
-    </Fragment>
-  );
+  if (isLoading) {
+    return <Spinner />;
+  } else {
+    return (
+      <Fragment>
+        <Box>
+          <Button variant="contained" sx={style} onClick={onClickCreateBtn}>
+            Create Board
+          </Button>
+          {!isLoading && <BoardList />}
+          <ModalBoard />
+        </Box>
+      </Fragment>
+    );
+  }
 };
 
 export default Boards;
