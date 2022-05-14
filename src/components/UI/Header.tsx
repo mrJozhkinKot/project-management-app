@@ -68,7 +68,6 @@ function Header(): React.ReactElement {
               </IconButton>
               <Menu
                 id="menu-appbar"
-                role="menubar"
                 anchorEl={anchorElNav}
                 anchorOrigin={{
                   vertical: 'bottom',
@@ -169,6 +168,7 @@ function Header(): React.ReactElement {
               </IconButton>
               <Menu
                 id="menu-appbar"
+                role="menubar"
                 anchorEl={anchorElNav}
                 anchorOrigin={{
                   vertical: 'bottom',
@@ -184,7 +184,21 @@ function Header(): React.ReactElement {
                 sx={{
                   display: { xs: 'block', md: 'none' },
                 }}
-              ></Menu>
+              >
+                <FormControl>
+                  <InputLabel id="select-label"></InputLabel>
+                  <Select
+                    labelId="select-label"
+                    id="select"
+                    sx={{ border: '1px solid #fff', height: '2rem' }}
+                    value={lang}
+                    onChange={onChange}
+                  >
+                    <MenuItem value="EN">EN</MenuItem>
+                    <MenuItem value="RU">RU</MenuItem>
+                  </Select>
+                </FormControl>
+              </Menu>
             </Box>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               <FormControl>
