@@ -10,7 +10,6 @@ const style = {
   },
   container: {
     alignItems: 'center',
-    padding: '10px',
     color: '#fff',
   },
   link: {
@@ -19,11 +18,11 @@ const style = {
     },
   },
   logo: {
-    minWidth: '50px',
+    minWidth: '40px',
     color: '#000',
     backgroundColor: '#fff',
     marginTop: '5px',
-    padding: '0 10px',
+    padding: '0 5px',
     '&:hover': {
       backgroundColor: '#E36655',
     },
@@ -36,7 +35,6 @@ const style = {
   listItem: {
     display: 'flex',
     justifyContent: 'center',
-    padding: '10px',
   },
   teammate: {
     display: 'flex',
@@ -67,7 +65,7 @@ const Footer: React.FC = () => {
                 underline="none"
                 color="inherit"
               >
-                <Typography component="span" sx={style.teammate}>
+                <Typography component="span" variant="body2" sx={style.teammate}>
                   <GitHubIcon fontSize="small" sx={style.githubIcon} />
                   Yulia
                 </Typography>
@@ -82,7 +80,7 @@ const Footer: React.FC = () => {
                 underline="none"
                 color="inherit"
               >
-                <Typography component="span" sx={style.teammate}>
+                <Typography component="span" variant="body2" sx={style.teammate}>
                   <GitHubIcon fontSize="small" sx={style.githubIcon} />
                   Sergey
                 </Typography>
@@ -97,7 +95,7 @@ const Footer: React.FC = () => {
                 underline="none"
                 color="inherit"
               >
-                <Typography component="span" sx={style.teammate}>
+                <Typography component="span" variant="body2" sx={style.teammate}>
                   <GitHubIcon fontSize="small" sx={style.githubIcon} />
                   Vera
                 </Typography>
@@ -105,7 +103,9 @@ const Footer: React.FC = () => {
             </Grid>
           </Grid>
           <Grid item lg={4} sm={3} xs={12} sx={style.listItem}>
-            <Typography component="span">© 2022</Typography>
+            <Typography component="span" variant="body2">
+              © 2022
+            </Typography>
           </Grid>
         </Grid>
       </Container>
