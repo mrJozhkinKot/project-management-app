@@ -4,7 +4,6 @@ import {
   SignUpBodyInterface,
   SignInBodyInterface,
   UpdateUserInterface,
-  BadRequestInterface,
   InternalServerErrorInterface,
   BoardDraftInterface,
   BoardInterface,

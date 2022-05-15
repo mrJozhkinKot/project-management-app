@@ -55,9 +55,10 @@ const ModalColumn = () => {
   const [valueText, setValueText] = useState('');
   const { setIsModalColumn } = boardsSlice.actions;
   const dispatch = useAppDispatch();
-  const { isModalColumn, columns } = useAppSelector((state) => state.boardsReducer);
+  const { isModalColumn } = useAppSelector((state) => state.boardsReducer);
   const { id } = useParams();
   const [createColumn, {}] = columnsAPI.useCreateColumnMutation();
+  const { data: columns } = columnsAPI.useGetColumnsQuery(id as string);
 
   const {
     register,
@@ -77,7 +78,7 @@ const ModalColumn = () => {
   }, [isSubmitSuccessful, reset]);
 
   const onSubmit = () => {
-    createColumn([id as string, { title: valueText, order: columns.length }]);
+    createColumn([id as string, { title: valueText, order: columns?.length || 0 }]);
     handleClose();
   };
 

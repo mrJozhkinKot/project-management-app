@@ -75,6 +75,7 @@ const ModalTask = () => {
   const { isModalTask, currentColumnId } = useAppSelector((state) => state.boardsReducer);
   const [createTask, {}] = tasksAPI.useCreateTasksMutation();
   const { id } = useParams();
+  const { data: tasks } = tasksAPI.useGetTasksQuery([id as string, currentColumnId]);
 
   const {
     register,
@@ -97,7 +98,12 @@ const ModalTask = () => {
     createTask([
       id as string,
       currentColumnId,
-      { title: valueTitle, description: valueDescription, order: 0, userId: valueUserId },
+      {
+        title: valueTitle,
+        description: valueDescription,
+        order: tasks?.length || 0,
+        userId: valueUserId,
+      },
     ]);
     handleClose();
   };

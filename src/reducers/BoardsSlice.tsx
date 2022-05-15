@@ -3,7 +3,6 @@ import {
   BoardInterface,
   BoardDraftInterface,
   ColumnInterface,
-  ColumnDraftInterface,
   TaskDraftInterface,
   TaskInterface,
 } from '../utils/interfaces';
@@ -12,10 +11,8 @@ interface BoardsState {
   boards: BoardDraftInterface[];
   board: BoardInterface;
   columns: ColumnInterface[];
-  columnsDraft: ColumnDraftInterface[];
   column: ColumnInterface;
   task: TaskInterface;
-  tasksDraft: TaskDraftInterface[];
   currentColumnId: string;
   isLoading: boolean;
   isModalBoard: boolean;
@@ -31,7 +28,6 @@ const initialState: BoardsState = {
     title: '',
     columns: [],
   },
-  columnsDraft: [],
   columns: [],
   column: {
     id: '',
@@ -49,7 +45,6 @@ const initialState: BoardsState = {
     boardId: '',
     columnId: '',
   },
-  tasksDraft: [],
   currentColumnId: '',
   isLoading: false,
   isModalBoard: false,
@@ -65,12 +60,6 @@ export const boardsSlice = createSlice({
     setCurrentColumnId(state, action: PayloadAction<string>) {
       state.currentColumnId = action.payload;
     },
-    deleteBoard(state, action: PayloadAction<string | undefined>) {
-      state.boards = state.boards.filter((board) => board.id !== action.payload);
-    },
-    deleteColumn(state, action: PayloadAction<string | undefined>) {
-      state.columns = state.columns.filter((column) => column.id !== action.payload);
-    },
     setIsModalBoard(state, action: PayloadAction<boolean>) {
       state.isModalBoard = action.payload;
     },
@@ -83,9 +72,6 @@ export const boardsSlice = createSlice({
     setIsModalColumn(state, action: PayloadAction<boolean>) {
       state.isModalColumn = action.payload;
     },
-    createNewBoard(state, action: PayloadAction<BoardInterface[]>) {
-      state.boards = [...state.boards, ...action.payload];
-    },
     reorderTaskList(state, action: PayloadAction<TaskDraftInterface[]>) {
       state.columns.forEach((col) => {
         if (col.id === state.column.id) {
@@ -95,21 +81,6 @@ export const boardsSlice = createSlice({
     },
     reorderColumnList(state, action: PayloadAction<ColumnInterface[]>) {
       state.columns = action.payload;
-    },
-    createNewTask(state, action: PayloadAction<TaskDraftInterface[]>) {
-      state.columns.forEach((col) => {
-        if (col.id === state.column.id) {
-          col.tasks = [...col.tasks, ...action.payload];
-        }
-      });
-    },
-    createNewColumn(state, action: PayloadAction<ColumnInterface[]>) {
-      state.columns = [...state.columns, ...action.payload];
-    },
-    deleteTask(state, action: PayloadAction<string | undefined>) {
-      state.columns.forEach((col) => {
-        col.tasks = col.tasks.filter((task) => task.id !== action.payload);
-      });
     },
     setColumns(state, action: PayloadAction<ColumnInterface[]>) {
       state.columns = action.payload;
