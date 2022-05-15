@@ -18,14 +18,13 @@ import {
 } from '@mui/material';
 
 function Header(): React.ReactElement {
-  const isAuth = false;
+  const isAuth = true;
   const [lang, setLang] = useState<string>('EN');
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
-    console.log('handleOpenNavMenu event.currentTarget: ', event.currentTarget);
   };
 
   const handleCloseNavMenu = () => {
@@ -67,7 +66,7 @@ function Header(): React.ReactElement {
                 <MenuIcon />
               </IconButton>
               <Menu
-                id="menu-appbar"
+                id="menu-appbar-auth"
                 anchorEl={anchorElNav}
                 anchorOrigin={{
                   vertical: 'bottom',
@@ -85,10 +84,10 @@ function Header(): React.ReactElement {
                 }}
               >
                 <FormControl>
-                  <InputLabel id="select-label"></InputLabel>
+                  <InputLabel id="select-label-hamburger-auth"></InputLabel>
                   <Select
-                    labelId="select-label"
-                    id="select"
+                    labelId="select-label-hamburger-auth"
+                    id="select-hamburger-auth"
                     sx={{ border: '1px solid #000', height: '2rem', ml: '15px' }}
                     value={lang}
                     onChange={onChange}
@@ -107,10 +106,10 @@ function Header(): React.ReactElement {
             </Box>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
               <FormControl>
-                <InputLabel id="select-label"></InputLabel>
+                <InputLabel id="select-label-auth"></InputLabel>
                 <Select
-                  labelId="select-label"
-                  id="select"
+                  labelId="select-label-auth"
+                  id="select-auth"
                   sx={{
                     color: '#fff',
                     border: '1px solid #fff',
@@ -186,10 +185,10 @@ function Header(): React.ReactElement {
                 }}
               >
                 <FormControl>
-                  <InputLabel id="select-label"></InputLabel>
+                  <InputLabel id="select-label-hamburger"></InputLabel>
                   <Select
-                    labelId="select-label"
-                    id="select"
+                    labelId="select-label-hamburger"
+                    id="select-hamburger"
                     sx={{ border: '1px solid #fff', height: '2rem' }}
                     value={lang}
                     onChange={onChange}
