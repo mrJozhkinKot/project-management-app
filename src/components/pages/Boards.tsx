@@ -1,28 +1,16 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment } from 'react';
 import BoardList from '../boards/BoardList';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import ModalBoard from '../modal/ModalBoard';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { getBoardsThunk } from '../../reducers/ActionBoardsCreater';
 import Spinner from '../spinner/Spinner';
 
 const Boards = () => {
   const { setIsModalBoard } = boardsSlice.actions;
   const dispatch = useAppDispatch();
   const { isLoading } = useAppSelector((state) => state.boardsReducer);
-
-  useEffect(() => {
-    dispatch(getBoardsThunk());
-    console.log('object');
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // useEffect(() => {
-  //   dispatch(getBoardsThunk());
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [boards, dispatch]);
 
   const onClickCreateBtn = () => {
     dispatch(setIsModalBoard(true));

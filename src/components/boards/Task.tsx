@@ -5,7 +5,8 @@ import { ItemTypes } from './ItemTypes';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useAppDispatch } from '../../hooks/redux';
 import ClearIcon from '@mui/icons-material/Clear';
-import { ColumnInterface, TaskDraftInterface } from '../../utils/interfaces';
+import { ColumnDraftInterface, TaskInterface } from '../../utils/interfaces';
+import { tasksAPI } from '../../utils/tasksService';
 
 const style = {
   task: {
@@ -23,10 +24,10 @@ const style = {
   },
 };
 export interface TaskProps {
-  task: TaskDraftInterface;
+  task: TaskInterface;
   index: number;
   moveTask: (dragIndex: number, hoverIndex: number) => void;
-  column: ColumnInterface;
+  column: ColumnDraftInterface;
 }
 interface DragItem {
   index: number;
@@ -35,11 +36,12 @@ interface DragItem {
 }
 
 export const Task: React.FC<TaskProps> = ({ task, index, moveTask, column }) => {
-  const { setColumn, deleteTask, setIsModalEditTask, setTask } = boardsSlice.actions;
+  const { setIsModalEditTask, setTask } = boardsSlice.actions;
   const dispatch = useAppDispatch();
+  const [deleteTask, {}] = tasksAPI.useDeleteTaskMutation();
 
   const onClickDeleteBtn = (id: string) => {
-    dispatch(deleteTask(id));
+    deleteTask([id, column.id, task.id]);
   };
 
   const onClickEditTask = () => {
@@ -77,7 +79,7 @@ export const Task: React.FC<TaskProps> = ({ task, index, moveTask, column }) => 
         return;
       }
 
-      dispatch(setColumn(column));
+      //dispatch(setColumn(column));
       moveTask(dragIndex, hoverIndex);
       item.index = hoverIndex;
     },

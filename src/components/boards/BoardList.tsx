@@ -1,13 +1,10 @@
 import React from 'react';
-import { useAppSelector } from '../../hooks/redux';
 import Board from './BoardItem';
 import Grid from '@mui/material/Grid';
-import { BoardDraftInterface } from '../../utils/interfaces';
 import { boardsAPI } from '../../utils/boardService';
 import Spinner from '../spinner/Spinner';
 
 const BoardList = () => {
-  //const { boards } = useAppSelector((state) => state.boardsReducer);
   const { data: boards, error, isLoading } = boardsAPI.useGetBoardsQuery(10);
   const style = {
     container: {

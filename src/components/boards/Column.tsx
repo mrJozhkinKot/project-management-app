@@ -9,19 +9,15 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { useDrag, useDrop } from 'react-dnd';
 import type { Identifier } from 'dnd-core';
 import { ItemTypes } from './ItemTypes';
-import { TaskDraftInterface, TaskInterface } from '../../utils/interfaces';
+import { ColumnDraftInterface, TaskDraftInterface, TaskInterface } from '../../utils/interfaces';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import AddBoxIcon from '@mui/icons-material/AddBox';
-import { deleteColumnThunk } from '../../reducers/ActionBoardsCreater';
 import { useParams } from 'react-router-dom';
+import { tasksAPI } from '../../utils/tasksService';
+import { columnsAPI } from '../../utils/columnsService';
 
 interface ColumnProps {
-  column: {
-    id: string;
-    title: string;
-    order: number;
-    tasks: TaskDraftInterface[];
-  };
+  column: ColumnDraftInterface;
   index: number;
   moveColumn: (dragIndex: number, hoverIndex: number) => void;
 }
@@ -32,39 +28,38 @@ interface DragItem {
 }
 
 const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
-  const { columns } = useAppSelector((state) => state.boardsReducer);
-  const { reorderTaskList, setIsModalTask, setColumn, deleteColumn } = boardsSlice.actions;
+  const { reorderTaskList, setIsModalTask, setCurrentColumnId } = boardsSlice.actions;
   const dispatch = useAppDispatch();
   const [shouldRender, setShouldRender] = useState(false);
   const { id } = useParams();
+  const { data: tasks } = tasksAPI.useGetTasksQuery([id as string, column.id]);
+  const [deleteColumn, {}] = columnsAPI.useDeleteColumnMutation();
+
   useEffect(() => setShouldRender(true), []);
-  const tasks = columns[index].tasks;
+  //const tasks = columns[index].tasks;
   const moveTask = useCallback(
     (dragIndex: number, hoverIndex: number) => {
-      dispatch(
-        reorderTaskList(
-          update(tasks, {
-            $splice: [
-              [dragIndex, 1],
-              [hoverIndex, 0, tasks[dragIndex] as TaskDraftInterface],
-            ],
-          })
-        )
-      );
+      // dispatch(
+      //   reorderTaskList(
+      //     update(tasks, {
+      //       $splice: [
+      //         [dragIndex, 1],
+      //         [hoverIndex, 0, tasks[dragIndex] as TaskDraftInterface],
+      //       ],
+      //     })
+      //   )
+      // );
     },
     [tasks, reorderTaskList, dispatch]
   );
 
   const onClickCreateBtn = () => {
+    dispatch(setCurrentColumnId(column.id));
     dispatch(setIsModalTask(true));
-    dispatch(setColumn(column));
   };
 
   const onClickDeleteBtn = () => {
-    dispatch(deleteColumn(column.id));
-    if (id) {
-      dispatch(deleteColumnThunk([id, column.id]));
-    }
+    deleteColumn([id as string, column.id]);
   };
 
   const style = {
@@ -140,9 +135,10 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
           <div style={style.header}>
             <Typography variant="h5">{column.title}</Typography>
           </div>
-          {tasks.map((task, index) => (
-            <Task key={task.id} task={task} index={index} moveTask={moveTask} column={column} />
-          ))}
+          {tasks &&
+            tasks.map((task, index) => (
+              <Task key={task.id} task={task} index={index} moveTask={moveTask} column={column} />
+            ))}
           <div style={style.btnContainer}>
             <DeleteForeverIcon
               sx={{

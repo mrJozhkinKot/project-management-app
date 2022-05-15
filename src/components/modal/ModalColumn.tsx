@@ -10,8 +10,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { createColumnThunk } from '../../reducers/ActionBoardsCreater';
-import { createColumn } from '../../utils/serverAPI';
+import { columnsAPI } from '../../utils/columnsService';
 
 const defaultValues = {
   title: '',
@@ -54,10 +53,11 @@ const style = {
 
 const ModalColumn = () => {
   const [valueText, setValueText] = useState('');
-  const { setIsModalColumn, createNewColumn } = boardsSlice.actions;
+  const { setIsModalColumn } = boardsSlice.actions;
   const dispatch = useAppDispatch();
   const { isModalColumn, columns } = useAppSelector((state) => state.boardsReducer);
   const { id } = useParams();
+  const [createColumn, {}] = columnsAPI.useCreateColumnMutation();
 
   const {
     register,
@@ -77,10 +77,7 @@ const ModalColumn = () => {
   }, [isSubmitSuccessful, reset]);
 
   const onSubmit = () => {
-    dispatch(createNewColumn([{ id: String(new Date()), title: valueText, order: 1, tasks: [] }]));
-    if (id) {
-      dispatch(createColumnThunk([id, { title: valueText, order: columns.length }]));
-    }
+    createColumn([id as string, { title: valueText, order: columns.length }]);
     handleClose();
   };
 
