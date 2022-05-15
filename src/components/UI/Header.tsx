@@ -39,13 +39,38 @@ function Header(): React.ReactElement {
     container: {
       backgroundColor: '#323535',
     },
+    btn: {
+      color: '#fff',
+      display: 'block',
+      '&:hover': {
+        color: '#20B298',
+      },
+    },
     buttonContained: {
       backgroundColor: '#20B298',
       color: '#fff',
+      '&:hover': {
+        backgroundColor: '#1C9D86',
+      },
     },
     buttonOutlined: {
       color: '#20B298',
       border: '1px solid #20B298',
+      marginLeft: '10px',
+      '&:hover': {
+        backgroundColor: '#535756',
+        border: '1px solid #535756',
+      },
+    },
+    select: {
+      color: '#fff',
+      border: '1px solid #fff',
+      height: '2rem',
+      alignItems: 'center',
+      marginRigth: '5px',
+      '&:hover': {
+        backgroundColor: '#535756',
+      },
     },
   };
 
@@ -110,13 +135,7 @@ function Header(): React.ReactElement {
                 <Select
                   labelId="select-label-auth"
                   id="select-auth"
-                  sx={{
-                    color: '#fff',
-                    border: '1px solid #fff',
-                    height: '2rem',
-                    alignItems: 'center',
-                    mr: '5px',
-                  }}
+                  sx={style.select}
                   value={lang}
                   onChange={onChange}
                 >
@@ -129,7 +148,7 @@ function Header(): React.ReactElement {
                   handleCloseNavMenu();
                   navigate('/editprofile');
                 }}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={style.btn}
               >
                 Edit profile
               </Button>
@@ -138,7 +157,7 @@ function Header(): React.ReactElement {
                   handleCloseNavMenu();
                   navigate('/modalboard');
                 }}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={style.btn}
               >
                 Create new board
               </Button>
@@ -147,7 +166,7 @@ function Header(): React.ReactElement {
               onClick={() => navigate('/welcome')}
               variant="contained"
               size="small"
-              style={style.buttonContained}
+              sx={style.buttonContained}
             >
               Sign Out
             </Button>
@@ -205,7 +224,7 @@ function Header(): React.ReactElement {
                 <Select
                   labelId="select-label"
                   id="select"
-                  sx={{ color: '#fff', border: '1px solid #fff', height: '2rem' }}
+                  sx={style.select}
                   value={lang}
                   onChange={onChange}
                 >
@@ -219,8 +238,7 @@ function Header(): React.ReactElement {
               onClick={() => navigate('/signin')}
               variant="contained"
               size="small"
-              style={style.buttonContained}
-              sx={{ mr: '10px' }}
+              sx={style.buttonContained}
             >
               Sign in
             </Button>
@@ -228,7 +246,7 @@ function Header(): React.ReactElement {
               onClick={() => navigate('/signup')}
               variant="outlined"
               size="small"
-              style={style.buttonOutlined}
+              sx={style.buttonOutlined}
             >
               Sign up
             </Button>
