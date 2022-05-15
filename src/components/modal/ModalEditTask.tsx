@@ -10,6 +10,8 @@ import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { createTheme, ThemeProvider } from '@mui/material';
+import { tasksAPI } from '../../utils/tasksService';
+import { useParams } from 'react-router-dom';
 
 const defaultValues = {
   title: '',
@@ -65,11 +67,16 @@ const style = {
 };
 
 const ModalEditTask = () => {
-  const { setIsModalEditTask, setTask, setColumns } = boardsSlice.actions;
+  const { setIsModalEditTask } = boardsSlice.actions;
   const dispatch = useAppDispatch();
-  const { isModalEditTask, task, columns } = useAppSelector((state) => state.boardsReducer);
-  const [valueTitle, setValueTitle] = useState(task.title);
-  const [valueDescription, setValueDescription] = useState(task.description);
+  const { isModalEditTask, currentColumnId, currentTaskId } = useAppSelector(
+    (state) => state.boardsReducer
+  );
+  const { id } = useParams();
+  const { data: task } = tasksAPI.useGetTaskQuery([id as string, currentColumnId, currentTaskId]);
+  const [valueTitle, setValueTitle] = useState(task?.title || '');
+  const [valueDescription, setValueDescription] = useState(task?.description || '');
+  const [updateTask, {}] = tasksAPI.useUpdateTaskMutation();
 
   const {
     register,
@@ -83,20 +90,9 @@ const ModalEditTask = () => {
   };
 
   const onClickAddUserBtn = () => {
-    dispatch(
-      setColumns(
-        columns.map((col) => {
-          if (col.id === task.columnId) {
-            return {
-              ...col,
-              tasks: col.tasks.map((t) => (t.id === task.id ? { ...t, userId: task.userId } : t)),
-            };
-          } else {
-            return col;
-          }
-        })
-      )
-    );
+    if (task) {
+      updateTask([id as string, currentColumnId, { ...task, userId: task?.userId || '' }]);
+    }
   };
 
   useEffect(() => {
@@ -105,32 +101,19 @@ const ModalEditTask = () => {
     }
   }, [isSubmitSuccessful, reset]);
 
-  useEffect(() => {
-    setValueTitle(task.title);
-    setValueDescription(task.description);
-  }, [task.title, task.description]);
-
-  useEffect(() => {
-    dispatch(
-      setColumns(
-        columns.map((col) => {
-          if (col.id === task.columnId) {
-            return {
-              ...col,
-              tasks: col.tasks.map((t) =>
-                t.id === task.id ? { ...t, title: task.title, description: task.description } : t
-              ),
-            };
-          } else {
-            return col;
-          }
-        })
-      )
-    );
-  }, [task.title, task.description]);
+  // useEffect(() => {
+  //   setValueTitle(task?.title || '');
+  //   setValueDescription(task?.description || '');
+  // }, [task?.title, task?.description]);
 
   const onSubmit = () => {
-    dispatch(setTask({ ...task, title: valueTitle, description: valueDescription }));
+    if (task) {
+      updateTask([
+        id as string,
+        currentColumnId,
+        { ...task, title: valueTitle, description: valueDescription },
+      ]);
+    }
     handleClose();
   };
 

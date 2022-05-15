@@ -1,7 +1,6 @@
 import React, { useCallback, useState, useEffect, useRef } from 'react';
 import update from 'immutability-helper';
 import { Task } from './Task';
-import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { boardsSlice } from '../../reducers/BoardsSlice';
@@ -9,8 +8,9 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { useDrag, useDrop } from 'react-dnd';
 import type { Identifier } from 'dnd-core';
 import { ItemTypes } from './ItemTypes';
-import { ColumnDraftInterface, TaskDraftInterface, TaskInterface } from '../../utils/interfaces';
+import { ColumnDraftInterface } from '../../utils/interfaces';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import TextField from '@mui/material/TextField';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import { useParams } from 'react-router-dom';
 import { tasksAPI } from '../../utils/tasksService';
@@ -30,6 +30,7 @@ interface DragItem {
 const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
   const { reorderTaskList, setIsModalTask, setCurrentColumnId } = boardsSlice.actions;
   const dispatch = useAppDispatch();
+  const { isColumnEdit } = useAppSelector((state) => state.boardsReducer);
   const [shouldRender, setShouldRender] = useState(false);
   const { id } = useParams();
   const { data: tasks } = tasksAPI.useGetTasksQuery([id as string, column.id]);
@@ -133,7 +134,8 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
       {shouldRender && (
         <Box ref={ref} sx={{ ...style.container, opacity }} data-handler-id={handlerId}>
           <div style={style.header}>
-            <Typography variant="h5">{column.title}</Typography>
+            {!isColumnEdit && <Typography variant="h5">{column.title}</Typography>}
+            {isColumnEdit && <TextField id="standard-basic" label="Standard" variant="standard" />}
           </div>
           {tasks &&
             tasks.map((task, index) => (

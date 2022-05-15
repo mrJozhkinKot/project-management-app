@@ -45,7 +45,7 @@ export const Task: React.FC<TaskProps> = ({ task, index, moveTask, column }) => 
   };
 
   const onClickEditTask = () => {
-    dispatch(setTask({ ...task, boardId: '', columnId: column.id }));
+    dispatch(setTask(task));
     dispatch(setIsModalEditTask(true));
   };
 

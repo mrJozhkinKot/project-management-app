@@ -1,20 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import {
-  BoardInterface,
-  BoardDraftInterface,
-  ColumnInterface,
-  TaskDraftInterface,
-  TaskInterface,
-} from '../utils/interfaces';
+import { ColumnInterface, TaskDraftInterface, TaskInterface } from '../utils/interfaces';
 
 interface BoardsState {
-  boards: BoardDraftInterface[];
-  board: BoardInterface;
   columns: ColumnInterface[];
   column: ColumnInterface;
   task: TaskInterface;
   currentColumnId: string;
+  currentTaskId: string;
   isLoading: boolean;
+  isColumnEdit: boolean;
   isModalBoard: boolean;
   isModalTask: boolean;
   isModalEditTask: boolean;
@@ -22,12 +16,6 @@ interface BoardsState {
 }
 
 const initialState: BoardsState = {
-  boards: [],
-  board: {
-    id: '',
-    title: '',
-    columns: [],
-  },
   columns: [],
   column: {
     id: '',
@@ -46,7 +34,9 @@ const initialState: BoardsState = {
     columnId: '',
   },
   currentColumnId: '',
+  currentTaskId: '',
   isLoading: false,
+  isColumnEdit: false,
   isModalBoard: false,
   isModalTask: false,
   isModalColumn: false,

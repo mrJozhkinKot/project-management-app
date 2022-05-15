@@ -19,6 +19,16 @@ export const tasksAPI = createApi({
       }),
       providesTags: ['Tasks'],
     }),
+    getTask: build.query<TaskInterface | null, string[]>({
+      query: ([boardID, columnID, taskID]) => ({
+        url: `/boards/${boardID}/columns/${columnID}/tasks${taskID}`,
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+      providesTags: ['Tasks'],
+    }),
     createTasks: build.mutation<TaskInterface | null, [string, string, TaskCreateBodyInterface]>({
       query: ([boardID, columnID, task]) => ({
         url: `/boards/${boardID}/columns/${columnID}/tasks`,
@@ -40,6 +50,21 @@ export const tasksAPI = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
+      invalidatesTags: ['Tasks'],
+    }),
+    updateTask: build.mutation<null, [string, string, TaskInterface]>({
+      query([boardID, columnID, task]) {
+        const { id, ...body } = task;
+        return {
+          url: `/boards/${boardID}/columns/${columnID}/tasks/${id}`,
+          method: 'PUT',
+          body: body,
+          headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        };
+      },
       invalidatesTags: ['Tasks'],
     }),
   }),

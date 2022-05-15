@@ -1,6 +1,6 @@
 import Button from '@mui/material/Button';
 import React, { Fragment, useEffect } from 'react';
-import { useAppDispatch } from '../../hooks/redux';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import ColumnList from '../boards/ColumnList';
 import ModalColumn from '../modal/ModalColumn';
@@ -13,6 +13,7 @@ const Board: React.FC = () => {
   const { setIsModalColumn } = boardsSlice.actions;
   const dispatch = useAppDispatch();
   const { id } = useParams();
+  const { currentColumnId } = useAppSelector((state) => state.boardsReducer);
 
   useEffect(() => {
     if (id) {
@@ -42,8 +43,8 @@ const Board: React.FC = () => {
       </Button>
       <ColumnList />
       <ModalColumn />
-      <ModalTask />
-      <ModalEditTask />
+      {currentColumnId && <ModalTask />}
+      {currentColumnId && <ModalEditTask />}
     </Fragment>
   );
 };
