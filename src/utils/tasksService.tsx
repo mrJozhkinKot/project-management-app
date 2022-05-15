@@ -55,7 +55,8 @@ export const tasksAPI = createApi({
     }),
     updateTask: build.mutation<null, [string, string, TaskInterface]>({
       query([boardID, columnID, task]) {
-        const { id, ...body } = task;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { id, files, ...body } = task;
         return {
           url: `/boards/${boardID}/columns/${columnID}/tasks/${id}`,
           method: 'PUT',

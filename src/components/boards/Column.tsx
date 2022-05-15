@@ -28,7 +28,8 @@ interface DragItem {
 }
 
 const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
-  const { reorderTaskList, setIsModalTask, setCurrentColumnId } = boardsSlice.actions;
+  const { reorderTaskList, setIsModalTask, setCurrentColumnId, setIsColumnEdit } =
+    boardsSlice.actions;
   const dispatch = useAppDispatch();
   const { isColumnEdit } = useAppSelector((state) => state.boardsReducer);
   const [shouldRender, setShouldRender] = useState(false);
@@ -144,7 +145,12 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
     <>
       {shouldRender && (
         <Box ref={ref} sx={{ ...style.container, opacity }} data-handler-id={handlerId}>
-          <div style={style.header}>
+          <div
+            style={style.header}
+            onClick={() => {
+              console.log('edit column');
+            }}
+          >
             {!isColumnEdit && <Typography variant="h5">{column.title}</Typography>}
             {isColumnEdit && (
               <TextField

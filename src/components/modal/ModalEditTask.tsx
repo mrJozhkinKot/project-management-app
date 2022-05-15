@@ -69,11 +69,11 @@ const style = {
 const ModalEditTask = () => {
   const { setIsModalEditTask } = boardsSlice.actions;
   const dispatch = useAppDispatch();
-  const { isModalEditTask, currentColumnId, currentTaskId } = useAppSelector(
+  const { isModalEditTask, currentColumnId, currentBoardId, task } = useAppSelector(
     (state) => state.boardsReducer
   );
   const { id } = useParams();
-  const { data: task } = tasksAPI.useGetTaskQuery([id as string, currentColumnId, currentTaskId]);
+  //const { data: task } = tasksAPI.useGetTaskQuery([id as string, currentColumnId, currentTaskId]);
   const [valueTitle, setValueTitle] = useState(task?.title || '');
   const [valueDescription, setValueDescription] = useState(task?.description || '');
   const [updateTask, {}] = tasksAPI.useUpdateTaskMutation();
@@ -101,15 +101,15 @@ const ModalEditTask = () => {
     }
   }, [isSubmitSuccessful, reset]);
 
-  // useEffect(() => {
-  //   setValueTitle(task?.title || '');
-  //   setValueDescription(task?.description || '');
-  // }, [task?.title, task?.description]);
+  useEffect(() => {
+    setValueTitle(task?.title || '');
+    setValueDescription(task?.description || '');
+  }, [task?.title, task?.description]);
 
   const onSubmit = () => {
     if (task) {
       updateTask([
-        id as string,
+        currentBoardId,
         currentColumnId,
         { ...task, title: valueTitle, description: valueDescription },
       ]);

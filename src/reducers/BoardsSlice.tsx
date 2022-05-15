@@ -5,6 +5,7 @@ interface BoardsState {
   columns: ColumnInterface[];
   column: ColumnInterface;
   task: TaskInterface;
+  currentBoardId: string;
   currentColumnId: string;
   currentTaskId: string;
   isLoading: boolean;
@@ -29,10 +30,10 @@ const initialState: BoardsState = {
     description: '',
     order: 0,
     userId: '',
-    files: [],
     boardId: '',
     columnId: '',
   },
+  currentBoardId: '',
   currentColumnId: '',
   currentTaskId: '',
   isLoading: false,
@@ -47,8 +48,14 @@ export const boardsSlice = createSlice({
   name: 'boards',
   initialState,
   reducers: {
+    setCurrentBoardId(state, action: PayloadAction<string>) {
+      state.currentBoardId = action.payload;
+    },
     setCurrentColumnId(state, action: PayloadAction<string>) {
       state.currentColumnId = action.payload;
+    },
+    setCurrentTaskId(state, action: PayloadAction<string>) {
+      state.currentTaskId = action.payload;
     },
     setIsModalBoard(state, action: PayloadAction<boolean>) {
       state.isModalBoard = action.payload;
@@ -61,6 +68,9 @@ export const boardsSlice = createSlice({
     },
     setIsModalColumn(state, action: PayloadAction<boolean>) {
       state.isModalColumn = action.payload;
+    },
+    setIsColumnEdit(state, action: PayloadAction<boolean>) {
+      state.isColumnEdit = action.payload;
     },
     reorderTaskList(state, action: PayloadAction<TaskDraftInterface[]>) {
       state.columns.forEach((col) => {

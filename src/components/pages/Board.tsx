@@ -13,7 +13,7 @@ const Board: React.FC = () => {
   const { setIsModalColumn } = boardsSlice.actions;
   const dispatch = useAppDispatch();
   const { id } = useParams();
-  const { currentColumnId } = useAppSelector((state) => state.boardsReducer);
+  const { currentColumnId, currentTaskId } = useAppSelector((state) => state.boardsReducer);
 
   useEffect(() => {
     if (id) {
@@ -44,7 +44,7 @@ const Board: React.FC = () => {
       <ColumnList />
       <ModalColumn />
       {currentColumnId && <ModalTask />}
-      {currentColumnId && <ModalEditTask />}
+      {currentColumnId && currentTaskId && <ModalEditTask />}
     </Fragment>
   );
 };

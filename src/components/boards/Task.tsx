@@ -7,6 +7,7 @@ import { useAppDispatch } from '../../hooks/redux';
 import ClearIcon from '@mui/icons-material/Clear';
 import { ColumnDraftInterface, TaskInterface } from '../../utils/interfaces';
 import { tasksAPI } from '../../utils/tasksService';
+import { useParams } from 'react-router-dom';
 
 const style = {
   task: {
@@ -36,17 +37,22 @@ interface DragItem {
 }
 
 export const Task: React.FC<TaskProps> = ({ task, index, moveTask, column }) => {
-  const { setIsModalEditTask, setTask, setCurrentColumnId } = boardsSlice.actions;
+  const { setIsModalEditTask, setTask, setCurrentColumnId, setCurrentTaskId, setCurrentBoardId } =
+    boardsSlice.actions;
   const dispatch = useAppDispatch();
   const [deleteTask, {}] = tasksAPI.useDeleteTaskMutation();
+  const { id } = useParams();
 
-  const onClickDeleteBtn = (id: string) => {
-    deleteTask([id, column.id, task.id]);
+  const onClickDeleteBtn = () => {
+    deleteTask([id as string, column.id, task.id]);
   };
 
   const onClickEditTask = () => {
-    console.log('object');
+    console.log(column.id);
     dispatch(setCurrentColumnId(column.id));
+    console.log(task.id);
+    dispatch(setCurrentTaskId(task.id));
+    dispatch(setCurrentBoardId(id as string));
     dispatch(setTask(task));
     dispatch(setIsModalEditTask(true));
   };
@@ -113,7 +119,7 @@ export const Task: React.FC<TaskProps> = ({ task, index, moveTask, column }) => 
         style={style.icon}
         onClick={(e) => {
           e.stopPropagation();
-          onClickDeleteBtn(task.id);
+          onClickDeleteBtn();
         }}
       />
     </div>
