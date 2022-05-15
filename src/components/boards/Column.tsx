@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect, useRef } from 'react';
-import update from 'immutability-helper';
+//import update from 'immutability-helper';
 import { Task } from './Task';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -32,13 +32,16 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
   const dispatch = useAppDispatch();
   const { isColumnEdit } = useAppSelector((state) => state.boardsReducer);
   const [shouldRender, setShouldRender] = useState(false);
+  const [valueTitle, setValueTitle] = useState('');
   const { id } = useParams();
   const { data: tasks } = tasksAPI.useGetTasksQuery([id as string, column.id]);
   const [deleteColumn, {}] = columnsAPI.useDeleteColumnMutation();
+  const [updateColumn, {}] = columnsAPI.useUpdateColummnMutation();
 
   useEffect(() => setShouldRender(true), []);
   //const tasks = columns[index].tasks;
   const moveTask = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (dragIndex: number, hoverIndex: number) => {
       // dispatch(
       //   reorderTaskList(
@@ -51,6 +54,7 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
       //   )
       // );
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [tasks, reorderTaskList, dispatch]
   );
 
@@ -62,6 +66,13 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
   const onClickDeleteBtn = () => {
     deleteColumn([id as string, column.id]);
   };
+
+  useEffect(() => {
+    if (id) {
+      updateColumn([id, column]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [valueTitle]);
 
   const style = {
     container: {
@@ -135,12 +146,23 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
         <Box ref={ref} sx={{ ...style.container, opacity }} data-handler-id={handlerId}>
           <div style={style.header}>
             {!isColumnEdit && <Typography variant="h5">{column.title}</Typography>}
-            {isColumnEdit && <TextField id="standard-basic" label="Standard" variant="standard" />}
+            {isColumnEdit && (
+              <TextField
+                id="standard-basic"
+                label="Standard"
+                variant="standard"
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  setValueTitle(event.target.value);
+                }}
+              />
+            )}
           </div>
           {tasks &&
-            tasks.map((task, index) => (
-              <Task key={task.id} task={task} index={index} moveTask={moveTask} column={column} />
-            ))}
+            tasks
+              //.sort((a, b) => (a.order > b.order ? 1 : -1))
+              .map((task, index) => (
+                <Task key={task.id} task={task} index={index} moveTask={moveTask} column={column} />
+              ))}
           <div style={style.btnContainer}>
             <DeleteForeverIcon
               sx={{

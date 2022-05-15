@@ -14,6 +14,7 @@ const ColumnList = () => {
   const dispatch = useAppDispatch();
   const { id } = useParams();
   const { data: columns } = columnsAPI.useGetColumnsQuery(id as string);
+  const [updateColumn, {}] = columnsAPI.useUpdateColummnMutation();
 
   const style = {
     container: {
@@ -24,6 +25,7 @@ const ColumnList = () => {
 
   const moveColumn = useCallback(
     (dragIndex: number, hoverIndex: number) => {
+      //updateColumn([id, ])
       // dispatch(
       //   reorderColumnList(
       //     update(columns, {
@@ -43,11 +45,13 @@ const ColumnList = () => {
     <div>
       <Grid sx={style.container} container spacing={4} pl={4} pr={4}>
         {columns &&
-          columns.map((column, index) => (
-            <Grid key={String(column.id)} item xs={12} sm={6} md={4} lg={3}>
-              <Column column={column} index={index} moveColumn={moveColumn} />
-            </Grid>
-          ))}
+          columns
+            //.sort((a, b) => (a.order > b.order ? 1 : -1))
+            .map((column, index) => (
+              <Grid key={String(column.id)} item xs={12} sm={6} md={4} lg={3}>
+                <Column column={column} index={index} moveColumn={moveColumn} />
+              </Grid>
+            ))}
       </Grid>
     </div>
   );

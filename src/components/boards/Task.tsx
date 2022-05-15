@@ -36,7 +36,7 @@ interface DragItem {
 }
 
 export const Task: React.FC<TaskProps> = ({ task, index, moveTask, column }) => {
-  const { setIsModalEditTask, setTask } = boardsSlice.actions;
+  const { setIsModalEditTask, setTask, setCurrentColumnId } = boardsSlice.actions;
   const dispatch = useAppDispatch();
   const [deleteTask, {}] = tasksAPI.useDeleteTaskMutation();
 
@@ -45,6 +45,8 @@ export const Task: React.FC<TaskProps> = ({ task, index, moveTask, column }) => 
   };
 
   const onClickEditTask = () => {
+    console.log('object');
+    dispatch(setCurrentColumnId(column.id));
     dispatch(setTask(task));
     dispatch(setIsModalEditTask(true));
   };

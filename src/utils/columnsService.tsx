@@ -27,6 +27,7 @@ export const columnsAPI = createApi({
         headers: {
           Accept: 'application/json',
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
       }),
       invalidatesTags: ['Columns'],
@@ -40,6 +41,22 @@ export const columnsAPI = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
+      invalidatesTags: ['Columns'],
+    }),
+    updateColummn: build.mutation<ColumnDraftInterface | null, [string, ColumnDraftInterface]>({
+      query([boardID, column]) {
+        const { id, ...body } = column;
+        return {
+          url: `/boards/${boardID}/columns/${id}`,
+          method: 'PUT',
+          body: body,
+          headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        };
+      },
       invalidatesTags: ['Columns'],
     }),
   }),
