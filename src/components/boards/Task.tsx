@@ -48,9 +48,7 @@ export const Task: React.FC<TaskProps> = ({ task, index, moveTask, column }) => 
   };
 
   const onClickEditTask = () => {
-    console.log(column.id);
     dispatch(setCurrentColumnId(column.id));
-    console.log(task.id);
     dispatch(setCurrentTaskId(task.id));
     dispatch(setCurrentBoardId(id as string));
     dispatch(setTask(task));

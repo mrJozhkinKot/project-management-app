@@ -19,7 +19,7 @@ import {
 
 const remoteServerURL = 'https://serene-inlet-66010.herokuapp.com';
 const token =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyODMyMmM1OS1iNjNjLTRkM2UtODhmMC0zOTNkNzBmMzgyYjMiLCJsb2dpbiI6InVzZXIxMjMiLCJpYXQiOjE2NTI1NDQyMzN9.XM3L7iV1UxgDjnuM0vBCpBwO-BtWANB4M8RBo2O8bFo';
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJlYTY5ZDllYi1iYmUxLTQ5ZWYtOTYyOC01YTQ5NDE3NDQwNTQiLCJsb2dpbiI6InRlc3QyIiwiaWF0IjoxNjUyNTQzOTQ2fQ.WJtIq6IU1ha2nXVOVnusrbhRTUxvtjPjjd4l-mXx4dw';
 
 export async function getUsers(): Promise<UserInterface[] | null> {
   const response: Response = await fetch(`${remoteServerURL}/users`, {
@@ -297,7 +297,6 @@ export async function createColumn(
     console.log('Something has gone wrong on createColumn()');
     return Promise.reject(data);
   }
-  console.log(body);
   return Promise.resolve(data);
 }
 
