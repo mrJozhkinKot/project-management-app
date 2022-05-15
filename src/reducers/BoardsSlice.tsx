@@ -9,6 +9,7 @@ interface BoardsState {
   currentColumnId: string;
   currentTaskId: string;
   isLoading: boolean;
+  isConfirmBoardModal: boolean;
   isColumnEdit: boolean;
   isModalBoard: boolean;
   isModalTask: boolean;
@@ -37,6 +38,7 @@ const initialState: BoardsState = {
   currentColumnId: '',
   currentTaskId: '',
   isLoading: false,
+  isConfirmBoardModal: false,
   isColumnEdit: false,
   isModalBoard: false,
   isModalTask: false,
@@ -71,6 +73,9 @@ export const boardsSlice = createSlice({
     },
     setIsColumnEdit(state, action: PayloadAction<boolean>) {
       state.isColumnEdit = action.payload;
+    },
+    setIsConfirmBoardModal(state, action: PayloadAction<boolean>) {
+      state.isConfirmBoardModal = action.payload;
     },
     reorderTaskList(state, action: PayloadAction<TaskDraftInterface[]>) {
       state.columns.forEach((col) => {

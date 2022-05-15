@@ -28,8 +28,7 @@ interface DragItem {
 }
 
 const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
-  const { reorderTaskList, setIsModalTask, setCurrentColumnId, setIsColumnEdit } =
-    boardsSlice.actions;
+  const { reorderTaskList, setIsModalTask, setCurrentColumnId } = boardsSlice.actions;
   const dispatch = useAppDispatch();
   const { isColumnEdit } = useAppSelector((state) => state.boardsReducer);
   const [shouldRender, setShouldRender] = useState(false);

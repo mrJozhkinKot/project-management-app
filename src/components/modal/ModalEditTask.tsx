@@ -73,7 +73,6 @@ const ModalEditTask = () => {
     (state) => state.boardsReducer
   );
   const { id } = useParams();
-  //const { data: task } = tasksAPI.useGetTaskQuery([id as string, currentColumnId, currentTaskId]);
   const [valueTitle, setValueTitle] = useState(task?.title || '');
   const [valueDescription, setValueDescription] = useState(task?.description || '');
   const [updateTask, {}] = tasksAPI.useUpdateTaskMutation();
