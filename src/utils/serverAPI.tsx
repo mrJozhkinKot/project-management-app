@@ -16,7 +16,6 @@ import {
 } from './interfaces';
 
 // TODO: Add 401 error everywhere
-
 const remoteServerURL = 'https://serene-inlet-66010.herokuapp.com';
 const token =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJlYTY5ZDllYi1iYmUxLTQ5ZWYtOTYyOC01YTQ5NDE3NDQwNTQiLCJsb2dpbiI6InRlc3QyIiwiaWF0IjoxNjUyNTQzOTQ2fQ.WJtIq6IU1ha2nXVOVnusrbhRTUxvtjPjjd4l-mXx4dw';
