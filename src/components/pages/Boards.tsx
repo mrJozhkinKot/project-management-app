@@ -6,7 +6,7 @@ import ModalBoard from '../modal/ModalBoard';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import Spinner from '../spinner/Spinner';
-import ConfirmModal from '../modal/ConfirmModal';
+import ConfirmBoardModal from '../modal/ConfirmBoardModal';
 
 const Boards = () => {
   const { setIsModalBoard } = boardsSlice.actions;
@@ -35,7 +35,7 @@ const Boards = () => {
           </Button>
           <BoardList />
           <ModalBoard />
-          <ConfirmModal />
+          <ConfirmBoardModal />
         </Box>
       </Fragment>
     );

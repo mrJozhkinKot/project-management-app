@@ -41,13 +41,10 @@ const style = {
     display: 'block',
     padding: '0.3rem 1rem',
     marginTop: '1rem',
-    '&:hover': {
-      backgroundColor: '#E36655',
-    },
   },
 };
 
-const ModalBoard = () => {
+const ConfirmBoardModal = () => {
   const { setIsConfirmBoardModal } = boardsSlice.actions;
   const dispatch = useAppDispatch();
   const { isConfirmBoardModal, currentBoardId } = useAppSelector((state) => state.boardsReducer);
@@ -81,20 +78,20 @@ const ModalBoard = () => {
                 variant="contained"
                 size="small"
                 sx={style.btn}
-                onClick={onClickConfirmDeleteBtn}
+                onClick={() => {
+                  dispatch(setIsConfirmBoardModal(false));
+                }}
               >
-                YES
+                CANCEL
               </Button>
               <Button
                 type="submit"
                 variant="contained"
                 size="small"
-                sx={style.btn}
-                onClick={() => {
-                  dispatch(setIsConfirmBoardModal(false));
-                }}
+                sx={{ ...style.btn, backgroundColor: '#E36655' }}
+                onClick={onClickConfirmDeleteBtn}
               >
-                NO
+                DELETE
               </Button>
             </div>
           </Box>
@@ -104,4 +101,4 @@ const ModalBoard = () => {
   );
 };
 
-export default ModalBoard;
+export default ConfirmBoardModal;

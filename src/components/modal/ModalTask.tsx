@@ -143,7 +143,7 @@ const ModalTask = () => {
                 multiline
                 rows={4}
                 sx={style.input}
-                {...register('description')}
+                {...register('description', { required: 'Enter the description' })}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setValueDescription(event.target.value);
                 }}

@@ -1,5 +1,5 @@
 import type { Identifier, XYCoord } from 'dnd-core';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { ItemTypes } from './ItemTypes';
 import { boardsSlice } from '../../reducers/BoardsSlice';
@@ -41,11 +41,20 @@ export const Task: React.FC<TaskProps> = ({ task, index, moveTask, column }) => 
     boardsSlice.actions;
   const dispatch = useAppDispatch();
   const [deleteTask, {}] = tasksAPI.useDeleteTaskMutation();
+  const [updateTask, {}] = tasksAPI.useUpdateTaskMutation();
   const { id } = useParams();
+  const { data: tasks } = tasksAPI.useGetTasksQuery([id as string, column.id]);
 
   const onClickDeleteBtn = () => {
     deleteTask([id as string, column.id, task.id]);
   };
+
+  useEffect(() => {
+    if (id) {
+      updateTask([id, column.id, { ...task, order: index }]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tasks]);
 
   const onClickEditTask = () => {
     dispatch(setCurrentColumnId(column.id));

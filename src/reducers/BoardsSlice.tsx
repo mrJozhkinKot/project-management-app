@@ -1,15 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ColumnInterface, TaskDraftInterface, TaskInterface } from '../utils/interfaces';
+import { ColumnDraftInterface, ColumnInterface, TaskInterface } from '../utils/interfaces';
 
 interface BoardsState {
   columns: ColumnInterface[];
-  column: ColumnInterface;
+  columnEdited: ColumnDraftInterface;
   task: TaskInterface;
   currentBoardId: string;
   currentColumnId: string;
   currentTaskId: string;
   isLoading: boolean;
   isConfirmBoardModal: boolean;
+  isConfirmColumnModal: boolean;
   isColumnEdit: boolean;
   isModalBoard: boolean;
   isModalTask: boolean;
@@ -19,11 +20,10 @@ interface BoardsState {
 
 const initialState: BoardsState = {
   columns: [],
-  column: {
+  columnEdited: {
     id: '',
     title: '',
     order: 0,
-    tasks: [],
   },
   task: {
     id: '',
@@ -39,6 +39,7 @@ const initialState: BoardsState = {
   currentTaskId: '',
   isLoading: false,
   isConfirmBoardModal: false,
+  isConfirmColumnModal: false,
   isColumnEdit: false,
   isModalBoard: false,
   isModalTask: false,
@@ -77,21 +78,24 @@ export const boardsSlice = createSlice({
     setIsConfirmBoardModal(state, action: PayloadAction<boolean>) {
       state.isConfirmBoardModal = action.payload;
     },
-    reorderTaskList(state, action: PayloadAction<TaskDraftInterface[]>) {
-      state.columns.forEach((col) => {
-        if (col.id === state.column.id) {
-          col.tasks = action.payload;
-        }
-      });
+    setIsConfirmColumnModal(state, action: PayloadAction<boolean>) {
+      state.isConfirmColumnModal = action.payload;
     },
+    // reorderTaskList(state, action: PayloadAction<TaskDraftInterface[]>) {
+    //   state.columns.forEach((col) => {
+    //     if (col.id === state.column.id) {
+    //       col.tasks = action.payload;
+    //     }
+    //   });
+    // },
     reorderColumnList(state, action: PayloadAction<ColumnInterface[]>) {
       state.columns = action.payload;
     },
     setColumns(state, action: PayloadAction<ColumnInterface[]>) {
       state.columns = action.payload;
     },
-    setColumn(state, action: PayloadAction<ColumnInterface>) {
-      state.column = action.payload;
+    setColumnEdited(state, action: PayloadAction<ColumnDraftInterface>) {
+      state.columnEdited = action.payload;
     },
     setTask(state, action: PayloadAction<TaskInterface>) {
       state.task = action.payload;

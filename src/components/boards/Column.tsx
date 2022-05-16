@@ -10,11 +10,11 @@ import type { Identifier } from 'dnd-core';
 import { ItemTypes } from './ItemTypes';
 import { ColumnDraftInterface } from '../../utils/interfaces';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import TextField from '@mui/material/TextField';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import { useParams } from 'react-router-dom';
 import { tasksAPI } from '../../utils/tasksService';
 import { columnsAPI } from '../../utils/columnsService';
+import Input from '@mui/material/Input';
 
 interface ColumnProps {
   column: ColumnDraftInterface;
@@ -28,15 +28,22 @@ interface DragItem {
 }
 
 const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
-  const { reorderTaskList, setIsModalTask, setCurrentColumnId } = boardsSlice.actions;
+  const {
+    setIsModalTask,
+    setCurrentColumnId,
+    setCurrentBoardId,
+    setIsColumnEdit,
+    setColumnEdited,
+    setIsConfirmColumnModal,
+  } = boardsSlice.actions;
   const dispatch = useAppDispatch();
-  const { isColumnEdit } = useAppSelector((state) => state.boardsReducer);
+  const { isColumnEdit, columnEdited } = useAppSelector((state) => state.boardsReducer);
   const [shouldRender, setShouldRender] = useState(false);
   const [valueTitle, setValueTitle] = useState('');
   const { id } = useParams();
   const { data: tasks } = tasksAPI.useGetTasksQuery([id as string, column.id]);
-  const [deleteColumn, {}] = columnsAPI.useDeleteColumnMutation();
   const [updateColumn, {}] = columnsAPI.useUpdateColummnMutation();
+  const { data: columns } = columnsAPI.useGetColumnsQuery(id as string);
 
   useEffect(() => setShouldRender(true), []);
   //const tasks = columns[index].tasks;
@@ -55,7 +62,7 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
       // );
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [tasks, reorderTaskList, dispatch]
+    [tasks]
   );
 
   const onClickCreateBtn = () => {
@@ -64,8 +71,19 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
   };
 
   const onClickDeleteBtn = () => {
-    deleteColumn([id as string, column.id]);
+    if (id) {
+      dispatch(setCurrentBoardId(id));
+      dispatch(setCurrentColumnId(column.id));
+      dispatch(setIsConfirmColumnModal(true));
+    }
   };
+
+  useEffect(() => {
+    if (id) {
+      updateColumn([id, { ...column, order: index }]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [columns]);
 
   useEffect(() => {
     if (id) {
@@ -87,6 +105,8 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
     },
     header: {
       color: '#323535',
+      cursor: 'pointer',
+      marginBottom: '1rem',
     },
     btnContainer: {
       display: 'flex',
@@ -100,6 +120,9 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
       alignSelf: 'flex-end',
       padding: 0,
       cursor: 'pointer',
+    },
+    input: {
+      fontSize: 16,
     },
   };
 
@@ -147,24 +170,35 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
           <div
             style={style.header}
             onClick={() => {
-              console.log('edit column');
+              dispatch(setIsColumnEdit(true));
+              dispatch(setColumnEdited(column));
+              setValueTitle(column.title);
             }}
           >
-            {!isColumnEdit && <Typography variant="h5">{column.title}</Typography>}
-            {isColumnEdit && (
-              <TextField
+            {(!isColumnEdit || column.id !== columnEdited.id) && (
+              <Typography variant="h5">{column.title}</Typography>
+            )}
+            {isColumnEdit && column.id === columnEdited.id && (
+              <Input
                 id="standard-basic"
-                label="Standard"
-                variant="standard"
+                autoFocus={true}
+                value={valueTitle}
+                disableUnderline={true}
+                sx={style.input}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setValueTitle(event.target.value);
+                }}
+                onBlur={() => {
+                  dispatch(setIsColumnEdit(false));
+                  updateColumn([id as string, { ...columnEdited, title: valueTitle }]);
                 }}
               />
             )}
           </div>
           {tasks &&
             tasks
-              //.sort((a, b) => (a.order > b.order ? 1 : -1))
+              .map((task) => task)
+              .sort((a, b) => (a.order > b.order ? 1 : -1))
               .map((task, index) => (
                 <Task key={task.id} task={task} index={index} moveTask={moveTask} column={column} />
               ))}
