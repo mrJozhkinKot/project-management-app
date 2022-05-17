@@ -16,7 +16,6 @@ import {
 } from './interfaces';
 
 // TODO: Add 401 error everywhere
-
 const remoteServerURL = 'https://serene-inlet-66010.herokuapp.com';
 const token =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJlYTY5ZDllYi1iYmUxLTQ5ZWYtOTYyOC01YTQ5NDE3NDQwNTQiLCJsb2dpbiI6InRlc3QyIiwiaWF0IjoxNjUyNTQzOTQ2fQ.WJtIq6IU1ha2nXVOVnusrbhRTUxvtjPjjd4l-mXx4dw';
@@ -55,10 +54,6 @@ export async function getUser(userID: string): Promise<UserInterface | null> {
     return Promise.reject(data);
   }
   return Promise.resolve(data);
-
-  if (response.status === 400 || response.status === 404) {
-    console.log('Incorrect userID');
-  }
 }
 
 export async function deleteUser(userID: string): Promise<null> {
@@ -78,10 +73,6 @@ export async function deleteUser(userID: string): Promise<null> {
   }
   console.log('User deleted successfully!');
   return Promise.resolve(data);
-
-  if (response.status === 400 || response.status === 404) {
-    console.log('User was not found! : ', data);
-  }
 }
 
 export async function updateUser(
@@ -105,13 +96,6 @@ export async function updateUser(
     return Promise.reject(data);
   }
   return Promise.resolve(data);
-
-  if (response.status === 400 || response.status === 404) {
-    console.log('User was not found (invalid ID)!');
-  }
-  if (response.status === 500) {
-    console.log('User login already exists!');
-  }
 }
 
 export async function signUp(body: SignUpBodyInterface): Promise<UserInterface | null> {
@@ -186,10 +170,6 @@ export async function getBoard(boardID: string): Promise<BoardInterface | null> 
     return Promise.reject(data);
   }
   return Promise.resolve(data);
-
-  if (response.status === 400 || response.status === 404) {
-    console.log('Incorrect boardID');
-  }
 }
 
 export async function createBoard(title: string): Promise<BoardDraftInterface | null> {
@@ -229,10 +209,6 @@ export async function deleteBoard(boardID: string): Promise<InternalServerErrorI
   }
   console.log('Board deleted successfully!');
   return Promise.resolve(data);
-
-  if (response.status === 400 || response.status === 404) {
-    console.log('Board was not found! : ', data);
-  }
 }
 
 export async function updateBoard(
@@ -256,10 +232,6 @@ export async function updateBoard(
     return Promise.reject(data);
   }
   return Promise.resolve(data);
-
-  if (response.status === 400 || response.status === 404) {
-    console.log('Board was not found (invalid ID)!');
-  }
 }
 
 export async function getColumns(boardID: string): Promise<ColumnDraftInterface[] | null> {
@@ -278,11 +250,6 @@ export async function getColumns(boardID: string): Promise<ColumnDraftInterface[
     return Promise.reject(data);
   }
   return Promise.resolve(data);
-
-  if (response.status === 400 || response.status === 404) {
-    console.log('Invalid boardID!');
-    console.log('data:BadRequestInterface : ', data);
-  }
 }
 
 export async function getColumn(
@@ -307,10 +274,6 @@ export async function getColumn(
     return Promise.reject(data);
   }
   return Promise.resolve(data);
-
-  if (response.status === 400 || response.status === 404) {
-    console.log('Invalid boardID!');
-  }
 }
 
 export async function createColumn(
@@ -334,11 +297,6 @@ export async function createColumn(
     return Promise.reject(data);
   }
   return Promise.resolve(data);
-
-  if (response.status === 500) {
-    console.log('Column with this order № already exists!');
-    console.log('data:InternalServerErrorInterface : ', data);
-  }
 }
 
 export async function deleteColumn(boardID: string, columnID: string): Promise<null> {
@@ -362,10 +320,6 @@ export async function deleteColumn(boardID: string, columnID: string): Promise<n
   }
   console.log('Column deleted successfully!');
   return Promise.resolve(data);
-
-  if (response.status === 400 || response.status === 404) {
-    console.log('Column or Board id was not found! : ', data);
-  }
 }
 
 export async function updateColumn(
@@ -393,13 +347,6 @@ export async function updateColumn(
     return Promise.reject(data);
   }
   return Promise.resolve(data);
-
-  if (response.status === 400 || response.status === 404) {
-    console.log('Board or Column was not found (invalid ID)!');
-  }
-  if (response.status === 500) {
-    console.log('This order was already used before!');
-  }
 }
 
 export async function getTasks(boardID: string, columnID: string): Promise<TaskInterface[] | null> {
@@ -421,11 +368,6 @@ export async function getTasks(boardID: string, columnID: string): Promise<TaskI
     return Promise.reject(data);
   }
   return Promise.resolve(data);
-
-  if (response.status === 400 || response.status === 404) {
-    console.log('Invalid boardID or columnID!');
-    console.log('data:BadRequestInterface : ', data);
-  }
 }
 
 export async function getTask(
@@ -451,10 +393,6 @@ export async function getTask(
     return Promise.reject(data);
   }
   return Promise.resolve(data);
-
-  if (response.status === 400 || response.status === 404) {
-    console.log('Invalid boardID, columnID or taskID!');
-  }
 }
 
 export async function createTask(
@@ -482,13 +420,6 @@ export async function createTask(
     return Promise.reject(data);
   }
   return Promise.resolve(data);
-
-  if (response.status === 400 || response.status === 404) {
-    console.log('Invalid boardID, columnID or ITaskCreateBody!');
-  }
-  if (response.status === 500) {
-    console.log('Invalid userID!');
-  }
 }
 
 export async function deleteTask(boardID: string, columnID: string, taskID: string): Promise<null> {
@@ -511,10 +442,6 @@ export async function deleteTask(boardID: string, columnID: string, taskID: stri
   }
   console.log('Task deleted successfully!');
   return Promise.resolve(data);
-
-  if (response.status === 400 || response.status === 404) {
-    console.log('boardID, columnID or taskID was not found! : ', data);
-  }
 }
 
 export async function updateTask(
@@ -543,13 +470,6 @@ export async function updateTask(
     return Promise.reject(data);
   }
   return Promise.resolve(data);
-
-  if (response.status === 400 || response.status === 404) {
-    console.log('Invalid boardID, columnID or taskID!');
-  }
-  if (response.status === 500) {
-    console.log('There is wrong data in ITaskUpdateBody (probably userId/boardId/columnId)!');
-  }
 }
 
 // Not ready

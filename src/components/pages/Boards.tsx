@@ -4,11 +4,14 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import ModalBoard from '../modal/ModalBoard';
 import { boardsSlice } from '../../reducers/BoardsSlice';
-import { useAppDispatch } from '../../hooks/redux';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import Spinner from '../spinner/Spinner';
+import ConfirmBoardModal from '../modal/ConfirmBoardModal';
 
-const Boards: React.FC = () => {
+const Boards = () => {
   const { setIsModalBoard } = boardsSlice.actions;
   const dispatch = useAppDispatch();
+  const { isLoading } = useAppSelector((state) => state.boardsReducer);
 
   const onClickCreateBtn = () => {
     dispatch(setIsModalBoard(true));
@@ -20,17 +23,23 @@ const Boards: React.FC = () => {
       backgroundColor: '#1C9D86',
     },
   };
-  return (
-    <Fragment>
-      <Box>
-        <Button variant="contained" sx={style} onClick={onClickCreateBtn}>
-          Create Board
-        </Button>
-        <BoardList />
-        <ModalBoard />
-      </Box>
-    </Fragment>
-  );
+
+  if (isLoading) {
+    return <Spinner />;
+  } else {
+    return (
+      <Fragment>
+        <Box>
+          <Button variant="contained" sx={style} onClick={onClickCreateBtn}>
+            Create Board
+          </Button>
+          <BoardList />
+          <ModalBoard />
+          <ConfirmBoardModal />
+        </Box>
+      </Fragment>
+    );
+  }
 };
 
 export default Boards;
