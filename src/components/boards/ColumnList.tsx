@@ -6,13 +6,14 @@ import Column from './Column';
 //import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { columnsAPI } from '../../utils/columnsService';
 import { useParams } from 'react-router-dom';
+import Spinner from '../spinner/Spinner';
 
 const ColumnList = () => {
   //const { columns, columnsDraft } = useAppSelector((state) => state.boardsReducer);
   //const { reorderColumnList } = boardsSlice.actions;
   //const dispatch = useAppDispatch();
   const { id } = useParams();
-  const { data: columns } = columnsAPI.useGetColumnsQuery(id as string);
+  const { data: columns, isLoading } = columnsAPI.useGetColumnsQuery(id as string);
   //const [updateColumn, {}] = columnsAPI.useUpdateColummnMutation();
 
   const style = {
@@ -43,6 +44,7 @@ const ColumnList = () => {
 
   return (
     <div>
+      {isLoading && <Spinner />}
       <Grid sx={style.container} container spacing={4} pl={4} pr={4}>
         {columns &&
           columns

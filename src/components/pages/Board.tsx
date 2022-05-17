@@ -9,6 +9,7 @@ import ModalTask from '../modal/ModalTask';
 import { getColumnsThunk } from '../../reducers/ActionBoardsCreater';
 import { useParams } from 'react-router-dom';
 import ConfirmColumnModal from '../modal/ConfirmColumnModal';
+import ConfirmTaskModal from '../modal/ConfirmTaskModa';
 
 const Board: React.FC = () => {
   const { setIsModalColumn } = boardsSlice.actions;
@@ -47,6 +48,7 @@ const Board: React.FC = () => {
       {currentColumnId && <ModalTask />}
       {currentColumnId && currentTaskId && <ModalEditTask />}
       <ConfirmColumnModal />
+      <ConfirmTaskModal />
     </Fragment>
   );
 };

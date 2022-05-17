@@ -11,6 +11,7 @@ import { ItemTypes } from './ItemTypes';
 import { ColumnDraftInterface } from '../../utils/interfaces';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import AddBoxIcon from '@mui/icons-material/AddBox';
+import DoneIcon from '@mui/icons-material/Done';
 import { useParams } from 'react-router-dom';
 import { tasksAPI } from '../../utils/tasksService';
 import { columnsAPI } from '../../utils/columnsService';
@@ -121,8 +122,15 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
       padding: 0,
       cursor: 'pointer',
     },
+    inputContainer: {
+      display: 'flex',
+      justifyContent: 'space-between',
+    },
     input: {
       fontSize: 16,
+    },
+    inputIcon: {
+      color: '#1C9D86',
     },
   };
 
@@ -179,20 +187,30 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
               <Typography variant="h5">{column.title}</Typography>
             )}
             {isColumnEdit && column.id === columnEdited.id && (
-              <Input
-                id="standard-basic"
-                autoFocus={true}
-                value={valueTitle}
-                disableUnderline={true}
-                sx={style.input}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  setValueTitle(event.target.value);
-                }}
-                onBlur={() => {
-                  dispatch(setIsColumnEdit(false));
-                  updateColumn([id as string, { ...columnEdited, title: valueTitle }]);
-                }}
-              />
+              <div style={style.inputContainer}>
+                <Input
+                  id="standard-basic"
+                  autoFocus={true}
+                  value={valueTitle}
+                  disableUnderline={true}
+                  sx={style.input}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    setValueTitle(event.target.value);
+                  }}
+                  onBlur={() => {
+                    dispatch(setIsColumnEdit(false));
+                    updateColumn([id as string, { ...columnEdited, title: valueTitle }]);
+                  }}
+                />
+                <DoneIcon
+                  sx={style.inputIcon}
+                  onClick={(event: React.MouseEvent<SVGSVGElement>) => {
+                    event.stopPropagation();
+                    dispatch(setIsColumnEdit(false));
+                    updateColumn([id as string, { ...columnEdited, title: valueTitle }]);
+                  }}
+                />
+              </div>
             )}
           </div>
           {tasks &&
