@@ -1,5 +1,5 @@
 import Button from '@mui/material/Button';
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import ColumnList from '../boards/ColumnList';
@@ -12,6 +12,7 @@ import ConfirmTaskModal from '../modal/ConfirmTaskModa';
 const Board: React.FC = () => {
   const { setIsModalColumn } = boardsSlice.actions;
   const dispatch = useAppDispatch();
+
   const { currentColumnId, currentTaskId } = useAppSelector((state) => state.boardsReducer);
 
   const style = {
