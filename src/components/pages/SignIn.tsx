@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { SignInBodyInterface } from '../../utils/interfaces';
 import { signIn } from '../../utils/serverAPI';
+import { useCookies } from 'react-cookie';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -38,6 +39,7 @@ const style = {
 };
 
 function SignIn(): React.ReactElement {
+  const [cookies, setCookie] = useCookies(['token']);
   const navigate = useNavigate();
 
   const {
@@ -49,12 +51,14 @@ function SignIn(): React.ReactElement {
 
   function onSignIn(data: SignInBodyInterface) {
     signIn(data)
-      .then((res) => {
+      .then(async (res) => {
         if (res) {
           console.log('signIn successful!: ', res);
+          setCookie('token', res.token);
           navigate('/boards');
         }
       })
+      .then(() => console.log('cookies: ', cookies))
       .catch((error) => {
         console.log('signIn failed!: ', error);
         if (error.statusCode === 400) {
