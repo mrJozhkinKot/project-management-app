@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import {
@@ -16,16 +16,17 @@ import {
   Select,
   SelectChangeEvent,
 } from '@mui/material';
+import '../../i18n';
+import { useTranslation } from 'react-i18next';
 
 function Header(): React.ReactElement {
+  const { t, i18n } = useTranslation();
   const isAuth = false;
-  const [lang, setLang] = useState<string>('EN');
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
-    console.log('handleOpenNavMenu event.currentTarget: ', event.currentTarget);
   };
 
   const handleCloseNavMenu = () => {
@@ -33,7 +34,7 @@ function Header(): React.ReactElement {
   };
 
   const onChange = (event: SelectChangeEvent) => {
-    setLang(event.target.value);
+    i18n.changeLanguage(event.target.value);
   };
 
   const style = {
@@ -90,11 +91,11 @@ function Header(): React.ReactElement {
                     labelId="select-label"
                     id="select"
                     sx={{ border: '1px solid #000', height: '2rem', ml: '15px' }}
-                    value={lang}
+                    value={i18n.language}
                     onChange={onChange}
                   >
-                    <MenuItem value="EN">EN</MenuItem>
-                    <MenuItem value="RU">RU</MenuItem>
+                    <MenuItem value="en">EN</MenuItem>
+                    <MenuItem value="ru">RU</MenuItem>
                   </Select>
                 </FormControl>
                 <MenuItem onClick={handleCloseNavMenu}>
@@ -118,11 +119,11 @@ function Header(): React.ReactElement {
                     alignItems: 'center',
                     mr: '5px',
                   }}
-                  value={lang}
+                  value={i18n.language}
                   onChange={onChange}
                 >
-                  <MenuItem value="EN">EN</MenuItem>
-                  <MenuItem value="RU">RU</MenuItem>
+                  <MenuItem value="en">EN</MenuItem>
+                  <MenuItem value="ru">RU</MenuItem>
                 </Select>
               </FormControl>
               <Button
@@ -132,7 +133,7 @@ function Header(): React.ReactElement {
                 }}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                Edit profile
+                {t('edit_profile')}
               </Button>
               <Button
                 onClick={() => {
@@ -141,7 +142,7 @@ function Header(): React.ReactElement {
                 }}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                Create new board
+                {t('create_new_board')}
               </Button>
             </Box>
             <Button
@@ -150,7 +151,7 @@ function Header(): React.ReactElement {
               size="small"
               style={style.buttonContained}
             >
-              Sign Out
+              {t('sign_out')}
             </Button>
           </Toolbar>
         ) : (
@@ -191,11 +192,11 @@ function Header(): React.ReactElement {
                     labelId="select-label"
                     id="select"
                     sx={{ border: '1px solid #fff', height: '2rem' }}
-                    value={lang}
+                    value={i18n.language}
                     onChange={onChange}
                   >
-                    <MenuItem value="EN">EN</MenuItem>
-                    <MenuItem value="RU">RU</MenuItem>
+                    <MenuItem value="en">EN</MenuItem>
+                    <MenuItem value="ru">RU</MenuItem>
                   </Select>
                 </FormControl>
               </Menu>
@@ -207,15 +208,14 @@ function Header(): React.ReactElement {
                   labelId="select-label"
                   id="select"
                   sx={{ color: '#fff', border: '1px solid #fff', height: '2rem' }}
-                  value={lang}
+                  value={i18n.language}
                   onChange={onChange}
                 >
-                  <MenuItem value="EN">EN</MenuItem>
-                  <MenuItem value="RU">RU</MenuItem>
+                  <MenuItem value="en">EN</MenuItem>
+                  <MenuItem value="ru">RU</MenuItem>
                 </Select>
               </FormControl>
             </Box>
-
             <Button
               onClick={() => navigate('/signin')}
               variant="contained"
@@ -223,7 +223,7 @@ function Header(): React.ReactElement {
               style={style.buttonContained}
               sx={{ mr: '10px' }}
             >
-              Sign in
+              {t('sign_in')}
             </Button>
             <Button
               onClick={() => navigate('/signup')}
@@ -231,7 +231,7 @@ function Header(): React.ReactElement {
               size="small"
               style={style.buttonOutlined}
             >
-              Sign up
+              {t('sign_up')}
             </Button>
           </Toolbar>
         )}

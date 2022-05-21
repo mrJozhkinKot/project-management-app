@@ -5,10 +5,12 @@ import Button from '@mui/material/Button';
 import ModalBoard from '../modal/ModalBoard';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useAppDispatch } from '../../hooks/redux';
+import { useTranslation } from 'react-i18next';
 
 const Boards: React.FC = () => {
   const { setIsModalBoard } = boardsSlice.actions;
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   const onClickCreateBtn = () => {
     dispatch(setIsModalBoard(true));
@@ -24,7 +26,7 @@ const Boards: React.FC = () => {
     <Fragment>
       <Box>
         <Button variant="contained" sx={style} onClick={onClickCreateBtn}>
-          Create Board
+          {t('create_board')}
         </Button>
         <BoardList />
         <ModalBoard />
