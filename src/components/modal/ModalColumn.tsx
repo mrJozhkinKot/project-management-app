@@ -9,11 +9,8 @@ import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { createTheme, ThemeProvider } from '@mui/material';
-<<<<<<< HEAD
-import { useTranslation } from 'react-i18next';
-=======
-import { boardsAPI } from '../../utils/boardService';
->>>>>>> develop
+import { useParams } from 'react-router-dom';
+import { columnsAPI } from '../../utils/columnsService';
 
 const defaultValues = {
   title: '',
@@ -54,17 +51,15 @@ const style = {
   },
 };
 
-const ModalBoard = () => {
-  const [valueName, setValueName] = useState('');
-  const { setIsModalBoard } = boardsSlice.actions;
+const ModalColumn = () => {
+  const [valueText, setValueText] = useState('');
+  const { setIsModalColumn } = boardsSlice.actions;
   const dispatch = useAppDispatch();
-  const { isModalBoard } = useAppSelector((state) => state.boardsReducer);
-<<<<<<< HEAD
-  const { t } = useTranslation();
+  const { isModalColumn } = useAppSelector((state) => state.boardsReducer);
+  const { id } = useParams();
+  const [createColumn, {}] = columnsAPI.useCreateColumnMutation();
+  const { data: columns } = columnsAPI.useGetColumnsQuery(id as string);
 
-=======
-  const [createBoard, {}] = boardsAPI.useCreateBoardMutation();
->>>>>>> develop
   const {
     register,
     handleSubmit,
@@ -73,7 +68,7 @@ const ModalBoard = () => {
   } = useForm({ defaultValues });
 
   const handleClose = () => {
-    dispatch(setIsModalBoard(false));
+    dispatch(setIsModalColumn(false));
   };
 
   useEffect(() => {
@@ -82,65 +77,36 @@ const ModalBoard = () => {
     }
   }, [isSubmitSuccessful, reset]);
 
-  const onSubmit = async () => {
-    dispatch(setIsModalBoard(false));
-    createBoard({ title: valueName });
+  const onSubmit = () => {
+    createColumn([id as string, { title: valueText, order: columns?.length || 0 }]);
+    handleClose();
   };
 
   return (
     <div>
       <ThemeProvider theme={theme}>
         <Modal
-          open={isModalBoard}
+          open={isModalColumn}
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
           <Box sx={style.box}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              {t('create_a_new_board')}:
+              Create a new column:
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)}>
               <TextField
-                id="name_input"
-<<<<<<< HEAD
-                label={t('enter_name')}
-                {...register('name', { required: t('enter_the_name') })}
-                multiline
-                rows={1}
-=======
-                label="Enter name"
-                {...register('title', { required: 'Enter the name' })}
->>>>>>> develop
-                sx={style.input}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  setValueName(event.target.value);
-                }}
-              />
-<<<<<<< HEAD
-              <TextField
                 id="descrtption_input"
-                label={t('enter_description')}
-                multiline
-                rows={4}
+                label="new column"
                 sx={style.input}
-                {...register('description', { required: t('enter_the_description') })}
+                {...register('title', { required: 'Enter the description' })}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  setValueDescription(event.target.value);
+                  setValueText(event.target.value);
                 }}
               />
-              <Button
-                type="submit"
-                variant="contained"
-                size="small"
-                style={style.btn}
-                disabled={!isDirty}
-              >
-                {t('create')}
-=======
               <Button type="submit" variant="contained" size="small" style={style.btn}>
                 CREATE
->>>>>>> develop
               </Button>
             </form>
           </Box>
@@ -150,4 +116,4 @@ const ModalBoard = () => {
   );
 };
 
-export default ModalBoard;
+export default ModalColumn;

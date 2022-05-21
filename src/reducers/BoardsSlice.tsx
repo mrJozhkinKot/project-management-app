@@ -1,36 +1,109 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-interface Board {
-  id?: string;
-  name?: string;
-  description?: string;
-}
+import { ColumnDraftInterface, ColumnInterface, TaskInterface } from '../utils/interfaces';
 
 interface BoardsState {
-  boards: Board[];
-  board: Board;
+  columns: ColumnInterface[];
+  columnEdited: ColumnDraftInterface;
+  task: TaskInterface;
+  currentBoardId: string;
+  currentColumnId: string;
+  currentTaskId: string;
+  isLoading: boolean;
+  isConfirmBoardModal: boolean;
+  isConfirmColumnModal: boolean;
+  isConfirmTaskModal: boolean;
+  isColumnEdit: boolean;
   isModalBoard: boolean;
+  isModalTask: boolean;
+  isModalEditTask: boolean;
+  isModalColumn: boolean;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const initialState: BoardsState = {
-  boards: [],
-  board: {},
+  columns: [],
+  columnEdited: {
+    id: '',
+    title: '',
+    order: 0,
+  },
+  task: {
+    id: '',
+    title: '',
+    description: '',
+    order: 0,
+    userId: '',
+    boardId: '',
+    columnId: '',
+  },
+  currentBoardId: '',
+  currentColumnId: '',
+  currentTaskId: '',
+  isLoading: false,
+  isConfirmBoardModal: false,
+  isConfirmColumnModal: false,
+  isConfirmTaskModal: false,
+  isColumnEdit: false,
   isModalBoard: false,
+  isModalTask: false,
+  isModalColumn: false,
+  isModalEditTask: false,
 };
 
 export const boardsSlice = createSlice({
   name: 'boards',
   initialState,
   reducers: {
-    deleteBoard(state, action: PayloadAction<string | undefined>) {
-      state.boards = state.boards.filter((board) => board.id !== action.payload);
+    setCurrentBoardId(state, action: PayloadAction<string>) {
+      state.currentBoardId = action.payload;
+    },
+    setCurrentColumnId(state, action: PayloadAction<string>) {
+      state.currentColumnId = action.payload;
+    },
+    setCurrentTaskId(state, action: PayloadAction<string>) {
+      state.currentTaskId = action.payload;
     },
     setIsModalBoard(state, action: PayloadAction<boolean>) {
       state.isModalBoard = action.payload;
     },
-    createNewBoard(state, action: PayloadAction<Board[]>) {
-      state.boards = [...state.boards, ...action.payload];
+    setIsModalTask(state, action: PayloadAction<boolean>) {
+      state.isModalTask = action.payload;
+    },
+    setIsModalEditTask(state, action: PayloadAction<boolean>) {
+      state.isModalEditTask = action.payload;
+    },
+    setIsModalColumn(state, action: PayloadAction<boolean>) {
+      state.isModalColumn = action.payload;
+    },
+    setIsColumnEdit(state, action: PayloadAction<boolean>) {
+      state.isColumnEdit = action.payload;
+    },
+    setIsConfirmBoardModal(state, action: PayloadAction<boolean>) {
+      state.isConfirmBoardModal = action.payload;
+    },
+    setIsConfirmColumnModal(state, action: PayloadAction<boolean>) {
+      state.isConfirmColumnModal = action.payload;
+    },
+    setIsConfirmTaskModal(state, action: PayloadAction<boolean>) {
+      state.isConfirmTaskModal = action.payload;
+    },
+    // reorderTaskList(state, action: PayloadAction<TaskDraftInterface[]>) {
+    //   state.columns.forEach((col) => {
+    //     if (col.id === state.column.id) {
+    //       col.tasks = action.payload;
+    //     }
+    //   });
+    // },
+    reorderColumnList(state, action: PayloadAction<ColumnInterface[]>) {
+      state.columns = action.payload;
+    },
+    setColumns(state, action: PayloadAction<ColumnInterface[]>) {
+      state.columns = action.payload;
+    },
+    setColumnEdited(state, action: PayloadAction<ColumnDraftInterface>) {
+      state.columnEdited = action.payload;
+    },
+    setTask(state, action: PayloadAction<TaskInterface>) {
+      state.task = action.payload;
     },
   },
 });

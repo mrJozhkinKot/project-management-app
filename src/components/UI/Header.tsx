@@ -41,13 +41,38 @@ function Header(): React.ReactElement {
     container: {
       backgroundColor: '#323535',
     },
+    btn: {
+      color: '#fff',
+      display: 'block',
+      '&:hover': {
+        color: '#20B298',
+      },
+    },
     buttonContained: {
       backgroundColor: '#20B298',
       color: '#fff',
+      '&:hover': {
+        backgroundColor: '#1C9D86',
+      },
     },
     buttonOutlined: {
       color: '#20B298',
       border: '1px solid #20B298',
+      marginLeft: '10px',
+      '&:hover': {
+        backgroundColor: '#535756',
+        border: '1px solid #535756',
+      },
+    },
+    select: {
+      color: '#fff',
+      border: '1px solid #fff',
+      height: '2rem',
+      alignItems: 'center',
+      marginRigth: '5px',
+      '&:hover': {
+        backgroundColor: '#535756',
+      },
     },
   };
 
@@ -68,7 +93,7 @@ function Header(): React.ReactElement {
                 <MenuIcon />
               </IconButton>
               <Menu
-                id="menu-appbar"
+                id="menu-appbar-auth"
                 anchorEl={anchorElNav}
                 anchorOrigin={{
                   vertical: 'bottom',
@@ -86,10 +111,10 @@ function Header(): React.ReactElement {
                 }}
               >
                 <FormControl>
-                  <InputLabel id="select-label"></InputLabel>
+                  <InputLabel id="select-label-hamburger-auth"></InputLabel>
                   <Select
-                    labelId="select-label"
-                    id="select"
+                    labelId="select-label-hamburger-auth"
+                    id="select-hamburger-auth"
                     sx={{ border: '1px solid #000', height: '2rem', ml: '15px' }}
                     value={i18n.language}
                     onChange={onChange}
@@ -108,17 +133,11 @@ function Header(): React.ReactElement {
             </Box>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
               <FormControl>
-                <InputLabel id="select-label"></InputLabel>
+                <InputLabel id="select-label-auth"></InputLabel>
                 <Select
-                  labelId="select-label"
-                  id="select"
-                  sx={{
-                    color: '#fff',
-                    border: '1px solid #fff',
-                    height: '2rem',
-                    alignItems: 'center',
-                    mr: '5px',
-                  }}
+                  labelId="select-label-auth"
+                  id="select-auth"
+                  sx={style.select}
                   value={i18n.language}
                   onChange={onChange}
                 >
@@ -131,7 +150,7 @@ function Header(): React.ReactElement {
                   handleCloseNavMenu();
                   navigate('/editprofile');
                 }}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={style.btn}
               >
                 {t('edit_profile')}
               </Button>
@@ -140,7 +159,7 @@ function Header(): React.ReactElement {
                   handleCloseNavMenu();
                   navigate('/modalboard');
                 }}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={style.btn}
               >
                 {t('create_new_board')}
               </Button>
@@ -149,7 +168,7 @@ function Header(): React.ReactElement {
               onClick={() => navigate('/welcome')}
               variant="contained"
               size="small"
-              style={style.buttonContained}
+              sx={style.buttonContained}
             >
               {t('sign_out')}
             </Button>
@@ -187,10 +206,10 @@ function Header(): React.ReactElement {
                 }}
               >
                 <FormControl>
-                  <InputLabel id="select-label"></InputLabel>
+                  <InputLabel id="select-label-hamburger"></InputLabel>
                   <Select
-                    labelId="select-label"
-                    id="select"
+                    labelId="select-label-hamburger"
+                    id="select-hamburger"
                     sx={{ border: '1px solid #fff', height: '2rem' }}
                     value={i18n.language}
                     onChange={onChange}
@@ -220,8 +239,7 @@ function Header(): React.ReactElement {
               onClick={() => navigate('/signin')}
               variant="contained"
               size="small"
-              style={style.buttonContained}
-              sx={{ mr: '10px' }}
+              sx={style.buttonContained}
             >
               {t('sign_in')}
             </Button>
@@ -229,7 +247,7 @@ function Header(): React.ReactElement {
               onClick={() => navigate('/signup')}
               variant="outlined"
               size="small"
-              style={style.buttonOutlined}
+              sx={style.buttonOutlined}
             >
               {t('sign_up')}
             </Button>
