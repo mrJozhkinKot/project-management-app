@@ -1,14 +1,19 @@
-import React, { Fragment } from 'react';
-import BoardList from '../boards/BoardList';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import ModalBoard from '../modal/ModalBoard';
+import React, { Fragment } from 'react';
+import { Navigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
-import { useAppDispatch } from '../../hooks/redux';
+import BoardList from '../boards/BoardList';
+import ConfirmBoardModal from '../modal/ConfirmBoardModal';
+import ModalBoard from '../modal/ModalBoard';
+import Spinner from '../spinner/Spinner';
 
-const Boards: React.FC = () => {
+const Boards = () => {
   const { setIsModalBoard } = boardsSlice.actions;
   const dispatch = useAppDispatch();
+  const { isLoading } = useAppSelector((state) => state.boardsReducer);
+  const { isAuth } = useAppSelector((state) => state.globalReducer);
 
   const onClickCreateBtn = () => {
     dispatch(setIsModalBoard(true));
@@ -20,6 +25,15 @@ const Boards: React.FC = () => {
       backgroundColor: '#1C9D86',
     },
   };
+
+  if (!isAuth) {
+    return <Navigate to="/signin" replace></Navigate>;
+  }
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
   return (
     <Fragment>
       <Box>
@@ -28,6 +42,7 @@ const Boards: React.FC = () => {
         </Button>
         <BoardList />
         <ModalBoard />
+        <ConfirmBoardModal />
       </Box>
     </Fragment>
   );

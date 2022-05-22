@@ -1,11 +1,11 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import './index.css';
-import App from './App';
-import { Provider } from 'react-redux';
-import { setupStore } from './store';
 import { CookiesProvider } from 'react-cookie';
+import ReactDOM from 'react-dom/client';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import App from './App';
+import './index.css';
+import { setupStore } from './store';
 
 const store = setupStore();
 

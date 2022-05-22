@@ -22,7 +22,7 @@
   },
   "include": [
     "src",
-    "custom.d.ts"
+    "custom.d.ts",
   ],
   "files": ["custom.d.ts"]
 }

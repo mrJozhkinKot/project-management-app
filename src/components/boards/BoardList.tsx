@@ -1,11 +1,11 @@
-import React from 'react';
-import { useAppSelector } from '../../hooks/redux';
-import Board from './BoardItem';
 import Grid from '@mui/material/Grid';
+import React from 'react';
+import { boardsAPI } from '../../utils/boardService';
+import Spinner from '../spinner/Spinner';
+import Board from './BoardItem';
 
 const BoardList = () => {
-  const { boards } = useAppSelector((state) => state.boardsReducer);
-
+  const { data: boards, error, isLoading } = boardsAPI.useGetBoardsQuery(10);
   const style = {
     container: {
       padding: '1rem',
@@ -16,11 +16,14 @@ const BoardList = () => {
   return (
     <div>
       <Grid sx={style.container} container spacing={4} pl={4} pr={4}>
-        {boards.map((board) => (
-          <Grid key={String(board.id)} item xs={12} sm={6} md={4} lg={3}>
-            <Board board={board} />
-          </Grid>
-        ))}
+        {isLoading && <Spinner />}
+        {error && <p style={{ margin: 'auto' }}>Something get wrong</p>}
+        {boards &&
+          boards.map((board) => (
+            <Grid key={board.id} item xs={12} sm={6} md={4} lg={3}>
+              <Board board={board} />
+            </Grid>
+          ))}
       </Grid>
     </div>
   );
