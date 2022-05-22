@@ -8,10 +8,12 @@ import ModalEditTask from '../modal/ModalEditTask';
 import ModalTask from '../modal/ModalTask';
 import ConfirmColumnModal from '../modal/ConfirmColumnModal';
 import ConfirmTaskModal from '../modal/ConfirmTaskModa';
+import { useTranslation } from 'react-i18next';
 
 const Board: React.FC = () => {
   const { setIsModalColumn } = boardsSlice.actions;
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   const { currentColumnId, currentTaskId } = useAppSelector((state) => state.boardsReducer);
 
@@ -32,7 +34,7 @@ const Board: React.FC = () => {
           dispatch(setIsModalColumn(true));
         }}
       >
-        Create Column
+        {t('create_column')}
       </Button>
       <ColumnList />
       <ModalColumn />

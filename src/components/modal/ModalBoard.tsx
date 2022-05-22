@@ -9,11 +9,8 @@ import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { createTheme, ThemeProvider } from '@mui/material';
-<<<<<<< HEAD
 import { useTranslation } from 'react-i18next';
-=======
 import { boardsAPI } from '../../utils/boardService';
->>>>>>> develop
 
 const defaultValues = {
   title: '',
@@ -59,12 +56,9 @@ const ModalBoard = () => {
   const { setIsModalBoard } = boardsSlice.actions;
   const dispatch = useAppDispatch();
   const { isModalBoard } = useAppSelector((state) => state.boardsReducer);
-<<<<<<< HEAD
   const { t } = useTranslation();
 
-=======
   const [createBoard, {}] = boardsAPI.useCreateBoardMutation();
->>>>>>> develop
   const {
     register,
     handleSubmit,
@@ -103,44 +97,15 @@ const ModalBoard = () => {
             <form onSubmit={handleSubmit(onSubmit)}>
               <TextField
                 id="name_input"
-<<<<<<< HEAD
                 label={t('enter_name')}
-                {...register('name', { required: t('enter_the_name') })}
-                multiline
-                rows={1}
-=======
-                label="Enter name"
-                {...register('title', { required: 'Enter the name' })}
->>>>>>> develop
+                {...register('title', { required: t('enter_the_name') })}
                 sx={style.input}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setValueName(event.target.value);
                 }}
               />
-<<<<<<< HEAD
-              <TextField
-                id="descrtption_input"
-                label={t('enter_description')}
-                multiline
-                rows={4}
-                sx={style.input}
-                {...register('description', { required: t('enter_the_description') })}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  setValueDescription(event.target.value);
-                }}
-              />
-              <Button
-                type="submit"
-                variant="contained"
-                size="small"
-                style={style.btn}
-                disabled={!isDirty}
-              >
-                {t('create')}
-=======
               <Button type="submit" variant="contained" size="small" style={style.btn}>
-                CREATE
->>>>>>> develop
+                {t('create')}
               </Button>
             </form>
           </Box>

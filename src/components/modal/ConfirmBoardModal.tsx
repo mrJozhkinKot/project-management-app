@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { boardsAPI } from '../../utils/boardService';
+import { useTranslation } from 'react-i18next';
 
 const theme = createTheme({
   palette: {
@@ -49,6 +50,7 @@ const ConfirmBoardModal = () => {
   const dispatch = useAppDispatch();
   const { isConfirmBoardModal, currentBoardId } = useAppSelector((state) => state.boardsReducer);
   const [deleteBoard, {}] = boardsAPI.useDeleteBoardMutation();
+  const { t } = useTranslation();
 
   const handleClose = () => {
     dispatch(setIsConfirmBoardModal(false));
@@ -70,7 +72,7 @@ const ConfirmBoardModal = () => {
         >
           <Box sx={style.box}>
             <Typography id="modal-modal-title" variant="h6" component="h2" sx={style.message}>
-              Delete this board with all columns?
+              {t('delete_this_board_with_all_columns')}?
             </Typography>
             <div style={style.btnContainer}>
               <Button
@@ -82,7 +84,7 @@ const ConfirmBoardModal = () => {
                   dispatch(setIsConfirmBoardModal(false));
                 }}
               >
-                CANCEL
+                {t('cancel')}
               </Button>
               <Button
                 type="submit"
@@ -91,7 +93,7 @@ const ConfirmBoardModal = () => {
                 sx={{ ...style.btn, backgroundColor: '#E36655' }}
                 onClick={onClickConfirmDeleteBtn}
               >
-                DELETE
+                {t('delete')}
               </Button>
             </div>
           </Box>

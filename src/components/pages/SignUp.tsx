@@ -132,7 +132,7 @@ function SignUp(): React.ReactElement {
           sx={style.input}
           fullWidth
           {...register('password', {
-            required: 'Required field',
+            required: t('required_field'),
             pattern: {
               value: new RegExp(/(?=.*[0-9])(?=.*[a-z])[0-9!@#$%^&*a-zA-Z]{6,}/g),
               message: t('6_symbols'),
