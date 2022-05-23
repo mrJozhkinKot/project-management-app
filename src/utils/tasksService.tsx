@@ -6,7 +6,7 @@ const token =
 
 export const tasksAPI = createApi({
   reducerPath: 'tasksAPI',
-  baseQuery: fetchBaseQuery({ baseUrl: 'https://serene-inlet-66010.herokuapp.com' }),
+  baseQuery: fetchBaseQuery({ baseUrl: 'https://evening-lowlands-03074.herokuapp.com' }),
   tagTypes: ['Tasks'],
   endpoints: (build) => ({
     getTasks: build.query<TaskInterface[] | null, string[]>({

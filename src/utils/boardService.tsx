@@ -6,7 +6,7 @@ const token =
 
 export const boardsAPI = createApi({
   reducerPath: 'boardsAPI',
-  baseQuery: fetchBaseQuery({ baseUrl: 'https://serene-inlet-66010.herokuapp.com' }),
+  baseQuery: fetchBaseQuery({ baseUrl: 'https://evening-lowlands-03074.herokuapp.com/' }),
   tagTypes: ['Boards'],
   endpoints: (build) => ({
     getBoards: build.query<BoardDraftInterface[] | null, number>({
