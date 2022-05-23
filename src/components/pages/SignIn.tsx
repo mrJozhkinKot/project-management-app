@@ -1,5 +1,3 @@
-// TODO: Add spinner while waiting for server response
-
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -12,6 +10,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../../hooks/redux';
 import { BadRequestInterface, SignInBodyInterface } from '../../utils/interfaces';
 import { usersAPI } from '../../utils/usersService';
+import Spinner from '../spinner/Spinner';
 
 const style = {
   container: {
@@ -39,7 +38,7 @@ const style = {
 
 function SignIn(): React.ReactElement {
   const [cookies, setCookies] = useCookies(['token']);
-  const [signIn, {}] = usersAPI.useSignInMutation();
+  const [signIn, { isLoading }] = usersAPI.useSignInMutation();
   const { isAuth, login, userName, token, userId } = useAppSelector((state) => state.globalReducer);
   const navigate = useNavigate();
   const {
@@ -74,6 +73,10 @@ function SignIn(): React.ReactElement {
       .catch((error: BadRequestInterface) => {
         handleErrors(error);
       });
+  }
+
+  if (isLoading) {
+    return <Spinner></Spinner>;
   }
 
   if (isAuth) {

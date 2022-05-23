@@ -1,5 +1,3 @@
-// TODO: Add spinner while waiting for server response
-
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -16,6 +14,7 @@ import {
   SignUpBodyInterface,
 } from '../../utils/interfaces';
 import { usersAPI } from '../../utils/usersService';
+import Spinner from '../spinner/Spinner';
 
 const style = {
   container: {
@@ -45,8 +44,8 @@ function SignUp(): React.ReactElement {
   const { isAuth, login, userName, token, userId } = useAppSelector((state) => state.globalReducer);
   const navigate = useNavigate();
   const [cookie, setCookie] = useCookies(['token', 'name']);
-  const [signIn, {}] = usersAPI.useSignInMutation();
-  const [signUp, {}] = usersAPI.useSignUpMutation();
+  const [signIn, { isLoading: isSignInLoading }] = usersAPI.useSignInMutation();
+  const [signUp, { isLoading: isSignUpLoading }] = usersAPI.useSignUpMutation();
   const {
     register,
     handleSubmit,
@@ -92,6 +91,10 @@ function SignUp(): React.ReactElement {
       .catch((error: BadRequestInterface) => {
         handleErrors(error);
       });
+  }
+
+  if (isSignInLoading || isSignUpLoading) {
+    return <Spinner></Spinner>;
   }
 
   if (isAuth) {
