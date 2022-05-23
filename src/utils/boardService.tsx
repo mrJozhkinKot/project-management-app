@@ -1,13 +1,19 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react';
-import { BoardDraftInterface } from './interfaces';
+import {
+  BoardDraftInterface,
+  ColumnBodyInterface,
+  ColumnDraftInterface,
+  TaskCreateBodyInterface,
+  TaskInterface,
+} from './interfaces';
 
 const token =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyODMyMmM1OS1iNjNjLTRkM2UtODhmMC0zOTNkNzBmMzgyYjMiLCJsb2dpbiI6InVzZXIxMjMiLCJpYXQiOjE2NTI1NDQyMzN9.XM3L7iV1UxgDjnuM0vBCpBwO-BtWANB4M8RBo2O8bFo';
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MmM5NGQwZC05Y2RhLTQ0N2UtOTlmMS1jZGNmOWM5NGFjYmUiLCJsb2dpbiI6InVzZXIwMDciLCJpYXQiOjE2NTMzMDkzNTR9.IYK-KOHLPDJx7C8gNmE5FAzvTmvXKIr2Gd4OZZ95wVI';
 
 export const boardsAPI = createApi({
   reducerPath: 'boardsAPI',
-  baseQuery: fetchBaseQuery({ baseUrl: 'https://serene-inlet-66010.herokuapp.com' }),
-  tagTypes: ['Boards'],
+  baseQuery: fetchBaseQuery({ baseUrl: 'https://evening-lowlands-03074.herokuapp.com' }),
+  tagTypes: ['Boards', 'Columns', 'Tasks'],
   endpoints: (build) => ({
     getBoards: build.query<BoardDraftInterface[] | null, number>({
       query: (limit) => ({
@@ -22,19 +28,21 @@ export const boardsAPI = createApi({
       }),
       providesTags: ['Boards'],
     }),
-    createBoard: build.mutation<BoardDraftInterface | null, { title: string }>({
-      query: (title) => ({
-        url: '/boards',
-        method: 'POST',
-        body: title,
-        headers: {
-          Accept: 'application/json',
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      }),
-      invalidatesTags: ['Boards'],
-    }),
+    createBoard: build.mutation<BoardDraftInterface | null, { title: string; description: string }>(
+      {
+        query: (title) => ({
+          url: '/boards',
+          method: 'POST',
+          body: title,
+          headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }),
+        invalidatesTags: ['Boards'],
+      }
+    ),
     deleteBoard: build.mutation<BoardDraftInterface | null, string>({
       query: (boardID) => ({
         url: `/boards/${boardID}`,
@@ -45,6 +53,117 @@ export const boardsAPI = createApi({
         },
       }),
       invalidatesTags: ['Boards'],
+    }),
+    getColumns: build.query<ColumnDraftInterface[] | null, string>({
+      query: (boardID) => ({
+        url: `/boards/${boardID}/columns`,
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+      providesTags: ['Columns'],
+    }),
+    createColumn: build.mutation<ColumnDraftInterface | null, [string, ColumnBodyInterface]>({
+      query: ([boardID, column]) => ({
+        url: `/boards/${boardID}/columns`,
+        method: 'POST',
+        body: column,
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }),
+      invalidatesTags: ['Columns'],
+    }),
+    deleteColumn: build.mutation<ColumnDraftInterface | null, string[]>({
+      query: ([boardID, columnID]) => ({
+        url: `/boards/${boardID}/columns/${columnID}`,
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+      invalidatesTags: ['Columns'],
+    }),
+    updateColummn: build.mutation<ColumnDraftInterface | null, [string, ColumnDraftInterface]>({
+      query([boardID, column]) {
+        const { id, ...body } = column;
+        return {
+          url: `/boards/${boardID}/columns/${id}`,
+          method: 'PUT',
+          body: body,
+          headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        };
+      },
+      invalidatesTags: ['Columns'],
+    }),
+    getTasks: build.query<TaskInterface[] | null, string[]>({
+      query: ([boardID, columnID]) => ({
+        url: `/boards/${boardID}/columns/${columnID}/tasks`,
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+      providesTags: ['Tasks'],
+    }),
+    getTask: build.query<TaskInterface | null, string[]>({
+      query: ([boardID, columnID, taskID]) => ({
+        url: `/boards/${boardID}/columns/${columnID}/tasks${taskID}`,
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+      providesTags: ['Tasks'],
+    }),
+    createTasks: build.mutation<TaskInterface | null, [string, string, TaskCreateBodyInterface]>({
+      query: ([boardID, columnID, task]) => ({
+        url: `/boards/${boardID}/columns/${columnID}/tasks`,
+        method: 'POST',
+        body: task,
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }),
+      invalidatesTags: ['Tasks'],
+    }),
+    deleteTask: build.mutation<null, string[]>({
+      query: ([boardID, columnID, taskID]) => ({
+        url: `/boards/${boardID}/columns/${columnID}/tasks/${taskID}`,
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+      invalidatesTags: ['Tasks'],
+    }),
+    updateTask: build.mutation<null, [string, string, TaskInterface]>({
+      query([boardID, columnID, task]) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { id, files, ...body } = task;
+        return {
+          url: `/boards/${boardID}/columns/${columnID}/tasks/${id}`,
+          method: 'PUT',
+          body: body,
+          headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        };
+      },
+      invalidatesTags: ['Tasks'],
     }),
   }),
 });

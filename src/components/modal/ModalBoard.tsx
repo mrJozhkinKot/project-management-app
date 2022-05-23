@@ -13,6 +13,7 @@ import { boardsAPI } from '../../utils/boardService';
 
 const defaultValues = {
   title: '',
+  description: '',
 };
 
 const theme = createTheme({
@@ -52,6 +53,7 @@ const style = {
 
 const ModalBoard = () => {
   const [valueName, setValueName] = useState('');
+  const [valueDescription, setValueDescription] = useState('');
   const { setIsModalBoard } = boardsSlice.actions;
   const dispatch = useAppDispatch();
   const { isModalBoard } = useAppSelector((state) => state.boardsReducer);
@@ -75,7 +77,7 @@ const ModalBoard = () => {
 
   const onSubmit = async () => {
     dispatch(setIsModalBoard(false));
-    createBoard({ title: valueName });
+    createBoard({ title: valueName, description: valueDescription });
   };
 
   return (
@@ -99,6 +101,17 @@ const ModalBoard = () => {
                 sx={style.input}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setValueName(event.target.value);
+                }}
+              />
+              <TextField
+                id="descrtption_input"
+                label="Enter description"
+                multiline
+                rows={4}
+                sx={style.input}
+                {...register('description', { required: 'Enter the description' })}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  setValueDescription(event.target.value);
                 }}
               />
               <Button type="submit" variant="contained" size="small" style={style.btn}>

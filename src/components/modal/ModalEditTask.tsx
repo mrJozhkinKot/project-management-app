@@ -10,8 +10,7 @@ import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { createTheme, ThemeProvider } from '@mui/material';
-import { tasksAPI } from '../../utils/tasksService';
-import { useParams } from 'react-router-dom';
+import { boardsAPI } from '../../utils/boardService';
 
 const defaultValues = {
   title: '',
@@ -72,10 +71,9 @@ const ModalEditTask = () => {
   const { isModalEditTask, currentColumnId, currentBoardId, task } = useAppSelector(
     (state) => state.boardsReducer
   );
-  const { id } = useParams();
   const [valueTitle, setValueTitle] = useState(task?.title || '');
   const [valueDescription, setValueDescription] = useState(task?.description || '');
-  const [updateTask, {}] = tasksAPI.useUpdateTaskMutation();
+  const [updateTask, {}] = boardsAPI.useUpdateTaskMutation();
 
   const {
     register,
@@ -90,7 +88,7 @@ const ModalEditTask = () => {
 
   const onClickAddUserBtn = () => {
     if (task) {
-      updateTask([id as string, currentColumnId, { ...task, userId: task?.userId || '' }]);
+      //updateTask([id as string, currentColumnId, { ...task, userId: task?.userId || '' }]);
     }
   };
 
@@ -134,7 +132,6 @@ const ModalEditTask = () => {
                 id="title_input"
                 label="new task"
                 value={valueTitle}
-                rows={2}
                 sx={style.input}
                 {...register('title')}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {

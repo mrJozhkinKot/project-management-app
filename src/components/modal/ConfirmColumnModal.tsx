@@ -6,7 +6,7 @@ import Modal from '@mui/material/Modal';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { createTheme, ThemeProvider } from '@mui/material';
-import { columnsAPI } from '../../utils/columnsService';
+import { boardsAPI } from '../../utils/boardService';
 
 const theme = createTheme({
   palette: {
@@ -50,7 +50,7 @@ const ConfirmColumnModal = () => {
   const { isConfirmColumnModal, currentBoardId, currentColumnId } = useAppSelector(
     (state) => state.boardsReducer
   );
-  const [deleteColumn, {}] = columnsAPI.useDeleteColumnMutation();
+  const [deleteColumn, {}] = boardsAPI.useDeleteColumnMutation();
 
   const handleClose = () => {
     dispatch(setIsConfirmColumnModal(false));
