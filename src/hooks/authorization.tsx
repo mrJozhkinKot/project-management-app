@@ -11,6 +11,23 @@ export interface DecodedTokenInterface {
   iat: number;
 }
 
+export function useCheckCookiesExpired() {
+  const [cookies, , deleteCookies] = useCookies(['token', 'name']);
+  const { setToken, setIsAuth, setLogin, setUserId, setUserName } = globalSlice.actions;
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (!cookies.token) {
+      deleteCookies('name');
+      dispatch(setIsAuth(false));
+      dispatch(setToken(''));
+      dispatch(setUserId(''));
+      dispatch(setLogin(''));
+      dispatch(setUserName(''));
+    }
+  }, []);
+}
+
 export function useSetCookiesName() {
   const [cookies, setCookies] = useCookies(['token', 'name']);
   const [getUser, {}] = usersAPI.useGetUserMutation();

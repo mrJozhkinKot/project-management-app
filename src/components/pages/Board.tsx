@@ -1,6 +1,7 @@
 import Button from '@mui/material/Button';
 import React, { Fragment } from 'react';
 import { Navigate } from 'react-router-dom';
+import { useCheckCookiesExpired } from '../../hooks/authorization';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import ColumnList from '../boards/ColumnList';
@@ -12,10 +13,11 @@ import ModalTask from '../modal/ModalTask';
 
 const Board: React.FC = () => {
   const { setIsModalColumn } = boardsSlice.actions;
-  const dispatch = useAppDispatch();
-
   const { currentColumnId, currentTaskId } = useAppSelector((state) => state.boardsReducer);
   const { isAuth } = useAppSelector((state) => state.globalReducer);
+  const dispatch = useAppDispatch();
+
+  useCheckCookiesExpired();
 
   const style = {
     margin: '2rem',

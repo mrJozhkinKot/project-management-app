@@ -42,4 +42,8 @@ function App(): React.ReactElement {
   );
 }
 
+window.addEventListener('locationchange', function () {
+  console.log('url changed');
+});
+
 export default App;

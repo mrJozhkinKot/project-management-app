@@ -2,6 +2,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import React, { Fragment } from 'react';
 import { Navigate } from 'react-router-dom';
+import { useCheckCookiesExpired } from '../../hooks/authorization';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import BoardList from '../boards/BoardList';
@@ -15,9 +16,12 @@ const Boards = () => {
   const { isLoading } = useAppSelector((state) => state.boardsReducer);
   const { isAuth } = useAppSelector((state) => state.globalReducer);
 
+  useCheckCookiesExpired();
+
   const onClickCreateBtn = () => {
     dispatch(setIsModalBoard(true));
   };
+
   const style = {
     margin: '2rem',
     backgroundColor: '#20B298',

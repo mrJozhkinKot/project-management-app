@@ -7,6 +7,7 @@ import React from 'react';
 import { useCookies } from 'react-cookie';
 import { useForm } from 'react-hook-form';
 import { Navigate, useNavigate } from 'react-router-dom';
+import { useCheckCookiesExpired } from '../../hooks/authorization';
 import { useAppSelector } from '../../hooks/redux';
 import {
   BadRequestInterface,
@@ -53,6 +54,8 @@ function SignUp(): React.ReactElement {
     formState: { errors },
   } = useForm<SignUpBodyInterface>({ mode: 'onSubmit', reValidateMode: 'onChange' });
 
+  useCheckCookiesExpired();
+
   function handleErrors(error: BadRequestInterface) {
     console.log('signUp failed!: ', error);
     if (error.statusCode === 400) {
@@ -80,8 +83,8 @@ function SignUp(): React.ReactElement {
             .then((res) => {
               if (res?.token) {
                 console.log('signIn successful!: ', res);
-                setCookie('token', res.token);
-                setCookie('name', data.name);
+                setCookie('token', res.token, { maxAge: 10 });
+                setCookie('name', data.name, { maxAge: 10 });
                 reset();
                 navigate('/boards');
               }
