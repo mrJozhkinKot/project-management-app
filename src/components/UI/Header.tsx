@@ -16,12 +16,16 @@ import {
   Select,
   SelectChangeEvent,
 } from '@mui/material';
+import { useAppDispatch } from '../../hooks/redux';
+import { boardsSlice } from '../../reducers/BoardsSlice';
 
 function Header(): React.ReactElement {
   const isAuth = true;
   const [lang, setLang] = useState<string>('EN');
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
+  const { setIsModalBoard } = boardsSlice.actions;
+  const dispatch = useAppDispatch();
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -155,7 +159,8 @@ function Header(): React.ReactElement {
               <Button
                 onClick={() => {
                   handleCloseNavMenu();
-                  navigate('/modalboard');
+                  dispatch(setIsModalBoard(true));
+                  navigate('/boards');
                 }}
                 sx={style.btn}
               >
