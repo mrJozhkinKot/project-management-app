@@ -58,7 +58,7 @@ const Column: React.FC<ColumnProps> = ({ column }) => {
   const style = {
     container: {
       maxWidth: '300px',
-      maxHeight: '1000px',
+      maxHeight: 'calc(100vh - 28rem)',
       border: '1px solid gray',
       padding: '0.5rem',
       display: 'flex',
@@ -66,6 +66,11 @@ const Column: React.FC<ColumnProps> = ({ column }) => {
       justifyContent: 'flex-end',
       backgroundColor: '#d3e3e3',
       cursor: 'move',
+      '& ::-webkit-scrollbar': { width: '0.5rem' },
+    },
+    content: {
+      height: '100%',
+      'overflow-y': 'scroll',
     },
     header: {
       color: '#323535',
@@ -137,10 +142,12 @@ const Column: React.FC<ColumnProps> = ({ column }) => {
           </div>
         )}
       </div>
-      {tasks &&
-        tasks.map((task, index) => (
-          <Task key={task.id} task={task} index={index} column={column} />
-        ))}
+      <div style={style.content}>
+        {tasks &&
+          tasks.map((task, index) => (
+            <Task key={task.id} task={task} index={index} column={column} />
+          ))}
+      </div>
       <div style={style.btnContainer}>
         <DeleteForeverIcon
           sx={{
