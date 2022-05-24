@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
@@ -59,6 +60,7 @@ const ModalColumn = () => {
   const { id } = useParams();
   const [createColumn, {}] = columnsAPI.useCreateColumnMutation();
   const { data: columns } = columnsAPI.useGetColumnsQuery(id as string);
+  const { t } = useTranslation();
 
   const {
     register,
@@ -93,20 +95,20 @@ const ModalColumn = () => {
         >
           <Box sx={style.box}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              Create a new column:
+              {t('create_a_new_column')}:
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)}>
               <TextField
                 id="descrtption_input"
-                label="new column"
+                label={t('new_column')}
                 sx={style.input}
-                {...register('title', { required: 'Enter the description' })}
+                {...register('title', { required: t('enter_the_description') })}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setValueText(event.target.value);
                 }}
               />
               <Button type="submit" variant="contained" size="small" style={style.btn}>
-                CREATE
+                {t('create')}
               </Button>
             </form>
           </Box>

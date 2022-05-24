@@ -1,6 +1,7 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import React, { Fragment } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Navigate } from 'react-router-dom';
 import { useCheckCookiesExpired } from '../../hooks/authorization';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
@@ -13,6 +14,7 @@ import Spinner from '../spinner/Spinner';
 const Boards = () => {
   const { setIsModalBoard } = boardsSlice.actions;
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const { isLoading } = useAppSelector((state) => state.boardsReducer);
   const { isAuth } = useAppSelector((state) => state.globalReducer);
 
@@ -42,7 +44,7 @@ const Boards = () => {
     <Fragment>
       <Box>
         <Button variant="contained" sx={style} onClick={onClickCreateBtn}>
-          Create Board
+          {t('create_board')}
         </Button>
         <BoardList />
         <ModalBoard />

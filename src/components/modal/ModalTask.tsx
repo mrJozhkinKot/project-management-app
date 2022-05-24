@@ -12,6 +12,7 @@ import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { tasksAPI } from '../../utils/tasksService';
+import { useTranslation } from 'react-i18next';
 
 const defaultValues = {
   title: '',
@@ -76,6 +77,7 @@ const ModalTask = () => {
   const [createTask, {}] = tasksAPI.useCreateTasksMutation();
   const { id } = useParams();
   const { data: tasks } = tasksAPI.useGetTasksQuery([id as string, currentColumnId]);
+  const { t } = useTranslation();
 
   const {
     register,
@@ -123,37 +125,37 @@ const ModalTask = () => {
         >
           <Box sx={style.box}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              Create a new task:
+              {t('сreate_a_new_task')}:
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)}>
               <TextField
                 id="title_input"
-                label="new task"
+                label={t('new_task')}
                 multiline
                 rows={2}
                 sx={style.input}
-                {...register('title', { required: 'Enter the title' })}
+                {...register('title', { required: t('enter_the_title') })}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setValueTitle(event.target.value);
                 }}
               />
               <TextField
                 id="descrtption_input"
-                label="Enter description"
+                label={t('enter_description')}
                 multiline
                 rows={4}
                 sx={style.input}
-                {...register('description', { required: 'Enter the description' })}
+                {...register('description', { required: t('enter_the_description') })}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setValueDescription(event.target.value);
                 }}
               />
               <div style={style.btnContainer}>
                 <Button type="submit" variant="contained" size="small" style={style.btn}>
-                  CREATE
+                  {t('create')}
                 </Button>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                  userName
+                  {t('user_name')}
                   <PersonAddIcon sx={style.icon} onClick={onClickAddUserBtn} />
                 </div>
               </div>

@@ -1,24 +1,25 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useAppSelector } from '../../hooks/redux';
-import { useCookies } from 'react-cookie';
-
 import {
   AppBar,
-  Container,
-  Typography,
-  Toolbar,
   Box,
   Button,
-  IconButton,
+  Container,
   FormControl,
+  IconButton,
   InputLabel,
   Menu,
   MenuItem,
   Select,
   SelectChangeEvent,
+  Toolbar,
+  Typography,
 } from '@mui/material';
+import React from 'react';
+import { useCookies } from 'react-cookie';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from '../../hooks/redux';
+import '../../i18n';
 
 const style = {
   container: {
@@ -62,7 +63,7 @@ const style = {
 function Header(): React.ReactElement {
   const { isAuth } = useAppSelector((state) => state.globalReducer);
   const [, , deleteCookies] = useCookies(['token']);
-  const [lang, setLang] = useState<string>('EN');
+  const { t, i18n } = useTranslation();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
 
@@ -75,7 +76,7 @@ function Header(): React.ReactElement {
   };
 
   const onChange = (event: SelectChangeEvent) => {
-    setLang(event.target.value);
+    i18n.changeLanguage(event.target.value);
   };
 
   return (
@@ -118,11 +119,11 @@ function Header(): React.ReactElement {
                     labelId="select-label-hamburger-auth"
                     id="select-hamburger-auth"
                     sx={{ border: '1px solid #000', height: '2rem', ml: '15px' }}
-                    value={lang}
+                    value={i18n.language}
                     onChange={onChange}
                   >
-                    <MenuItem value="EN">EN</MenuItem>
-                    <MenuItem value="RU">RU</MenuItem>
+                    <MenuItem value="en">EN</MenuItem>
+                    <MenuItem value="ru">RU</MenuItem>
                   </Select>
                 </FormControl>
                 <MenuItem onClick={handleCloseNavMenu}>
@@ -140,11 +141,11 @@ function Header(): React.ReactElement {
                   labelId="select-label-auth"
                   id="select-auth"
                   sx={style.select}
-                  value={lang}
+                  value={i18n.language}
                   onChange={onChange}
                 >
-                  <MenuItem value="EN">EN</MenuItem>
-                  <MenuItem value="RU">RU</MenuItem>
+                  <MenuItem value="en">EN</MenuItem>
+                  <MenuItem value="ru">RU</MenuItem>
                 </Select>
               </FormControl>
               <Button
@@ -154,7 +155,7 @@ function Header(): React.ReactElement {
                 }}
                 sx={style.btn}
               >
-                Edit profile
+                {t('edit_profile')}
               </Button>
               <Button
                 onClick={() => {
@@ -163,7 +164,7 @@ function Header(): React.ReactElement {
                 }}
                 sx={style.btn}
               >
-                Create new board
+                {t('create_new_board')}
               </Button>
             </Box>
             <Button
@@ -175,7 +176,7 @@ function Header(): React.ReactElement {
               size="small"
               sx={style.buttonContained}
             >
-              Sign Out
+              {t('sign_out')}
             </Button>
           </Toolbar>
         ) : (
@@ -216,11 +217,11 @@ function Header(): React.ReactElement {
                     labelId="select-label-hamburger"
                     id="select-hamburger"
                     sx={{ border: '1px solid #fff', height: '2rem' }}
-                    value={lang}
+                    value={i18n.language}
                     onChange={onChange}
                   >
-                    <MenuItem value="EN">EN</MenuItem>
-                    <MenuItem value="RU">RU</MenuItem>
+                    <MenuItem value="en">EN</MenuItem>
+                    <MenuItem value="ru">RU</MenuItem>
                   </Select>
                 </FormControl>
               </Menu>
@@ -231,23 +232,22 @@ function Header(): React.ReactElement {
                 <Select
                   labelId="select-label"
                   id="select"
-                  sx={style.select}
-                  value={lang}
+                  sx={{ color: '#fff', border: '1px solid #fff', height: '2rem' }}
+                  value={i18n.language}
                   onChange={onChange}
                 >
-                  <MenuItem value="EN">EN</MenuItem>
-                  <MenuItem value="RU">RU</MenuItem>
+                  <MenuItem value="en">EN</MenuItem>
+                  <MenuItem value="ru">RU</MenuItem>
                 </Select>
               </FormControl>
             </Box>
-
             <Button
               onClick={() => navigate('/signin')}
               variant="contained"
               size="small"
               sx={style.buttonContained}
             >
-              Sign in
+              {t('sign_in')}
             </Button>
             <Button
               onClick={() => navigate('/signup')}
@@ -255,7 +255,7 @@ function Header(): React.ReactElement {
               size="small"
               sx={style.buttonOutlined}
             >
-              Sign up
+              {t('sign_up')}
             </Button>
           </Toolbar>
         )}
