@@ -25,6 +25,7 @@ export function useCheckCookiesExpired() {
       dispatch(setLogin(''));
       dispatch(setUserName(''));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 }
 
