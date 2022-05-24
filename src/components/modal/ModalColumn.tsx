@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
-import { columnsAPI } from '../../utils/columnsService';
+import { boardsAPI } from '../../utils/boardService';
 
 const defaultValues = {
   title: '',
@@ -58,8 +58,7 @@ const ModalColumn = () => {
   const dispatch = useAppDispatch();
   const { isModalColumn } = useAppSelector((state) => state.boardsReducer);
   const { id } = useParams();
-  const [createColumn, {}] = columnsAPI.useCreateColumnMutation();
-  const { data: columns } = columnsAPI.useGetColumnsQuery(id as string);
+  const [createColumn, {}] = boardsAPI.useCreateColumnMutation();
   const { t } = useTranslation();
 
   const {
@@ -80,7 +79,7 @@ const ModalColumn = () => {
   }, [isSubmitSuccessful, reset]);
 
   const onSubmit = () => {
-    createColumn([id as string, { title: valueText, order: columns?.length || 0 }]);
+    createColumn([id as string, { title: valueText }]);
     handleClose();
   };
 

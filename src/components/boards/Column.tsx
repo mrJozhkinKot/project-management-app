@@ -4,31 +4,20 @@ import DoneIcon from '@mui/icons-material/Done';
 import Box from '@mui/material/Box';
 import Input from '@mui/material/Input';
 import Typography from '@mui/material/Typography';
-import type { Identifier } from 'dnd-core';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useDrag, useDrop } from 'react-dnd';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
-import { columnsAPI } from '../../utils/columnsService';
+import { boardsAPI } from '../../utils/boardService';
 import { ColumnDraftInterface } from '../../utils/interfaces';
-import { tasksAPI } from '../../utils/tasksService';
-import { ItemTypes } from './ItemTypes';
-//import update from 'immutability-helper';
 import { Task } from './Task';
 
 interface ColumnProps {
   column: ColumnDraftInterface;
   index: number;
-  moveColumn: (dragIndex: number, hoverIndex: number) => void;
-}
-interface DragItem {
-  index: number;
-  id: string;
-  type: string;
 }
 
-const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
+const Column: React.FC<ColumnProps> = ({ column }) => {
   const {
     setIsModalTask,
     setCurrentColumnId,
@@ -39,32 +28,11 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
   } = boardsSlice.actions;
   const dispatch = useAppDispatch();
   const { isColumnEdit, columnEdited } = useAppSelector((state) => state.boardsReducer);
-  const [shouldRender, setShouldRender] = useState(false);
+
   const [valueTitle, setValueTitle] = useState('');
   const { id } = useParams();
-  const { data: tasks } = tasksAPI.useGetTasksQuery([id as string, column.id]);
-  const [updateColumn, {}] = columnsAPI.useUpdateColumnMutation();
-  const { data: columns } = columnsAPI.useGetColumnsQuery(id as string);
-
-  useEffect(() => setShouldRender(true), []);
-  //const tasks = columns[index].tasks;
-  const moveTask = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    (dragIndex: number, hoverIndex: number) => {
-      // dispatch(
-      //   reorderTaskList(
-      //     update(tasks, {
-      //       $splice: [
-      //         [dragIndex, 1],
-      //         [hoverIndex, 0, tasks[dragIndex] as TaskDraftInterface],
-      //       ],
-      //     })
-      //   )
-      // );
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [tasks]
-  );
+  const { data: tasks } = boardsAPI.useGetTasksQuery([id as string, column.id]);
+  const [updateColumn, {}] = boardsAPI.useUpdateColummnMutation();
 
   const onClickCreateBtn = () => {
     dispatch(setCurrentColumnId(column.id));
@@ -81,13 +49,6 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
 
   useEffect(() => {
     if (id) {
-      updateColumn([id, { ...column, order: index }]);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [columns]);
-
-  useEffect(() => {
-    if (id) {
       updateColumn([id, column]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -96,6 +57,7 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
   const style = {
     container: {
       maxWidth: '300px',
+      maxHeight: 'calc(100vh - 28rem)',
       border: '1px solid gray',
       padding: '0.5rem',
       display: 'flex',
@@ -103,6 +65,11 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
       justifyContent: 'flex-end',
       backgroundColor: '#d3e3e3',
       cursor: 'move',
+      '& ::-webkit-scrollbar': { width: '0.5rem' },
+    },
+    content: {
+      height: '100%',
+      'overflow-y': 'scroll',
     },
     header: {
       color: '#323535',
@@ -134,107 +101,65 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
     },
   };
 
-  const ref = useRef<HTMLDivElement>(null);
-  const [{ handlerId }, drop] = useDrop<DragItem, void, { handlerId: Identifier | null }>({
-    accept: ItemTypes.COLUMN,
-    collect(monitor) {
-      return {
-        handlerId: monitor.getHandlerId(),
-      };
-    },
-    hover(item: DragItem) {
-      if (!ref.current) {
-        return;
-      }
-      const dragIndex = item.index;
-      const hoverIndex = index;
-
-      if (dragIndex === hoverIndex) {
-        return;
-      }
-
-      moveColumn(dragIndex, hoverIndex);
-      item.index = hoverIndex;
-    },
-  });
-
-  const [{ isDragging }, drag] = useDrag({
-    type: ItemTypes.COLUMN,
-    item: () => {
-      const id = column.id;
-      return { id, index };
-    },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  });
-
-  const opacity = isDragging ? 0 : 1;
-  drag(drop(ref));
   return (
-    <>
-      {shouldRender && (
-        <Box ref={ref} sx={{ ...style.container, opacity }} data-handler-id={handlerId}>
-          <div
-            style={style.header}
-            onClick={() => {
-              dispatch(setIsColumnEdit(true));
-              dispatch(setColumnEdited(column));
-              setValueTitle(column.title);
-            }}
-          >
-            {(!isColumnEdit || column.id !== columnEdited.id) && (
-              <Typography variant="h5">{column.title}</Typography>
-            )}
-            {isColumnEdit && column.id === columnEdited.id && (
-              <div style={style.inputContainer}>
-                <Input
-                  id="standard-basic"
-                  autoFocus={true}
-                  value={valueTitle}
-                  disableUnderline={true}
-                  sx={style.input}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    setValueTitle(event.target.value);
-                  }}
-                  onBlur={() => {
-                    dispatch(setIsColumnEdit(false));
-                    updateColumn([id as string, { ...columnEdited, title: valueTitle }]);
-                  }}
-                />
-                <DoneIcon
-                  sx={style.inputIcon}
-                  onClick={(event: React.MouseEvent<SVGSVGElement>) => {
-                    event.stopPropagation();
-                    dispatch(setIsColumnEdit(false));
-                    updateColumn([id as string, { ...columnEdited, title: valueTitle }]);
-                  }}
-                />
-              </div>
-            )}
-          </div>
-          {tasks &&
-            tasks
-              .map((task) => task)
-              .sort((a, b) => (a.order > b.order ? 1 : -1))
-              .map((task, index) => (
-                <Task key={task.id} task={task} index={index} moveTask={moveTask} column={column} />
-              ))}
-          <div style={style.btnContainer}>
-            <DeleteForeverIcon
-              sx={{
-                ...style.btn,
-                '&:hover': {
-                  color: '#E36655',
-                },
+    <Box sx={style.container}>
+      <div
+        style={style.header}
+        onClick={() => {
+          dispatch(setIsColumnEdit(true));
+          dispatch(setColumnEdited(column));
+          setValueTitle(column.title);
+        }}
+      >
+        {(!isColumnEdit || column.id !== columnEdited.id) && (
+          <Typography variant="h5">{column.title}</Typography>
+        )}
+        {isColumnEdit && column.id === columnEdited.id && (
+          <div style={style.inputContainer}>
+            <Input
+              id="standard-basic"
+              autoFocus={true}
+              value={valueTitle}
+              disableUnderline={true}
+              sx={style.input}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                setValueTitle(event.target.value);
               }}
-              onClick={onClickDeleteBtn}
+              onBlur={() => {
+                dispatch(setIsColumnEdit(false));
+                updateColumn([id as string, { ...columnEdited, title: valueTitle }]);
+              }}
             />
-            <AddBoxIcon sx={style.btn} onClick={onClickCreateBtn} />
+            <DoneIcon
+              sx={style.inputIcon}
+              onClick={(event: React.MouseEvent<SVGSVGElement>) => {
+                event.stopPropagation();
+                dispatch(setIsColumnEdit(false));
+                updateColumn([id as string, { ...columnEdited, title: valueTitle }]);
+              }}
+            />
           </div>
-        </Box>
-      )}
-    </>
+        )}
+      </div>
+      <div style={style.content}>
+        {tasks &&
+          tasks.map((task, index) => (
+            <Task key={task.id} task={task} index={index} column={column} />
+          ))}
+      </div>
+      <div style={style.btnContainer}>
+        <DeleteForeverIcon
+          sx={{
+            ...style.btn,
+            '&:hover': {
+              color: '#E36655',
+            },
+          }}
+          onClick={onClickDeleteBtn}
+        />
+        <AddBoxIcon sx={style.btn} onClick={onClickCreateBtn} />
+      </div>
+    </Box>
   );
 };
 

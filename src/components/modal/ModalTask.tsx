@@ -8,11 +8,11 @@ import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
-import { tasksAPI } from '../../utils/tasksService';
-import { useTranslation } from 'react-i18next';
+import { boardsAPI } from '../../utils/boardService';
 
 const defaultValues = {
   title: '',
@@ -69,14 +69,13 @@ const style = {
 const ModalTask = () => {
   const [valueTitle, setValueTitle] = useState('');
   const [valueDescription, setValueDescription] = useState('');
-  const [valueUserId, setValueUserId] = useState('28322c59-b63c-4d3e-88f0-393d70f382b3');
+  const [valueUserId, setValueUserId] = useState('62c94d0d-9cda-447e-99f1-cdcf9c94acbe');
 
   const dispatch = useAppDispatch();
   const { setIsModalTask } = boardsSlice.actions;
   const { isModalTask, currentColumnId } = useAppSelector((state) => state.boardsReducer);
-  const [createTask, {}] = tasksAPI.useCreateTasksMutation();
+  const [createTask, {}] = boardsAPI.useCreateTasksMutation();
   const { id } = useParams();
-  const { data: tasks } = tasksAPI.useGetTasksQuery([id as string, currentColumnId]);
   const { t } = useTranslation();
 
   const {
@@ -103,7 +102,6 @@ const ModalTask = () => {
       {
         title: valueTitle,
         description: valueDescription,
-        order: tasks?.length || 0,
         userId: valueUserId,
       },
     ]);

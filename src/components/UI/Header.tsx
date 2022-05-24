@@ -18,8 +18,9 @@ import React from 'react';
 import { useCookies } from 'react-cookie';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '../../hooks/redux';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import '../../i18n';
+import { boardsSlice } from '../../reducers/BoardsSlice';
 
 const style = {
   container: {
@@ -66,6 +67,8 @@ function Header(): React.ReactElement {
   const { t, i18n } = useTranslation();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
+  const { setIsModalBoard } = boardsSlice.actions;
+  const dispatch = useAppDispatch();
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -160,7 +163,8 @@ function Header(): React.ReactElement {
               <Button
                 onClick={() => {
                   handleCloseNavMenu();
-                  navigate('/modalboard');
+                  dispatch(setIsModalBoard(true));
+                  navigate('/boards');
                 }}
                 sx={style.btn}
               >
