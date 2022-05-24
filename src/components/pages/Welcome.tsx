@@ -39,11 +39,14 @@ function Welcome(): React.ReactElement {
           <Grid container sx={style.container} component="section">
             <Grid item lg={6} md={6} sm={12} xs={12} sx={style.aboutProject}>
               <Typography component="h1" variant="h2">
-                Project-management-app
+                Project management app
+              </Typography>
+              <Typography component="h2" variant="h4" sx={{ mb: '0.5rem', mt: '0.75rem' }}>
+                Can help you to manage your projects effectively
               </Typography>
               <Typography component="h2" variant="h4" sx={{ mb: '1rem' }}>
-                will help you manage your effective projects. Create boards, columns, tasks, drag
-                and drop columns and enjoy productive work
+                Create new boards, columns, tasks, drag and drop it and enjoy working productively
+                watching progress visually
               </Typography>
             </Grid>
 
@@ -145,13 +148,12 @@ function Welcome(): React.ReactElement {
               justifyContent="center"
               sx={{ mb: 2.5 }}
             >
-              Аbout the RSSchool React course
+              Аbout the React course at RS School
             </Typography>
             <Typography component="p" variant="body1">
-              The online course &quot;Development with React&quot; is a free course from The Rolling
-              Scopes community. Everyone can study at RS School, regardless of age, professional
-              employment, or place of residence. For more information and to register for the
-              course, please&nbsp;
+              &quot;React Development&quot; is a free online course from The Rolling Scopes
+              community. Everyone can study at RS School, regardless of age, professional employment
+              or location. For more information or to register for the course, please&nbsp;
               <Link
                 href="https://rs.school/react/"
                 target="_blank"
