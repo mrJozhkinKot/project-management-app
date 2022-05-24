@@ -1,21 +1,21 @@
-import React, { useCallback, useState, useEffect, useRef } from 'react';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import DoneIcon from '@mui/icons-material/Done';
+import Box from '@mui/material/Box';
+import Input from '@mui/material/Input';
+import Typography from '@mui/material/Typography';
+import type { Identifier } from 'dnd-core';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useDrag, useDrop } from 'react-dnd';
+import { useParams } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { boardsSlice } from '../../reducers/BoardsSlice';
+import { columnsAPI } from '../../utils/columnsService';
+import { ColumnDraftInterface } from '../../utils/interfaces';
+import { tasksAPI } from '../../utils/tasksService';
+import { ItemTypes } from './ItemTypes';
 //import update from 'immutability-helper';
 import { Task } from './Task';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import { boardsSlice } from '../../reducers/BoardsSlice';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { useDrag, useDrop } from 'react-dnd';
-import type { Identifier } from 'dnd-core';
-import { ItemTypes } from './ItemTypes';
-import { ColumnDraftInterface } from '../../utils/interfaces';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import AddBoxIcon from '@mui/icons-material/AddBox';
-import DoneIcon from '@mui/icons-material/Done';
-import { useParams } from 'react-router-dom';
-import { tasksAPI } from '../../utils/tasksService';
-import { columnsAPI } from '../../utils/columnsService';
-import Input from '@mui/material/Input';
 
 interface ColumnProps {
   column: ColumnDraftInterface;
@@ -43,7 +43,7 @@ const Column: React.FC<ColumnProps> = ({ column, index, moveColumn }) => {
   const [valueTitle, setValueTitle] = useState('');
   const { id } = useParams();
   const { data: tasks } = tasksAPI.useGetTasksQuery([id as string, column.id]);
-  const [updateColumn, {}] = columnsAPI.useUpdateColummnMutation();
+  const [updateColumn, {}] = columnsAPI.useUpdateColumnMutation();
   const { data: columns } = columnsAPI.useGetColumnsQuery(id as string);
 
   useEffect(() => setShouldRender(true), []);

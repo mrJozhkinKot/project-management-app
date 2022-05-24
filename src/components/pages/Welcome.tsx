@@ -1,6 +1,7 @@
-import React, { Fragment } from 'react';
-import { Container, Grid, Card, CardContent, CardMedia, Link, Typography } from '@mui/material';
+import { Card, CardContent, CardMedia, Container, Grid, Link, Typography } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import React, { Fragment } from 'react';
+import { useCheckCookiesExpired } from '../../hooks/authorization';
 
 const theme = createTheme();
 
@@ -32,6 +33,8 @@ const style = {
 };
 
 function Welcome(): React.ReactElement {
+  useCheckCookiesExpired();
+
   return (
     <Fragment>
       <ThemeProvider theme={theme}>

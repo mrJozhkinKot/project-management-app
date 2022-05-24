@@ -1,15 +1,15 @@
-import * as React from 'react';
+import { createTheme, ThemeProvider } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
 import Modal from '@mui/material/Modal';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { boardsSlice } from '../../reducers/BoardsSlice';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { createTheme, ThemeProvider } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { boardsSlice } from '../../reducers/BoardsSlice';
 import { boardsAPI } from '../../utils/boardService';
 
 const defaultValues = {

@@ -6,7 +6,7 @@ const token =
 
 export const columnsAPI = createApi({
   reducerPath: 'columnsAPI',
-  baseQuery: fetchBaseQuery({ baseUrl: 'https://serene-inlet-66010.herokuapp.com' }),
+  baseQuery: fetchBaseQuery({ baseUrl: 'https://evening-lowlands-03074.herokuapp.com/' }),
   tagTypes: ['Columns'],
   endpoints: (build) => ({
     getColumns: build.query<ColumnDraftInterface[] | null, string>({
@@ -43,7 +43,7 @@ export const columnsAPI = createApi({
       }),
       invalidatesTags: ['Columns'],
     }),
-    updateColummn: build.mutation<ColumnDraftInterface | null, [string, ColumnDraftInterface]>({
+    updateColumn: build.mutation<ColumnDraftInterface | null, [string, ColumnDraftInterface]>({
       query([boardID, column]) {
         const { id, ...body } = column;
         return {

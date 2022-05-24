@@ -1,27 +1,69 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import {
   AppBar,
-  Container,
-  Typography,
-  Toolbar,
   Box,
   Button,
-  IconButton,
+  Container,
   FormControl,
+  IconButton,
   InputLabel,
   Menu,
   MenuItem,
   Select,
   SelectChangeEvent,
+  Toolbar,
+  Typography,
 } from '@mui/material';
-import '../../i18n';
+import React from 'react';
+import { useCookies } from 'react-cookie';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from '../../hooks/redux';
+import '../../i18n';
+
+const style = {
+  container: {
+    backgroundColor: '#323535',
+  },
+  btn: {
+    color: '#fff',
+    display: 'block',
+    '&:hover': {
+      color: '#20B298',
+    },
+  },
+  buttonContained: {
+    backgroundColor: '#20B298',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#1C9D86',
+    },
+  },
+  buttonOutlined: {
+    color: '#20B298',
+    border: '1px solid #20B298',
+    marginLeft: '10px',
+    '&:hover': {
+      backgroundColor: '#535756',
+      border: '1px solid #535756',
+    },
+  },
+  select: {
+    color: '#fff',
+    border: '1px solid #fff',
+    height: '2rem',
+    alignItems: 'center',
+    marginRigth: '5px',
+    '&:hover': {
+      backgroundColor: '#535756',
+    },
+  },
+};
 
 function Header(): React.ReactElement {
+  const { isAuth } = useAppSelector((state) => state.globalReducer);
+  const [, , deleteCookies] = useCookies(['token']);
   const { t, i18n } = useTranslation();
-  const isAuth = false;
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
 
@@ -35,45 +77,6 @@ function Header(): React.ReactElement {
 
   const onChange = (event: SelectChangeEvent) => {
     i18n.changeLanguage(event.target.value);
-  };
-
-  const style = {
-    container: {
-      backgroundColor: '#323535',
-    },
-    btn: {
-      color: '#fff',
-      display: 'block',
-      '&:hover': {
-        color: '#20B298',
-      },
-    },
-    buttonContained: {
-      backgroundColor: '#20B298',
-      color: '#fff',
-      '&:hover': {
-        backgroundColor: '#1C9D86',
-      },
-    },
-    buttonOutlined: {
-      color: '#20B298',
-      border: '1px solid #20B298',
-      marginLeft: '10px',
-      '&:hover': {
-        backgroundColor: '#535756',
-        border: '1px solid #535756',
-      },
-    },
-    select: {
-      color: '#fff',
-      border: '1px solid #fff',
-      height: '2rem',
-      alignItems: 'center',
-      marginRigth: '5px',
-      '&:hover': {
-        backgroundColor: '#535756',
-      },
-    },
   };
 
   return (
@@ -165,7 +168,10 @@ function Header(): React.ReactElement {
               </Button>
             </Box>
             <Button
-              onClick={() => navigate('/welcome')}
+              onClick={() => {
+                deleteCookies('token');
+                navigate('/welcome');
+              }}
               variant="contained"
               size="small"
               sx={style.buttonContained}

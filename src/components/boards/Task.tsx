@@ -1,13 +1,13 @@
+import ClearIcon from '@mui/icons-material/Clear';
 import type { Identifier, XYCoord } from 'dnd-core';
 import { useEffect, useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
-import { ItemTypes } from './ItemTypes';
-import { boardsSlice } from '../../reducers/BoardsSlice';
+import { useParams } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks/redux';
-import ClearIcon from '@mui/icons-material/Clear';
+import { boardsSlice } from '../../reducers/BoardsSlice';
 import { ColumnDraftInterface, TaskInterface } from '../../utils/interfaces';
 import { tasksAPI } from '../../utils/tasksService';
-import { useParams } from 'react-router-dom';
+import { ItemTypes } from './ItemTypes';
 
 const style = {
   task: {

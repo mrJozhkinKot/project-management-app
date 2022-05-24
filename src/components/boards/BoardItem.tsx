@@ -1,14 +1,14 @@
-import * as React from 'react';
+import { CardActionArea } from '@mui/material';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
-import Button from '@mui/material/Button';
 import CardHeader from '@mui/material/CardHeader';
-import { CardActionArea } from '@mui/material';
-import { NavLink } from 'react-router-dom';
-import { BoardDraftInterface } from '../../utils/interfaces';
-import { useAppDispatch } from '../../hooks/redux';
+import * as React from 'react';
 import { useTranslation } from 'react-i18next';
+import { NavLink } from 'react-router-dom';
+import { useAppDispatch } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
+import { BoardDraftInterface } from '../../utils/interfaces';
 
 interface Props {
   board: BoardDraftInterface;

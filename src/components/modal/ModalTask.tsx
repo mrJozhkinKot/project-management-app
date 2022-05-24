@@ -1,16 +1,16 @@
-import * as React from 'react';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import { createTheme, ThemeProvider } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
 import Modal from '@mui/material/Modal';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { boardsSlice } from '../../reducers/BoardsSlice';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { createTheme, ThemeProvider } from '@mui/material';
 import { useParams } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { boardsSlice } from '../../reducers/BoardsSlice';
 import { tasksAPI } from '../../utils/tasksService';
 import { useTranslation } from 'react-i18next';
 

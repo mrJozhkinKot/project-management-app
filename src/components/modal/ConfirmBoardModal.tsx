@@ -1,13 +1,13 @@
-import * as React from 'react';
+import { createTheme, ThemeProvider } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import Typography from '@mui/material/Typography';
+import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
-import { createTheme, ThemeProvider } from '@mui/material';
 import { boardsAPI } from '../../utils/boardService';
-import { useTranslation } from 'react-i18next';
 
 const theme = createTheme({
   palette: {
