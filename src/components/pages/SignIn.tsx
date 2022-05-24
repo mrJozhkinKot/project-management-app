@@ -68,7 +68,7 @@ function SignIn(): React.ReactElement {
       .unwrap()
       .then(async (res) => {
         if (res?.token) {
-          setCookies('token', res.token, { maxAge: 10 });
+          setCookies('token', res.token, { maxAge: 300 });
           reset();
           navigate('/boards');
         }

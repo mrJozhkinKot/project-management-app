@@ -83,8 +83,8 @@ function SignUp(): React.ReactElement {
             .then((res) => {
               if (res?.token) {
                 console.log('signIn successful!: ', res);
-                setCookie('token', res.token, { maxAge: 10 });
-                setCookie('name', data.name, { maxAge: 10 });
+                setCookie('token', res.token, { maxAge: 300 });
+                setCookie('name', data.name, { maxAge: 300 });
                 reset();
                 navigate('/boards');
               }
