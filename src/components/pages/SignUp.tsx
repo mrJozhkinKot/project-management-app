@@ -12,6 +12,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { useTranslation } from 'react-i18next';
 
 const style = {
   container: {
@@ -39,6 +40,7 @@ const style = {
 
 function SignUp(): React.ReactElement {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const {
     register,
@@ -82,7 +84,7 @@ function SignUp(): React.ReactElement {
   return (
     <Container maxWidth="lg" sx={style.container}>
       <Typography variant="h5" sx={{ margin: '0.8em' }}>
-        Sign Up for Free
+        {t('sign_up_for_free')}
       </Typography>
       <Box
         component="form"
@@ -93,47 +95,47 @@ function SignUp(): React.ReactElement {
         autoComplete="off"
       >
         <TextField
-          label="Name"
+          label={t('name')}
           id="signup-form__name"
           type="text"
           helperText={errors?.name?.message}
           sx={style.input}
           fullWidth
           {...register('name', {
-            required: 'Required field',
+            required: t('required_field'),
             minLength: {
               value: 2,
-              message: 'Minimum 2 symbols',
+              message: t('minimum_2_symbols'),
             },
           })}
         />
         <TextField
-          label="Login"
+          label={t('login')}
           id="signup-form__login"
           type="text"
           helperText={errors?.login?.message}
           sx={style.input}
           fullWidth
           {...register('login', {
-            required: 'Required field',
+            required: t('required_field'),
             minLength: {
               value: 2,
-              message: 'Minimum 2 symbols',
+              message: t('minimum_2_symbols'),
             },
           })}
         />
         <TextField
-          label="Password"
+          label={t('password')}
           id="signup-form__password"
           type="password"
           helperText={errors?.password?.message}
           sx={style.input}
           fullWidth
           {...register('password', {
-            required: 'Required field',
+            required: t('required_field'),
             pattern: {
               value: new RegExp(/(?=.*[0-9])(?=.*[a-z])[0-9!@#$%^&*a-zA-Z]{6,}/g),
-              message: '6 symbols (letters + digits)',
+              message: t('6_symbols'),
             },
           })}
         />
@@ -144,7 +146,7 @@ function SignUp(): React.ReactElement {
           sx={style.btn}
           className="signup-form__submit-btn"
         >
-          Get started
+          {t('get_started')}
         </Button>
       </Box>
     </Container>

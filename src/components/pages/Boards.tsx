@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import ModalBoard from '../modal/ModalBoard';
 import { boardsSlice } from '../../reducers/BoardsSlice';
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import Spinner from '../spinner/Spinner';
 import ConfirmBoardModal from '../modal/ConfirmBoardModal';
@@ -11,6 +12,7 @@ import ConfirmBoardModal from '../modal/ConfirmBoardModal';
 const Boards = () => {
   const { setIsModalBoard } = boardsSlice.actions;
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const { isLoading } = useAppSelector((state) => state.boardsReducer);
 
   const onClickCreateBtn = () => {
@@ -31,7 +33,7 @@ const Boards = () => {
       <Fragment>
         <Box>
           <Button variant="contained" sx={style} onClick={onClickCreateBtn}>
-            Create Board
+            {t('create_board')}
           </Button>
           <BoardList />
           <ModalBoard />

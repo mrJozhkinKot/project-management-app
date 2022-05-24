@@ -9,6 +9,7 @@ import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { createTheme, ThemeProvider } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { boardsAPI } from '../../utils/boardService';
 
 const defaultValues = {
@@ -55,6 +56,8 @@ const ModalBoard = () => {
   const { setIsModalBoard } = boardsSlice.actions;
   const dispatch = useAppDispatch();
   const { isModalBoard } = useAppSelector((state) => state.boardsReducer);
+  const { t } = useTranslation();
+
   const [createBoard, {}] = boardsAPI.useCreateBoardMutation();
   const {
     register,
@@ -89,20 +92,20 @@ const ModalBoard = () => {
         >
           <Box sx={style.box}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              Create a new board:
+              {t('create_a_new_board')}:
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)}>
               <TextField
                 id="name_input"
-                label="Enter name"
-                {...register('title', { required: 'Enter the name' })}
+                label={t('enter_name')}
+                {...register('title', { required: t('enter_the_name') })}
                 sx={style.input}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setValueName(event.target.value);
                 }}
               />
               <Button type="submit" variant="contained" size="small" style={style.btn}>
-                CREATE
+                {t('create')}
               </Button>
             </form>
           </Box>

@@ -12,6 +12,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { useTranslation } from 'react-i18next';
 
 const style = {
   container: {
@@ -39,6 +40,7 @@ const style = {
 
 function SignIn(): React.ReactElement {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const {
     register,
@@ -73,7 +75,7 @@ function SignIn(): React.ReactElement {
   return (
     <Container maxWidth="lg" sx={style.container}>
       <Typography variant="h5" sx={{ margin: '0.8em' }}>
-        Welcome Back!
+        {t('welcome_back')}!
       </Typography>
       <Box
         component="form"
@@ -84,32 +86,32 @@ function SignIn(): React.ReactElement {
         autoComplete="on"
       >
         <TextField
-          label="Login"
+          label={t('login')}
           id="signin-form__login"
           type="text"
           helperText={errors?.login?.message}
           sx={style.input}
           fullWidth
           {...register('login', {
-            required: 'Required field',
+            required: t('required_field'),
             minLength: {
               value: 2,
-              message: 'Minimum 2 symbols',
+              message: t('minimum_2_symbols'),
             },
           })}
         />
         <TextField
-          label="Password"
+          label={t('password')}
           id="signin-form__password"
           type="password"
           helperText={errors?.password?.message}
           sx={style.input}
           fullWidth
           {...register('password', {
-            required: 'Required field',
+            required: t('required_field'),
             pattern: {
               value: new RegExp(/(?=.*[0-9])(?=.*[a-z])[0-9!@#$%^&*a-zA-Z]{6,}/g),
-              message: '6 symbols (letters + digits)',
+              message: t('6_symbols'),
             },
           })}
         />
@@ -120,7 +122,7 @@ function SignIn(): React.ReactElement {
           sx={style.btn}
           className="signin-form__submit-btn"
         >
-          Sign In
+          {t('sign_in')}
         </Button>
       </Box>
     </Container>
