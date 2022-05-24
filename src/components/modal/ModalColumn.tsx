@@ -1,15 +1,16 @@
-import * as React from 'react';
+import { createTheme, ThemeProvider } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
 import Modal from '@mui/material/Modal';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { boardsSlice } from '../../reducers/BoardsSlice';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { createTheme, ThemeProvider } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { boardsSlice } from '../../reducers/BoardsSlice';
 import { boardsAPI } from '../../utils/boardService';
 
 const defaultValues = {
@@ -58,6 +59,7 @@ const ModalColumn = () => {
   const { isModalColumn } = useAppSelector((state) => state.boardsReducer);
   const { id } = useParams();
   const [createColumn, {}] = boardsAPI.useCreateColumnMutation();
+  const { t } = useTranslation();
 
   const {
     register,
@@ -92,20 +94,20 @@ const ModalColumn = () => {
         >
           <Box sx={style.box}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              Create a new column:
+              {t('create_a_new_column')}:
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)}>
               <TextField
                 id="descrtption_input"
-                label="new column"
+                label={t('new_column')}
                 sx={style.input}
-                {...register('title', { required: 'Enter the description' })}
+                {...register('title', { required: t('enter_the_description') })}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setValueText(event.target.value);
                 }}
               />
               <Button type="submit" variant="contained" size="small" style={style.btn}>
-                CREATE
+                {t('create')}
               </Button>
             </form>
           </Box>

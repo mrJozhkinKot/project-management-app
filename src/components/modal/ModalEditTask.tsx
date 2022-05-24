@@ -1,16 +1,17 @@
-import * as React from 'react';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import { createTheme, ThemeProvider } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
 import Modal from '@mui/material/Modal';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { boardsSlice } from '../../reducers/BoardsSlice';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { createTheme, ThemeProvider } from '@mui/material';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { boardsSlice } from '../../reducers/BoardsSlice';
 import { boardsAPI } from '../../utils/boardService';
+import { useTranslation } from 'react-i18next';
 
 const defaultValues = {
   title: '',
@@ -74,6 +75,7 @@ const ModalEditTask = () => {
   const [valueTitle, setValueTitle] = useState(task?.title || '');
   const [valueDescription, setValueDescription] = useState(task?.description || '');
   const [updateTask, {}] = boardsAPI.useUpdateTaskMutation();
+  const { t } = useTranslation();
 
   const {
     register,
@@ -125,12 +127,12 @@ const ModalEditTask = () => {
         >
           <Box sx={style.box}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              Edit task:
+              {t('edit_task')}:
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)}>
               <TextField
                 id="title_input"
-                label="new task"
+                label={t('new_task')}
                 value={valueTitle}
                 sx={style.input}
                 {...register('title')}
@@ -140,22 +142,22 @@ const ModalEditTask = () => {
               />
               <TextField
                 id="descrtption_input"
-                label="Enter description"
+                label={t('enter_description')}
                 value={valueDescription}
                 multiline
                 rows={4}
                 sx={style.input}
-                {...register('description', { required: 'Enter the description' })}
+                {...register('description', { required: t('enter_the_description') })}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setValueDescription(event.target.value);
                 }}
               />
               <div style={style.btnContainer}>
                 <Button type="submit" variant="contained" size="small" style={style.btn}>
-                  SAVE
+                  {t('save')}
                 </Button>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                  userName
+                  {t('user_name')}
                   <PersonAddIcon sx={style.icon} onClick={onClickAddUserBtn} />
                 </div>
               </div>

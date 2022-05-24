@@ -1,9 +1,10 @@
-import React from 'react';
+//import update from 'immutability-helper';
 import Grid from '@mui/material/Grid';
-import Column from './Column';
+import React from 'react';
 import { useParams } from 'react-router-dom';
-import Spinner from '../spinner/Spinner';
 import { boardsAPI } from '../../utils/boardService';
+import Spinner from '../spinner/Spinner';
+import Column from './Column';
 
 const ColumnList = () => {
   const { id } = useParams();

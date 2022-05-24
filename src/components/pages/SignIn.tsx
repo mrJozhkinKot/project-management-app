@@ -1,17 +1,18 @@
-// TODO: Add spinner while waiting for server response
-// TODO: Add token processing (save it into cookies)
-// TODO: Change the global var 'isAuth'
-
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import { SignInBodyInterface } from '../../utils/interfaces';
-import { signIn } from '../../utils/serverAPI';
-import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import React from 'react';
+import { useCookies } from 'react-cookie';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { useCheckCookiesExpired } from '../../hooks/authorization';
+import { useAppSelector } from '../../hooks/redux';
+import { BadRequestInterface, SignInBodyInterface } from '../../utils/interfaces';
+import { usersAPI } from '../../utils/usersService';
+import Spinner from '../spinner/Spinner';
 
 const style = {
   container: {
@@ -38,7 +39,11 @@ const style = {
 };
 
 function SignIn(): React.ReactElement {
+  const [cookies, setCookies] = useCookies(['token']);
+  const [signIn, { isLoading }] = usersAPI.useSignInMutation();
+  const { isAuth, login, userName, token, userId } = useAppSelector((state) => state.globalReducer);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const {
     register,
@@ -47,33 +52,47 @@ function SignIn(): React.ReactElement {
     formState: { errors },
   } = useForm<SignInBodyInterface>({ mode: 'onSubmit', reValidateMode: 'onChange' });
 
-  function onSignIn(data: SignInBodyInterface) {
-    signIn(data)
-      .then((res) => {
-        if (res) {
-          console.log('signIn successful!: ', res);
+  useCheckCookiesExpired();
+
+  function handleErrors(error: BadRequestInterface) {
+    console.log('signIn failed!: ', error);
+    if (error.statusCode === 400) {
+      console.log('Found empty field!');
+    }
+    if (error.statusCode === 403) {
+      console.log('User was not found or password was wrong!');
+    } else if (error.statusCode < 200 || error.statusCode >= 300) {
+      console.log('This error code was not processed');
+    }
+  }
+
+  function onSignIn(userData: SignInBodyInterface) {
+    signIn(userData)
+      .unwrap()
+      .then(async (res) => {
+        if (res?.token) {
+          setCookies('token', res.token, { maxAge: 300 });
+          reset();
           navigate('/boards');
         }
       })
-      .catch((error) => {
-        console.log('signIn failed!: ', error);
-        if (error.statusCode === 400) {
-          console.log('Found empty field!');
-        }
-        if (error.statusCode === 403) {
-          console.log('User was not found or password was wrong!');
-        } else if (error.statusCode < 200 || error.statusCode >= 300) {
-          console.log('This error code was not processed');
-        }
+      .catch((error: BadRequestInterface) => {
+        handleErrors(error);
       });
+  }
 
-    reset();
+  if (isLoading) {
+    return <Spinner></Spinner>;
+  }
+
+  if (isAuth) {
+    return <Navigate to="/boards" replace></Navigate>;
   }
 
   return (
     <Container maxWidth="lg" sx={style.container}>
       <Typography variant="h5" sx={{ margin: '0.8em' }}>
-        Welcome Back!
+        {t('welcome_back')}!
       </Typography>
       <Box
         component="form"
@@ -84,32 +103,32 @@ function SignIn(): React.ReactElement {
         autoComplete="on"
       >
         <TextField
-          label="Login"
+          label={t('login')}
           id="signin-form__login"
           type="text"
           helperText={errors?.login?.message}
           sx={style.input}
           fullWidth
           {...register('login', {
-            required: 'Required field',
+            required: t('required_field'),
             minLength: {
               value: 2,
-              message: 'Minimum 2 symbols',
+              message: t('minimum_2_symbols'),
             },
           })}
         />
         <TextField
-          label="Password"
+          label={t('password')}
           id="signin-form__password"
           type="password"
           helperText={errors?.password?.message}
           sx={style.input}
           fullWidth
           {...register('password', {
-            required: 'Required field',
+            required: t('required_field'),
             pattern: {
               value: new RegExp(/(?=.*[0-9])(?=.*[a-z])[0-9!@#$%^&*a-zA-Z]{6,}/g),
-              message: '6 symbols (letters + digits)',
+              message: t('6_symbols'),
             },
           })}
         />
@@ -120,8 +139,21 @@ function SignIn(): React.ReactElement {
           sx={style.btn}
           className="signin-form__submit-btn"
         >
-          Sign In
+          {t('sign_in')}
         </Button>
+        <button
+          onClick={(e: React.MouseEvent) => {
+            e.preventDefault();
+            console.log('cookies.token: ', cookies.token);
+            console.log('token: ', token);
+            console.log('isAuth: ', isAuth);
+            console.log('login: ', login);
+            console.log('userId: ', userId);
+            console.log('userName: ', userName);
+          }}
+        >
+          Show user data
+        </button>
       </Box>
     </Container>
   );

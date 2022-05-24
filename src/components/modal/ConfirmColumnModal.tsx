@@ -1,11 +1,12 @@
-import * as React from 'react';
+import { createTheme, ThemeProvider } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import Typography from '@mui/material/Typography';
+import * as React from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
-import { createTheme, ThemeProvider } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { boardsAPI } from '../../utils/boardService';
 
 const theme = createTheme({
@@ -51,6 +52,7 @@ const ConfirmColumnModal = () => {
     (state) => state.boardsReducer
   );
   const [deleteColumn, {}] = boardsAPI.useDeleteColumnMutation();
+  const { t } = useTranslation();
 
   const handleClose = () => {
     dispatch(setIsConfirmColumnModal(false));
@@ -72,7 +74,7 @@ const ConfirmColumnModal = () => {
         >
           <Box sx={style.box}>
             <Typography id="modal-modal-title" variant="h6" component="h2" sx={style.message}>
-              Delete this column with all tasks?
+              {t('delete_this_column_with_all_tasks')}?
             </Typography>
             <div style={style.btnContainer}>
               <Button
@@ -84,7 +86,7 @@ const ConfirmColumnModal = () => {
                   dispatch(setIsConfirmColumnModal(false));
                 }}
               >
-                CANCEL
+                {t('cancel')}
               </Button>
               <Button
                 type="submit"
@@ -93,7 +95,7 @@ const ConfirmColumnModal = () => {
                 sx={{ ...style.btn, backgroundColor: '#E36655' }}
                 onClick={onClickConfirmDeleteBtn}
               >
-                DELETE
+                {t('delete')}
               </Button>
             </div>
           </Box>

@@ -1,13 +1,14 @@
-import * as React from 'react';
+import { CardActionArea } from '@mui/material';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
-import Button from '@mui/material/Button';
 import CardHeader from '@mui/material/CardHeader';
-import { CardActionArea } from '@mui/material';
+import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';
-import { BoardDraftInterface } from '../../utils/interfaces';
 import { useAppDispatch } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
+import { BoardDraftInterface } from '../../utils/interfaces';
 
 interface Props {
   board: BoardDraftInterface;
@@ -16,6 +17,7 @@ interface Props {
 const Board: React.FC<Props> = ({ board }) => {
   const { setCurrentBoardId, setIsConfirmBoardModal } = boardsSlice.actions;
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   const onClickDeleteBtn = () => {
     dispatch(setCurrentBoardId(board.id));
@@ -46,7 +48,7 @@ const Board: React.FC<Props> = ({ board }) => {
       </NavLink>
       <CardActions>
         <Button variant="contained" size="small" style={style.btn} onClick={onClickDeleteBtn}>
-          Delete
+          {t('delete')}
         </Button>
       </CardActions>
     </Card>

@@ -2,6 +2,7 @@ import React from 'react';
 import { Container, Grid, Link, SvgIcon, Typography } from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import { ReactComponent as RSSIcon } from '../img/rs_school_js.svg';
+import { useTranslation } from 'react-i18next';
 
 const style = {
   footer: {
@@ -46,6 +47,7 @@ const style = {
 };
 
 const Footer: React.FC = () => {
+  const { t } = useTranslation();
   return (
     <footer style={style.footer}>
       <Container maxWidth="xl">
@@ -67,7 +69,7 @@ const Footer: React.FC = () => {
               >
                 <Typography component="span" variant="body2" sx={style.teammate}>
                   <GitHubIcon fontSize="small" sx={style.githubIcon} />
-                  Yulia
+                  {t('Yulia')}
                 </Typography>
               </Link>
             </Grid>
@@ -82,7 +84,7 @@ const Footer: React.FC = () => {
               >
                 <Typography component="span" variant="body2" sx={style.teammate}>
                   <GitHubIcon fontSize="small" sx={style.githubIcon} />
-                  Sergey
+                  {t('Sergey')}
                 </Typography>
               </Link>
             </Grid>
@@ -97,7 +99,7 @@ const Footer: React.FC = () => {
               >
                 <Typography component="span" variant="body2" sx={style.teammate}>
                   <GitHubIcon fontSize="small" sx={style.githubIcon} />
-                  Vera
+                  {t('Vera')}
                 </Typography>
               </Link>
             </Grid>

@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from 'react';
-//import update from 'immutability-helper';
-import { Task } from './Task';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import { boardsSlice } from '../../reducers/BoardsSlice';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import AddBoxIcon from '@mui/icons-material/AddBox';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import DoneIcon from '@mui/icons-material/Done';
-import { useParams } from 'react-router-dom';
+import Box from '@mui/material/Box';
 import Input from '@mui/material/Input';
-import { ColumnDraftInterface } from '../../utils/interfaces';
+import Typography from '@mui/material/Typography';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { boardsSlice } from '../../reducers/BoardsSlice';
 import { boardsAPI } from '../../utils/boardService';
+import { ColumnDraftInterface } from '../../utils/interfaces';
+import { Task } from './Task';
 
 interface ColumnProps {
   column: ColumnDraftInterface;

@@ -1,8 +1,8 @@
-import { boardsSlice } from '../../reducers/BoardsSlice';
-import { useAppDispatch } from '../../hooks/redux';
 import ClearIcon from '@mui/icons-material/Clear';
-import { ColumnDraftInterface, TaskInterface } from '../../utils/interfaces';
 import { useParams } from 'react-router-dom';
+import { useAppDispatch } from '../../hooks/redux';
+import { boardsSlice } from '../../reducers/BoardsSlice';
+import { ColumnDraftInterface, TaskInterface } from '../../utils/interfaces';
 
 const style = {
   task: {

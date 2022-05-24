@@ -1,8 +1,8 @@
-import React from 'react';
-import Board from './BoardItem';
 import Grid from '@mui/material/Grid';
+import React from 'react';
 import { boardsAPI } from '../../utils/boardService';
 import Spinner from '../spinner/Spinner';
+import Board from './BoardItem';
 
 const BoardList = () => {
   const { data: boards, error, isLoading } = boardsAPI.useGetBoardsQuery(10);
