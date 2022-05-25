@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { ColumnDraftInterface, TaskInterface } from '../../utils/interfaces';
+import { Draggable } from 'react-beautiful-dnd';
 
 const style = {
   task: {
@@ -25,7 +26,7 @@ export interface TaskProps {
   column: ColumnDraftInterface;
 }
 
-export const Task: React.FC<TaskProps> = ({ task, column }) => {
+export const Task: React.FC<TaskProps> = ({ task, column, index }) => {
   const {
     setIsModalEditTask,
     setTask,
@@ -55,16 +56,22 @@ export const Task: React.FC<TaskProps> = ({ task, column }) => {
   };
 
   return (
-    <div style={style.task} onClick={onClickEditTask}>
-      {task.title}
-      <ClearIcon
-        fontSize="small"
-        style={style.icon}
-        onClick={(e) => {
-          e.stopPropagation();
-          onClickDeleteBtn();
-        }}
-      />
-    </div>
+    <Draggable draggableId={task.id} index={index}>
+      {(provided) => (
+        <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+          <div style={style.task} onClick={onClickEditTask}>
+            {task.title}
+            <ClearIcon
+              fontSize="small"
+              style={style.icon}
+              onClick={(e) => {
+                e.stopPropagation();
+                onClickDeleteBtn();
+              }}
+            />
+          </div>
+        </div>
+      )}
+    </Draggable>
   );
 };

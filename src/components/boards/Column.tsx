@@ -11,6 +11,7 @@ import { boardsSlice } from '../../reducers/BoardsSlice';
 import { boardsAPI } from '../../utils/boardService';
 import { ColumnDraftInterface } from '../../utils/interfaces';
 import { Task } from './Task';
+import { Droppable } from 'react-beautiful-dnd';
 
 interface ColumnProps {
   column: ColumnDraftInterface;
@@ -69,7 +70,7 @@ const Column: React.FC<ColumnProps> = ({ column }) => {
     },
     content: {
       height: '100%',
-      'overflow-y': 'scroll',
+      overflowY: 'scroll' as const,
     },
     header: {
       color: '#323535',
@@ -102,64 +103,71 @@ const Column: React.FC<ColumnProps> = ({ column }) => {
   };
 
   return (
-    <Box sx={style.container}>
-      <div
-        style={style.header}
-        onClick={() => {
-          dispatch(setIsColumnEdit(true));
-          dispatch(setColumnEdited(column));
-          setValueTitle(column.title);
-        }}
-      >
-        {(!isColumnEdit || column.id !== columnEdited.id) && (
-          <Typography variant="h5">{column.title}</Typography>
-        )}
-        {isColumnEdit && column.id === columnEdited.id && (
-          <div style={style.inputContainer}>
-            <Input
-              id="standard-basic"
-              autoFocus={true}
-              value={valueTitle}
-              disableUnderline={true}
-              sx={style.input}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                setValueTitle(event.target.value);
+    <Droppable droppableId={column.id}>
+      {(provided) => (
+        <div {...provided.droppableProps} ref={provided.innerRef}>
+          <Box sx={style.container}>
+            <div
+              style={style.header}
+              onClick={() => {
+                dispatch(setIsColumnEdit(true));
+                dispatch(setColumnEdited(column));
+                setValueTitle(column.title);
               }}
-              onBlur={() => {
-                dispatch(setIsColumnEdit(false));
-                updateColumn([id as string, { ...columnEdited, title: valueTitle }]);
-              }}
-            />
-            <DoneIcon
-              sx={style.inputIcon}
-              onClick={(event: React.MouseEvent<SVGSVGElement>) => {
-                event.stopPropagation();
-                dispatch(setIsColumnEdit(false));
-                updateColumn([id as string, { ...columnEdited, title: valueTitle }]);
-              }}
-            />
-          </div>
-        )}
-      </div>
-      <div style={style.content}>
-        {tasks &&
-          tasks.map((task, index) => (
-            <Task key={task.id} task={task} index={index} column={column} />
-          ))}
-      </div>
-      <div style={style.btnContainer}>
-        <DeleteForeverIcon
-          sx={{
-            ...style.btn,
-            '&:hover': {
-              color: '#E36655',
-            },
-          }}
-          onClick={onClickDeleteBtn}
-        />
-        <AddBoxIcon sx={style.btn} onClick={onClickCreateBtn} />
-      </div>
-    </Box>
+            >
+              {(!isColumnEdit || column.id !== columnEdited.id) && (
+                <Typography variant="h5">{column.title}</Typography>
+              )}
+              {isColumnEdit && column.id === columnEdited.id && (
+                <div style={style.inputContainer}>
+                  <Input
+                    id="standard-basic"
+                    autoFocus={true}
+                    value={valueTitle}
+                    disableUnderline={true}
+                    sx={style.input}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                      setValueTitle(event.target.value);
+                    }}
+                    onBlur={() => {
+                      dispatch(setIsColumnEdit(false));
+                      updateColumn([id as string, { ...columnEdited, title: valueTitle }]);
+                    }}
+                  />
+                  <DoneIcon
+                    sx={style.inputIcon}
+                    onClick={(event: React.MouseEvent<SVGSVGElement>) => {
+                      event.stopPropagation();
+                      dispatch(setIsColumnEdit(false));
+                      updateColumn([id as string, { ...columnEdited, title: valueTitle }]);
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+            <div style={style.content}>
+              {tasks &&
+                tasks.map((task, index) => (
+                  <Task key={task.id} task={task} index={index} column={column} />
+                ))}
+            </div>
+            <div style={style.btnContainer}>
+              <DeleteForeverIcon
+                sx={{
+                  ...style.btn,
+                  '&:hover': {
+                    color: '#E36655',
+                  },
+                }}
+                onClick={onClickDeleteBtn}
+              />
+              <AddBoxIcon sx={style.btn} onClick={onClickCreateBtn} />
+            </div>
+            {provided.placeholder}
+          </Box>
+        </div>
+      )}
+    </Droppable>
   );
 };
 
