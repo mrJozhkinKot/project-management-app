@@ -7,7 +7,7 @@ import React from 'react';
 import { useCookies } from 'react-cookie';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useCheckCookiesExpired } from '../../hooks/authorization';
 import { useAppSelector } from '../../hooks/redux';
 import {
@@ -46,7 +46,7 @@ function EditProfile(): React.ReactElement {
   const { isAuth, login, userName, token, userId } = useAppSelector((state) => state.globalReducer);
   const [cookie, setCookie] = useCookies(['token', 'name']);
   const [updateUser, { isLoading: isUpdateUserLoading }] = usersAPI.useUpdateUserMutation();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { t } = useTranslation();
   const {
     register,
