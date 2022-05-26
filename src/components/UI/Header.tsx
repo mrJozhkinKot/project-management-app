@@ -147,7 +147,9 @@ function Header(): React.ReactElement {
                   value={i18n.language}
                   onChange={onChange}
                 >
-                  <MenuItem value="en">EN</MenuItem>
+                  <MenuItem selected={true} value="en">
+                    EN
+                  </MenuItem>
                   <MenuItem value="ru">RU</MenuItem>
                 </Select>
               </FormControl>

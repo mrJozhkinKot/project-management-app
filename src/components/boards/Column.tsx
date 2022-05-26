@@ -147,9 +147,12 @@ const Column: React.FC<ColumnProps> = ({ column }) => {
             </div>
             <div style={style.content}>
               {tasks &&
-                tasks.map((task, index) => (
-                  <Task key={task.id} task={task} index={index} column={column} />
-                ))}
+                tasks
+                  .map((task) => task)
+                  .sort((a, b) => (a.order > b.order ? 1 : -1))
+                  .map((task, index) => (
+                    <Task key={task.id} task={task} index={index} column={column} />
+                  ))}
             </div>
             <div style={style.btnContainer}>
               <DeleteForeverIcon

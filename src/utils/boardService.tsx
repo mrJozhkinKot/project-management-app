@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react';
 import {
   BoardDraftInterface,
+  BoardInterface,
   ColumnBodyInterface,
   ColumnDraftInterface,
   TaskCreateBodyInterface,
@@ -27,6 +28,16 @@ export const boardsAPI = createApi({
         },
       }),
       providesTags: ['Boards'],
+    }),
+    getBoard: build.query<BoardInterface | null, string>({
+      query: (boardID) => ({
+        url: `/boards/${boardID}`,
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+      providesTags: ['Boards', 'Columns', 'Tasks'],
     }),
     createBoard: build.mutation<BoardDraftInterface | null, { title: string; description: string }>(
       {
