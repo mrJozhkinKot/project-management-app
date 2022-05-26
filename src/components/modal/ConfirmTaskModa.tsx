@@ -6,8 +6,8 @@ import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
-import { tasksAPI } from '../../utils/tasksService';
 import { useTranslation } from 'react-i18next';
+import { boardsAPI } from '../../utils/boardService';
 
 const theme = createTheme({
   palette: {
@@ -51,7 +51,7 @@ const ConfirmTaskModal = () => {
   const { isConfirmTaskModal, currentBoardId, currentColumnId, currentTaskId } = useAppSelector(
     (state) => state.boardsReducer
   );
-  const [deleteTask, {}] = tasksAPI.useDeleteTaskMutation();
+  const [deleteTask, {}] = boardsAPI.useDeleteTaskMutation();
   const { t } = useTranslation();
 
   const handleClose = () => {

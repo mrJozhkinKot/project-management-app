@@ -6,8 +6,8 @@ import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
-import { columnsAPI } from '../../utils/columnsService';
 import { useTranslation } from 'react-i18next';
+import { boardsAPI } from '../../utils/boardService';
 
 const theme = createTheme({
   palette: {
@@ -51,7 +51,7 @@ const ConfirmColumnModal = () => {
   const { isConfirmColumnModal, currentBoardId, currentColumnId } = useAppSelector(
     (state) => state.boardsReducer
   );
-  const [deleteColumn, {}] = columnsAPI.useDeleteColumnMutation();
+  const [deleteColumn, {}] = boardsAPI.useDeleteColumnMutation();
   const { t } = useTranslation();
 
   const handleClose = () => {

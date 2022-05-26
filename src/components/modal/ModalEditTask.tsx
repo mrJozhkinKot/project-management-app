@@ -8,10 +8,9 @@ import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
-import { tasksAPI } from '../../utils/tasksService';
+import { boardsAPI } from '../../utils/boardService';
 import { useTranslation } from 'react-i18next';
 
 const defaultValues = {
@@ -73,10 +72,9 @@ const ModalEditTask = () => {
   const { isModalEditTask, currentColumnId, currentBoardId, task } = useAppSelector(
     (state) => state.boardsReducer
   );
-  const { id } = useParams();
   const [valueTitle, setValueTitle] = useState(task?.title || '');
   const [valueDescription, setValueDescription] = useState(task?.description || '');
-  const [updateTask, {}] = tasksAPI.useUpdateTaskMutation();
+  const [updateTask, {}] = boardsAPI.useUpdateTaskMutation();
   const { t } = useTranslation();
 
   const {
@@ -92,7 +90,7 @@ const ModalEditTask = () => {
 
   const onClickAddUserBtn = () => {
     if (task) {
-      updateTask([id as string, currentColumnId, { ...task, userId: task?.userId || '' }]);
+      //updateTask([id as string, currentColumnId, { ...task, userId: task?.userId || '' }]);
     }
   };
 
@@ -136,7 +134,6 @@ const ModalEditTask = () => {
                 id="title_input"
                 label={t('new_task')}
                 value={valueTitle}
-                rows={2}
                 sx={style.input}
                 {...register('title')}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {

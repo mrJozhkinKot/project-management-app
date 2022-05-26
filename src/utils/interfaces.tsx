@@ -39,6 +39,7 @@ export interface InternalServerErrorInterface {
 export interface BoardDraftInterface {
   id: string;
   title: string;
+  description: string;
 }
 
 export interface BoardInterface {
@@ -49,7 +50,6 @@ export interface BoardInterface {
 
 export interface ColumnBodyInterface {
   title: string;
-  order: number;
 }
 
 export interface ColumnDraftInterface {
@@ -67,7 +67,6 @@ export interface ColumnInterface {
 
 export interface TaskCreateBodyInterface {
   title: string;
-  order: number;
   description: string;
   userId: string;
 }
