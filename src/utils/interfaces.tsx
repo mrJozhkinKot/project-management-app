@@ -5,7 +5,6 @@ export interface UserInterface {
 }
 
 export interface UpdateUserInterface {
-  id: string;
   name: string;
   login: string;
   password: string;

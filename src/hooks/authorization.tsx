@@ -60,8 +60,7 @@ export function useWatchCookiesToken() {
       dispatch(setUserId(''));
       dispatch(setLogin(''));
       dispatch(setUserName(''));
-    }
-    if (cookies.token) {
+    } else if (cookies.token) {
       const decodedToken: DecodedTokenInterface = jwt_decode(cookies.token);
       dispatch(setIsAuth(true));
       dispatch(setToken(cookies.token));
