@@ -44,9 +44,8 @@ const style = {
 
 function EditProfile(): React.ReactElement {
   const { isAuth, login, userName, token, userId } = useAppSelector((state) => state.globalReducer);
-  const [cookie, setCookie] = useCookies(['token', 'name']);
+  const [, setCookie] = useCookies(['token', 'name']);
   const [updateUser, { isLoading: isUpdateUserLoading }] = usersAPI.useUpdateUserMutation();
-  // const navigate = useNavigate();
   const { t } = useTranslation();
   const {
     register,
@@ -71,12 +70,11 @@ function EditProfile(): React.ReactElement {
       .unwrap()
       .then(async (response) => {
         if (response?.id) {
-          console.log('updateUser successful!: ', response);
           setCookie('token', token, { maxAge: 300 });
           setCookie('name', response.name, { maxAge: 300 });
           resetField('password');
-          // alert('updateUser successful!');
-          // navigate('/boards');
+          //TODO: - change alert for toast or pop-up
+          // alert('Your data update was successful!');
         }
       })
       .catch((error: BadRequestInterface) => {
@@ -162,19 +160,6 @@ function EditProfile(): React.ReactElement {
         >
           {t('save')}
         </Button>
-        <button
-          onClick={(e: React.MouseEvent) => {
-            e.preventDefault();
-            console.log('cookie.token: ', cookie.token);
-            console.log('token: ', token);
-            console.log('isAuth: ', isAuth);
-            console.log('login: ', login);
-            console.log('userId: ', userId);
-            console.log('userName: ', userName);
-          }}
-        >
-          Show user data
-        </button>
       </Box>
     </Container>
   );

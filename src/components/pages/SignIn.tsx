@@ -39,12 +39,11 @@ const style = {
 };
 
 function SignIn(): React.ReactElement {
-  const [cookies, setCookies] = useCookies(['token']);
+  const [, setCookies] = useCookies(['token']);
   const [signIn, { isLoading }] = usersAPI.useSignInMutation();
-  const { isAuth, login, userName, token, userId } = useAppSelector((state) => state.globalReducer);
+  const { isAuth } = useAppSelector((state) => state.globalReducer);
   const navigate = useNavigate();
   const { t } = useTranslation();
-
   const {
     register,
     handleSubmit,
@@ -141,19 +140,6 @@ function SignIn(): React.ReactElement {
         >
           {t('sign_in')}
         </Button>
-        <button
-          onClick={(e: React.MouseEvent) => {
-            e.preventDefault();
-            console.log('cookies.token: ', cookies.token);
-            console.log('token: ', token);
-            console.log('isAuth: ', isAuth);
-            console.log('login: ', login);
-            console.log('userId: ', userId);
-            console.log('userName: ', userName);
-          }}
-        >
-          Show user data
-        </button>
       </Box>
     </Container>
   );
