@@ -173,6 +173,16 @@ function Header(): React.ReactElement {
             </Box>
             <Button
               onClick={() => {
+                navigate('/welcome');
+              }}
+              variant="outlined"
+              size="small"
+              sx={{ ...style.buttonOutlined, marginRight: '10px' }}
+            >
+              Main page
+            </Button>
+            <Button
+              onClick={() => {
                 deleteCookies('token');
                 navigate('/welcome');
               }}
