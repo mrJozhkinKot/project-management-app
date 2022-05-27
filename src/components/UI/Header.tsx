@@ -12,7 +12,6 @@ import {
   Select,
   SelectChangeEvent,
   Toolbar,
-  Typography,
 } from '@mui/material';
 import React from 'react';
 import { useCookies } from 'react-cookie';
@@ -130,10 +129,25 @@ function Header(): React.ReactElement {
                   </Select>
                 </FormControl>
                 <MenuItem onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">Edit profile</Typography>
+                  <Button
+                    onClick={() => {
+                      handleCloseNavMenu();
+                      navigate('/editprofile');
+                    }}
+                  >
+                    {t('edit_profile')}
+                  </Button>
                 </MenuItem>
                 <MenuItem onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">Create new board</Typography>
+                  <Button
+                    onClick={() => {
+                      handleCloseNavMenu();
+                      dispatch(setIsModalBoard(true));
+                      navigate('/boards');
+                    }}
+                  >
+                    {t('create_new_board')}
+                  </Button>
                 </MenuItem>
               </Menu>
             </Box>
