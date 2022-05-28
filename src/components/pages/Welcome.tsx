@@ -2,6 +2,7 @@ import { Card, CardContent, CardMedia, Container, Grid, Link, Typography } from 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import React, { Fragment } from 'react';
 import { useCheckCookiesExpired } from '../../hooks/authorization';
+import { useTranslation } from 'react-i18next';
 
 const theme = createTheme();
 
@@ -34,6 +35,7 @@ const style = {
 
 function Welcome(): React.ReactElement {
   useCheckCookiesExpired();
+  const { t } = useTranslation();
 
   return (
     <Fragment>
@@ -42,14 +44,13 @@ function Welcome(): React.ReactElement {
           <Grid container sx={style.container} component="section">
             <Grid item lg={6} md={6} sm={12} xs={12} sx={style.aboutProject}>
               <Typography component="h1" variant="h2">
-                Project management app
+                {t('project_management_app')}
               </Typography>
               <Typography component="h2" variant="h4" sx={{ mb: '0.5rem', mt: '0.75rem' }}>
-                Can help you to manage your projects effectively
+                {t('can_help_you')}
               </Typography>
               <Typography component="h2" variant="h4" sx={{ mb: '1rem' }}>
-                Create new boards, columns, tasks, drag and drop it and enjoy working productively
-                watching progress visually
+                {t('enjoy_working')}
               </Typography>
             </Grid>
 
@@ -61,7 +62,7 @@ function Welcome(): React.ReactElement {
               sm={12}
               xs={12}
               src={require('../img/kanban.jpg')}
-              alt="kanban"
+              alt={t('kanban')}
               style={style.img}
             ></Grid>
           </Grid>
@@ -75,7 +76,7 @@ function Welcome(): React.ReactElement {
               align="center"
               sx={{ m: 3 }}
             >
-              Our team
+              {t('our_team')}
             </Typography>
             <Grid container spacing={3}>
               <Grid item lg={4} md={4} sm={6} xs={12} display="flex">
@@ -84,14 +85,14 @@ function Welcome(): React.ReactElement {
                     component="img"
                     height="300"
                     src="https://images.unsplash.com/photo-1598015132635-131afe3ba07f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nzd8fHRlYW18ZW58MHx8MHx8&auto=format&fit=crop&w=400&q=60"
-                    alt="photo"
+                    alt={t('photo')}
                   />
                   <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
-                      Yulia
+                      {t('Yulia')}
                     </Typography>
                     <Typography variant="body1" color="text.secondary">
-                      Team lead. Developed architecture, design, main page, boards, tasks...
+                      {t('contribution_Yulia')}
                     </Typography>
                   </CardContent>
                 </Card>
@@ -103,14 +104,14 @@ function Welcome(): React.ReactElement {
                     component="img"
                     height="300"
                     src="https://images.unsplash.com/photo-1598015132635-131afe3ba07f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nzd8fHRlYW18ZW58MHx8MHx8&auto=format&fit=crop&w=400&q=60"
-                    alt="photo"
+                    alt={t('photo')}
                   />
                   <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
-                      Sergey
+                      {t('Sergey')}
                     </Typography>
                     <Typography variant="body1" color="text.secondary">
-                      Implemented backend deployment, user authorization and edit profile...
+                      {t('contribution_Sergey')}
                     </Typography>
                   </CardContent>
                 </Card>
@@ -122,14 +123,14 @@ function Welcome(): React.ReactElement {
                     component="img"
                     height="300"
                     src="https://images.unsplash.com/photo-1598015132635-131afe3ba07f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nzd8fHRlYW18ZW58MHx8MHx8&auto=format&fit=crop&w=400&q=60"
-                    alt="photo"
+                    alt={t('photo')}
                   />
                   <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
-                      Vera
+                      {t('Vera')}
                     </Typography>
                     <Typography variant="body1" color="text.secondary">
-                      Implemented header, welcome page, footer, application localization.
+                      {t('contribution_Vera')}
                     </Typography>
                   </CardContent>
                 </Card>
@@ -151,19 +152,17 @@ function Welcome(): React.ReactElement {
               justifyContent="center"
               sx={{ mb: 2.5 }}
             >
-              Аbout the React course at RS School
+              {t('about_the_React_course')}
             </Typography>
             <Typography component="p" variant="body1">
-              &quot;React Development&quot; is a free online course from The Rolling Scopes
-              community. Everyone can study at RS School, regardless of age, professional employment
-              or location. For more information or to register for the course, please&nbsp;
+              {t('react_development')}&nbsp;
               <Link
                 href="https://rs.school/react/"
                 target="_blank"
                 rel="noreferrer"
                 underline="none"
               >
-                follow the link.
+                {t('follow_the_link')}
               </Link>
             </Typography>
           </Grid>
