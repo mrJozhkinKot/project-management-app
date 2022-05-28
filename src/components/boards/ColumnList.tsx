@@ -61,7 +61,14 @@ const ColumnList = () => {
       : [];
 
     const delArrOfTasks =
-      colDestination?.tasks && colSource?.tasks.map((task) => task).splice(source.index, 1);
+      colDestination?.tasks && colSource?.tasks
+        ? moveDeleted(
+            colSource?.tasks.map((task) => task).sort((a, b) => (a.order > b.order ? 1 : -1)),
+            colDestination?.tasks.map((task) => task).sort((a, b) => (a.order > b.order ? 1 : -1)),
+            source,
+            destination
+          )
+        : [];
 
     const addedArrOfTasks =
       colDestination?.tasks && colSource?.tasks
@@ -142,9 +149,19 @@ const ColumnList = () => {
           setLocalColumns(
             localColumns.map((col) => {
               if (col.id === colDestination.id) {
-                return { ...col, tasks: addedArrOfTasks };
+                return {
+                  ...col,
+                  tasks: addedArrOfTasks
+                    .map((task) => task)
+                    .sort((a, b) => (a.order > b.order ? 1 : -1)),
+                };
               } else if (col.id === colSource.id) {
-                return { ...col, tasks: delArrOfTasks };
+                return {
+                  ...col,
+                  tasks: delArrOfTasks
+                    .map((task) => task)
+                    .sort((a, b) => (a.order > b.order ? 1 : -1)),
+                };
               } else {
                 return col;
               }
@@ -225,6 +242,21 @@ const ColumnList = () => {
     destClone.splice(droppableDestination.index, 0, removed);
 
     const result = destClone;
+    return result;
+  };
+
+  const moveDeleted = (
+    source: TaskDraftInterface[],
+    destination: TaskDraftInterface[],
+    droppableSource: DraggableLocation,
+    droppableDestination: DraggableLocation
+  ) => {
+    const sourceClone = Array.from(source);
+    const destClone = Array.from(destination);
+    const [removed] = sourceClone.splice(droppableSource.index, 1);
+    destClone.splice(droppableDestination.index, 0, removed);
+
+    const result = sourceClone;
     return result;
   };
 
