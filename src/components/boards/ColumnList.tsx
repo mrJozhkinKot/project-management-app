@@ -1,19 +1,19 @@
-//import update from 'immutability-helper';
 import Grid from '@mui/material/Grid';
 import React from 'react';
-import { DragDropContext, DraggableLocation } from 'react-beautiful-dnd';
+import { DragDropContext, DraggableLocation, Droppable } from 'react-beautiful-dnd';
 import { DropResult } from 'react-beautiful-dnd';
 import { useParams } from 'react-router-dom';
 import { boardsAPI } from '../../utils/boardService';
 import Spinner from '../spinner/Spinner';
 import Column from './Column';
-import { ColumnInterface, TaskDraftInterface } from '../../utils/interfaces';
+import { ColumnDraftInterface, ColumnInterface, TaskDraftInterface } from '../../utils/interfaces';
 
 const ColumnList = () => {
   const { id } = useParams();
   const { data: columns, isLoading } = boardsAPI.useGetColumnsQuery(id as string);
   const { data: board } = boardsAPI.useGetBoardQuery(id as string);
   const [updateTask, {}] = boardsAPI.useUpdateTaskMutation();
+  const [updateColumn, {}] = boardsAPI.useUpdateColummnMutation();
   const [createTask, {}] = boardsAPI.useCreateTasksMutation();
   const [deleteTask, {}] = boardsAPI.useDeleteTaskMutation();
 
@@ -23,8 +23,9 @@ const ColumnList = () => {
       marginBottom: '10rem',
     },
   };
+
   const onDragEnd = (result: DropResult) => {
-    const { destination, source } = result;
+    const { destination, source, type } = result;
     if (!destination) {
       return;
     }
@@ -51,6 +52,23 @@ const ColumnList = () => {
             destination
           )
         : [];
+
+    const reorderedColumns = columns
+      ? reorderColumns(
+          columns?.map((col) => col).sort((a, b) => (a.order > b.order ? 1 : -1)),
+          source.index,
+          destination.index
+        )
+      : [];
+
+    if (columns && type === 'list') {
+      columns
+        .map((col) => col)
+        .sort((a, b) => (a.order > b.order ? 1 : -1))
+        .map((col, index) => {
+          updateColumn([id as string, { ...col, order: reorderedColumns[index].order }]);
+        });
+    }
 
     if (sInd === dInd) {
       colSource?.tasks
@@ -108,6 +126,17 @@ const ColumnList = () => {
     }
   };
 
+  const reorderColumns = (
+    columns: ColumnDraftInterface[],
+    startIndex: number,
+    endIndex: number
+  ): ColumnDraftInterface[] => {
+    const result = Array.from(columns);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+    return result;
+  };
+
   const reorder = (
     tasks: TaskDraftInterface[],
     startIndex: number,
@@ -137,20 +166,33 @@ const ColumnList = () => {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div>
-        <div>
-          {isLoading && <Spinner />}
-          <Grid sx={style.container} container spacing={4} pl={4} pr={4}>
-            {columns &&
-              columns
-                .map((task) => task)
-                .sort((a, b) => (a.order > b.order ? 1 : -1))
-                .map((column, index) => (
-                  <Grid key={String(column.id)} item xs={12} sm={6} md={4} lg={3}>
-                    <Column column={column} index={index} />
-                  </Grid>
-                ))}
-          </Grid>
-        </div>
+        {isLoading && <Spinner />}
+        {!isLoading && (
+          <Droppable droppableId="columnList" direction="horizontal" type="list">
+            {(provided) => (
+              <Grid
+                sx={style.container}
+                container
+                spacing={4}
+                pl={4}
+                pr={4}
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                {columns &&
+                  columns
+                    .map((task) => task)
+                    .sort((a, b) => (a.order > b.order ? 1 : -1))
+                    .map((column, index) => (
+                      <Grid key={String(column.id)} item xs={12} sm={6} md={4} lg={3}>
+                        <Column column={column} index={index} />
+                      </Grid>
+                    ))}
+                {provided.placeholder}
+              </Grid>
+            )}
+          </Droppable>
+        )}
       </div>
     </DragDropContext>
   );

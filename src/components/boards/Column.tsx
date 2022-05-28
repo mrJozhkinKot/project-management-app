@@ -11,14 +11,14 @@ import { boardsSlice } from '../../reducers/BoardsSlice';
 import { boardsAPI } from '../../utils/boardService';
 import { ColumnDraftInterface } from '../../utils/interfaces';
 import { Task } from './Task';
-import { Droppable } from 'react-beautiful-dnd';
+import { Draggable, Droppable } from 'react-beautiful-dnd';
 
 interface ColumnProps {
   column: ColumnDraftInterface;
   index: number;
 }
 
-const Column: React.FC<ColumnProps> = ({ column }) => {
+const Column: React.FC<ColumnProps> = ({ column, index }) => {
   const {
     setIsModalTask,
     setCurrentColumnId,
@@ -103,74 +103,76 @@ const Column: React.FC<ColumnProps> = ({ column }) => {
   };
 
   return (
-    <Droppable droppableId={column.id}>
+    <Draggable draggableId={column.id} index={index}>
       {(provided) => (
-        <div {...provided.droppableProps} ref={provided.innerRef}>
-          <Box sx={style.container}>
-            <div
-              style={style.header}
-              onClick={() => {
-                dispatch(setIsColumnEdit(true));
-                dispatch(setColumnEdited(column));
-                setValueTitle(column.title);
-              }}
-            >
-              {(!isColumnEdit || column.id !== columnEdited.id) && (
-                <Typography variant="h5">{column.title}</Typography>
-              )}
-              {isColumnEdit && column.id === columnEdited.id && (
-                <div style={style.inputContainer}>
-                  <Input
-                    id="standard-basic"
-                    autoFocus={true}
-                    value={valueTitle}
-                    disableUnderline={true}
-                    sx={style.input}
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                      setValueTitle(event.target.value);
-                    }}
-                    onBlur={() => {
-                      dispatch(setIsColumnEdit(false));
-                      updateColumn([id as string, { ...columnEdited, title: valueTitle }]);
-                    }}
-                  />
-                  <DoneIcon
-                    sx={style.inputIcon}
-                    onClick={(event: React.MouseEvent<SVGSVGElement>) => {
-                      event.stopPropagation();
-                      dispatch(setIsColumnEdit(false));
-                      updateColumn([id as string, { ...columnEdited, title: valueTitle }]);
-                    }}
-                  />
+        <div {...provided.draggableProps} ref={provided.innerRef} {...provided.dragHandleProps}>
+          <Droppable droppableId={column.id}>
+            {(provided) => (
+              <Box sx={style.container} {...provided.droppableProps} ref={provided.innerRef}>
+                <div
+                  style={style.header}
+                  onClick={() => {
+                    dispatch(setIsColumnEdit(true));
+                    dispatch(setColumnEdited(column));
+                    setValueTitle(column.title);
+                  }}
+                >
+                  {(!isColumnEdit || column.id !== columnEdited.id) && (
+                    <Typography variant="h5">{column.title}</Typography>
+                  )}
+                  {isColumnEdit && column.id === columnEdited.id && (
+                    <div style={style.inputContainer}>
+                      <Input
+                        id="standard-basic"
+                        autoFocus={true}
+                        value={valueTitle}
+                        disableUnderline={true}
+                        sx={style.input}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                          setValueTitle(event.target.value);
+                        }}
+                        onBlur={() => {
+                          dispatch(setIsColumnEdit(false));
+                          updateColumn([id as string, { ...columnEdited, title: valueTitle }]);
+                        }}
+                      />
+                      <DoneIcon
+                        sx={style.inputIcon}
+                        onClick={(event: React.MouseEvent<SVGSVGElement>) => {
+                          event.stopPropagation();
+                          dispatch(setIsColumnEdit(false));
+                          updateColumn([id as string, { ...columnEdited, title: valueTitle }]);
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-            <div style={style.content}>
-              {tasks &&
-                tasks
-                  .map((task) => task)
-                  .sort((a, b) => (a.order > b.order ? 1 : -1))
-                  .map((task, index) => (
-                    <Task key={task.id} task={task} index={index} column={column} />
-                  ))}
-            </div>
-            <div style={style.btnContainer}>
-              <DeleteForeverIcon
-                sx={{
-                  ...style.btn,
-                  '&:hover': {
-                    color: '#E36655',
-                  },
-                }}
-                onClick={onClickDeleteBtn}
-              />
-              <AddBoxIcon sx={style.btn} onClick={onClickCreateBtn} />
-            </div>
-            {provided.placeholder}
-          </Box>
+                {tasks &&
+                  tasks
+                    .map((task) => task)
+                    .sort((a, b) => (a.order > b.order ? 1 : -1))
+                    .map((task, index) => (
+                      <Task key={task.id} task={task} index={index} column={column} />
+                    ))}
+                <div style={style.btnContainer}>
+                  <DeleteForeverIcon
+                    sx={{
+                      ...style.btn,
+                      '&:hover': {
+                        color: '#E36655',
+                      },
+                    }}
+                    onClick={onClickDeleteBtn}
+                  />
+                  <AddBoxIcon sx={style.btn} onClick={onClickCreateBtn} />
+                </div>
+                {provided.placeholder}
+              </Box>
+            )}
+          </Droppable>
         </div>
       )}
-    </Droppable>
+    </Draggable>
   );
 };
 
