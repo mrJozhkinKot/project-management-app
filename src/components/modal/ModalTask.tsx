@@ -50,6 +50,7 @@ const style = {
     justifyContent: 'space-between',
     marginTop: '1rem',
     alignItems: 'center',
+    position: 'relative' as const,
   },
   icon: {
     color: '#20B298',
@@ -64,19 +65,44 @@ const style = {
     display: 'block',
     padding: '0.5rem 1rem',
   },
+  list: {
+    position: 'absolute' as const,
+    backgroundColor: '#f0ede9',
+    border: '1px solid #20B298',
+    padding: '0 2rem 0 0',
+    top: '250px',
+    left: '500px',
+    maxHeight: '150px',
+    overflowY: 'scroll' as const,
+  },
+  listUi: {
+    listStyle: 'none' as const,
+    overflow: 'hidden',
+    cursor: 'pointer',
+  },
 };
 
 const ModalTask = () => {
-  const [valueTitle, setValueTitle] = useState('');
-  const [valueDescription, setValueDescription] = useState('');
-  const [valueUserId, setValueUserId] = useState('62c94d0d-9cda-447e-99f1-cdcf9c94acbe');
-
   const dispatch = useAppDispatch();
   const { setIsModalTask } = boardsSlice.actions;
-  const { isModalTask, currentColumnId } = useAppSelector((state) => state.boardsReducer);
+  const { userId, userName } = useAppSelector((state) => state.globalReducer);
+  const { isModalTask, currentColumnId, task } = useAppSelector((state) => state.boardsReducer);
   const [createTask, {}] = boardsAPI.useCreateTasksMutation();
   const { id } = useParams();
   const { t } = useTranslation();
+  const { data: users } = boardsAPI.useGetUsersQuery(10);
+  const { data: user } = boardsAPI.useGetUserQuery(task?.userId);
+
+  const [valueTitle, setValueTitle] = useState('');
+  const [valueDescription, setValueDescription] = useState('');
+  const [valueUserId, setValueUserId] = useState(userId);
+  const [valueUserName, setValueUserName] = useState(userName);
+  const [isVisibleUserList, setIsVisibleUserList] = useState(false);
+
+  useEffect(() => {
+    setValueUserName(userName);
+    setValueUserId(userId);
+  }, [isModalTask]);
 
   const {
     register,
@@ -109,7 +135,7 @@ const ModalTask = () => {
   };
 
   const onClickAddUserBtn = () => {
-    setValueUserId('1');
+    setIsVisibleUserList(!isVisibleUserList);
   };
 
   return (
@@ -153,11 +179,28 @@ const ModalTask = () => {
                   {t('create')}
                 </Button>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                  {t('user_name')}
+                  {valueUserName}
                   <PersonAddIcon sx={style.icon} onClick={onClickAddUserBtn} />
                 </div>
               </div>
             </form>
+            <div style={{ ...style.list, display: isVisibleUserList ? 'block' : 'none' }}>
+              <ul style={style.listUi}>
+                {users &&
+                  users.map((user) => (
+                    <li
+                      key={user.id}
+                      onClick={() => {
+                        setValueUserName(user.name);
+                        setValueUserId(user.id);
+                        setIsVisibleUserList(false);
+                      }}
+                    >
+                      {user.name}
+                    </li>
+                  ))}
+              </ul>
+            </div>
           </Box>
         </Modal>
       </ThemeProvider>

@@ -5,6 +5,7 @@ import {
   ColumnDraftInterface,
   TaskCreateBodyInterface,
   TaskInterface,
+  UserInterface,
 } from './interfaces';
 
 const token =
@@ -13,7 +14,7 @@ const token =
 export const boardsAPI = createApi({
   reducerPath: 'boardsAPI',
   baseQuery: fetchBaseQuery({ baseUrl: 'https://evening-lowlands-03074.herokuapp.com' }),
-  tagTypes: ['Boards', 'Columns', 'Tasks'],
+  tagTypes: ['Boards', 'Columns', 'Tasks', 'Users'],
   endpoints: (build) => ({
     getBoards: build.query<BoardDraftInterface[] | null, number>({
       query: (limit) => ({
@@ -112,7 +113,7 @@ export const boardsAPI = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
-      providesTags: ['Tasks'],
+      providesTags: ['Tasks', 'Users'],
     }),
     getTask: build.query<TaskInterface | null, string[]>({
       query: ([boardID, columnID, taskID]) => ({
@@ -122,7 +123,7 @@ export const boardsAPI = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
-      providesTags: ['Tasks'],
+      providesTags: ['Tasks', 'Users'],
     }),
     createTasks: build.mutation<TaskInterface | null, [string, string, TaskCreateBodyInterface]>({
       query: ([boardID, columnID, task]) => ({
@@ -135,7 +136,7 @@ export const boardsAPI = createApi({
           'Content-Type': 'application/json',
         },
       }),
-      invalidatesTags: ['Tasks'],
+      invalidatesTags: ['Tasks', 'Users'],
     }),
     deleteTask: build.mutation<null, string[]>({
       query: ([boardID, columnID, taskID]) => ({
@@ -146,7 +147,7 @@ export const boardsAPI = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
-      invalidatesTags: ['Tasks'],
+      invalidatesTags: ['Tasks', 'Users'],
     }),
     updateTask: build.mutation<null, [string, string, TaskInterface]>({
       query([boardID, columnID, task]) {
@@ -163,7 +164,30 @@ export const boardsAPI = createApi({
           },
         };
       },
-      invalidatesTags: ['Tasks'],
+      invalidatesTags: ['Tasks', 'Users'],
+    }),
+    getUsers: build.query<UserInterface[] | null, number>({
+      query: (limit) => ({
+        url: `/users`,
+        params: {
+          _limit: limit,
+        },
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+      providesTags: ['Tasks', 'Users'],
+    }),
+    getUser: build.query<UserInterface | null, string>({
+      query: (userID) => ({
+        url: `users/${userID}`,
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+      providesTags: ['Tasks', 'Users'],
     }),
   }),
 });
