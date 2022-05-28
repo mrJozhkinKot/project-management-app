@@ -7,16 +7,19 @@ import React from 'react';
 import { useCookies } from 'react-cookie';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useCheckCookiesExpired } from '../../hooks/authorization';
 import { useAppSelector } from '../../hooks/redux';
 import {
-  BadRequestInterface,
+  ParsedErrorInterface,
   SignInBodyInterface,
   SignUpBodyInterface,
 } from '../../utils/interfaces';
 import { usersAPI } from '../../utils/usersService';
 import Spinner from '../spinner/Spinner';
+import { notifyAuthWarning } from '../toasts/toasts';
 
 const style = {
   container: {
@@ -43,34 +46,32 @@ const style = {
 };
 
 function SignUp(): React.ReactElement {
-  const { isAuth, login, userName, token, userId } = useAppSelector((state) => state.globalReducer);
-  const navigate = useNavigate();
-  const [cookie, setCookie] = useCookies(['token', 'name']);
+  const { isAuth } = useAppSelector((state) => state.globalReducer);
+  const [, setCookie] = useCookies(['token', 'name']);
   const [signIn, { isLoading: isSignInLoading }] = usersAPI.useSignInMutation();
   const [signUp, { isLoading: isSignUpLoading }] = usersAPI.useSignUpMutation();
   const { t } = useTranslation();
-
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<SignUpBodyInterface>({ mode: 'onSubmit', reValidateMode: 'onChange' });
 
   useCheckCookiesExpired();
 
-  function handleErrors(error: BadRequestInterface) {
-    console.log('signUp failed!: ', error);
-    if (error.statusCode === 400) {
-      console.log('Found empty field! (error from SignUp - 99%)');
+  function handleErrors(error: ParsedErrorInterface) {
+    const data = error.data;
+
+    if (error.status === 400) {
+      notifyAuthWarning('Found empty field!');
     }
-    if (error.statusCode === 403) {
-      console.log('User was not found or password was wrong! (error from SignIn)');
+    if (error.status === 403) {
+      notifyAuthWarning('Invalid password or login!');
     }
-    if (error.statusCode === 409) {
-      console.log('User login already exists! (error from SignUp)');
-    } else if (error.statusCode < 200 || error.statusCode >= 300) {
-      console.log('This error code was not processed');
+    if (error.status === 409) {
+      notifyAuthWarning('This login already exists!');
+    } else if (error.status < 200 || error.status >= 300) {
+      notifyAuthWarning(data.message);
     }
   }
 
@@ -78,24 +79,22 @@ function SignUp(): React.ReactElement {
     signUp(data)
       .unwrap()
       .then(async (response) => {
-        if (response) {
-          const body: SignInBodyInterface = { login: data.login, password: data.password };
+        const body: SignInBodyInterface = { login: data.login, password: data.password };
 
+        if (response) {
           signIn(body)
             .unwrap()
             .then((res) => {
               if (res?.token) {
-                console.log('signIn successful!: ', res);
                 setCookie('token', res.token, { maxAge: 300 });
                 setCookie('name', data.name, { maxAge: 300 });
-                reset();
-                navigate('/boards');
               }
             });
         }
       })
-      .catch((error: BadRequestInterface) => {
-        handleErrors(error);
+      .catch((error) => {
+        const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
+        handleErrors(parsedError);
       });
   }
 
@@ -174,20 +173,8 @@ function SignUp(): React.ReactElement {
         >
           {t('get_started')}
         </Button>
-        <button
-          onClick={(e: React.MouseEvent) => {
-            e.preventDefault();
-            console.log('cookie.token: ', cookie.token);
-            console.log('token: ', token);
-            console.log('isAuth: ', isAuth);
-            console.log('login: ', login);
-            console.log('userId: ', userId);
-            console.log('userName: ', userName);
-          }}
-        >
-          Show user data
-        </button>
       </Box>
+      <ToastContainer />
     </Container>
   );
 }

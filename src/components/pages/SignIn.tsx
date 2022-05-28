@@ -7,12 +7,15 @@ import React from 'react';
 import { useCookies } from 'react-cookie';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useCheckCookiesExpired } from '../../hooks/authorization';
 import { useAppSelector } from '../../hooks/redux';
-import { BadRequestInterface, SignInBodyInterface } from '../../utils/interfaces';
+import { ParsedErrorInterface, SignInBodyInterface } from '../../utils/interfaces';
 import { usersAPI } from '../../utils/usersService';
 import Spinner from '../spinner/Spinner';
+import { notifyAuthWarning } from '../toasts/toasts';
 
 const style = {
   container: {
@@ -39,30 +42,28 @@ const style = {
 };
 
 function SignIn(): React.ReactElement {
-  const [cookies, setCookies] = useCookies(['token']);
+  const [, setCookies] = useCookies(['token']);
   const [signIn, { isLoading }] = usersAPI.useSignInMutation();
-  const { isAuth, login, userName, token, userId } = useAppSelector((state) => state.globalReducer);
-  const navigate = useNavigate();
+  const { isAuth } = useAppSelector((state) => state.globalReducer);
   const { t } = useTranslation();
-
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<SignInBodyInterface>({ mode: 'onSubmit', reValidateMode: 'onChange' });
 
   useCheckCookiesExpired();
 
-  function handleErrors(error: BadRequestInterface) {
-    console.log('signIn failed!: ', error);
-    if (error.statusCode === 400) {
-      console.log('Found empty field!');
+  function handleErrors(error: ParsedErrorInterface) {
+    const data = error.data;
+
+    if (error.status === 400) {
+      notifyAuthWarning('Found empty field!');
     }
-    if (error.statusCode === 403) {
-      console.log('User was not found or password was wrong!');
-    } else if (error.statusCode < 200 || error.statusCode >= 300) {
-      console.log('This error code was not processed');
+    if (error.status === 403) {
+      notifyAuthWarning('Invalid password or login!');
+    } else if (error.status < 200 || error.status >= 300) {
+      notifyAuthWarning(data.message);
     }
   }
 
@@ -72,12 +73,11 @@ function SignIn(): React.ReactElement {
       .then(async (res) => {
         if (res?.token) {
           setCookies('token', res.token, { maxAge: 300 });
-          reset();
-          navigate('/boards');
         }
       })
-      .catch((error: BadRequestInterface) => {
-        handleErrors(error);
+      .catch((error) => {
+        const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
+        handleErrors(parsedError);
       });
   }
 
@@ -141,20 +141,8 @@ function SignIn(): React.ReactElement {
         >
           {t('sign_in')}
         </Button>
-        <button
-          onClick={(e: React.MouseEvent) => {
-            e.preventDefault();
-            console.log('cookies.token: ', cookies.token);
-            console.log('token: ', token);
-            console.log('isAuth: ', isAuth);
-            console.log('login: ', login);
-            console.log('userId: ', userId);
-            console.log('userName: ', userName);
-          }}
-        >
-          Show user data
-        </button>
       </Box>
+      <ToastContainer />
     </Container>
   );
 }

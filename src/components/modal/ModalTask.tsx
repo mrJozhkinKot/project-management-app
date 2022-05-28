@@ -13,6 +13,8 @@ import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { boardsAPI } from '../../utils/boardService';
+import { handleBoardsErrors, notifySuccess } from '../toasts/toasts';
+import { ParsedErrorInterface } from '../../utils/interfaces';
 
 const defaultValues = {
   title: '',
@@ -71,11 +73,11 @@ const ModalTask = () => {
   const [valueDescription, setValueDescription] = useState('');
   const [valueUserId, setValueUserId] = useState('62c94d0d-9cda-447e-99f1-cdcf9c94acbe');
 
-  const dispatch = useAppDispatch();
   const { setIsModalTask } = boardsSlice.actions;
   const { isModalTask, currentColumnId } = useAppSelector((state) => state.boardsReducer);
-  const [createTask, {}] = boardsAPI.useCreateTasksMutation();
   const { id } = useParams();
+  const [createTask, {}] = boardsAPI.useCreateTaskMutation();
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
   const {
@@ -104,8 +106,18 @@ const ModalTask = () => {
         description: valueDescription,
         userId: valueUserId,
       },
-    ]);
-    handleClose();
+    ])
+      .unwrap()
+      .then((response) => {
+        if (response) {
+          notifySuccess('Task created successfully!');
+        }
+        handleClose();
+      })
+      .catch((error) => {
+        const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
+        handleBoardsErrors(parsedError, 'columns');
+      });
   };
 
   const onClickAddUserBtn = () => {

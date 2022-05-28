@@ -12,6 +12,8 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { boardsAPI } from '../../utils/boardService';
 import { useTranslation } from 'react-i18next';
+import { handleBoardsErrors, notifySuccess } from '../toasts/toasts';
+import { ParsedErrorInterface } from '../../utils/interfaces';
 
 const defaultValues = {
   title: '',
@@ -68,13 +70,13 @@ const style = {
 
 const ModalEditTask = () => {
   const { setIsModalEditTask } = boardsSlice.actions;
-  const dispatch = useAppDispatch();
   const { isModalEditTask, currentColumnId, currentBoardId, task } = useAppSelector(
     (state) => state.boardsReducer
   );
   const [valueTitle, setValueTitle] = useState(task?.title || '');
   const [valueDescription, setValueDescription] = useState(task?.description || '');
   const [updateTask, {}] = boardsAPI.useUpdateTaskMutation();
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
   const {
@@ -111,7 +113,18 @@ const ModalEditTask = () => {
         currentBoardId,
         currentColumnId,
         { ...task, title: valueTitle, description: valueDescription },
-      ]);
+      ])
+        .unwrap()
+        .then((response) => {
+          if (response) {
+            notifySuccess('Task updated successfully!');
+          }
+          handleClose();
+        })
+        .catch((error) => {
+          const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
+          handleBoardsErrors(parsedError, 'columns');
+        });
     }
     handleClose();
   };

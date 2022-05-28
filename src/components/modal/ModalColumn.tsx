@@ -12,6 +12,8 @@ import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { boardsAPI } from '../../utils/boardService';
+import { handleBoardsErrors, notifySuccess } from '../toasts/toasts';
+import { ParsedErrorInterface } from '../../utils/interfaces';
 
 const defaultValues = {
   title: '',
@@ -55,12 +57,12 @@ const style = {
 const ModalColumn = () => {
   const [valueText, setValueText] = useState('');
   const { setIsModalColumn } = boardsSlice.actions;
-  const dispatch = useAppDispatch();
   const { isModalColumn } = useAppSelector((state) => state.boardsReducer);
   const { id } = useParams();
-  const [createColumn, {}] = boardsAPI.useCreateColumnMutation();
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
+  const [createColumn, {}] = boardsAPI.useCreateColumnMutation();
   const {
     register,
     handleSubmit,
@@ -79,8 +81,18 @@ const ModalColumn = () => {
   }, [isSubmitSuccessful, reset]);
 
   const onSubmit = () => {
-    createColumn([id as string, { title: valueText }]);
-    handleClose();
+    createColumn([id as string, { title: valueText }])
+      .unwrap()
+      .then((response) => {
+        if (response) {
+          notifySuccess('Column created successfully!');
+        }
+        handleClose();
+      })
+      .catch((error) => {
+        const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
+        handleBoardsErrors(parsedError, 'columns');
+      });
   };
 
   return (

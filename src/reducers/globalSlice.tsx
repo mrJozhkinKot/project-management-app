@@ -7,7 +7,6 @@ export interface GlobalStateInterface {
   login: string;
   userName: string;
   language: string;
-  password?: string;
 }
 
 const initialState: GlobalStateInterface = {

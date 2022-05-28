@@ -5,7 +5,6 @@ export interface UserInterface {
 }
 
 export interface UpdateUserInterface {
-  id: string;
   name: string;
   login: string;
   password: string;
@@ -104,4 +103,9 @@ export interface TaskUpdateBodyInterface {
 export interface FileInterface {
   filename: string;
   fileSize: number;
+}
+
+export interface ParsedErrorInterface {
+  data: BadRequestInterface;
+  status: number;
 }

@@ -43,7 +43,7 @@ export const boardsAPI = createApi({
         invalidatesTags: ['Boards'],
       }
     ),
-    deleteBoard: build.mutation<BoardDraftInterface | null, string>({
+    deleteBoard: build.mutation<null, string>({
       query: (boardID) => ({
         url: `/boards/${boardID}`,
         method: 'DELETE',
@@ -77,7 +77,7 @@ export const boardsAPI = createApi({
       }),
       invalidatesTags: ['Columns'],
     }),
-    deleteColumn: build.mutation<ColumnDraftInterface | null, string[]>({
+    deleteColumn: build.mutation<null, string[]>({
       query: ([boardID, columnID]) => ({
         url: `/boards/${boardID}/columns/${columnID}`,
         method: 'DELETE',
@@ -88,7 +88,7 @@ export const boardsAPI = createApi({
       }),
       invalidatesTags: ['Columns'],
     }),
-    updateColummn: build.mutation<ColumnDraftInterface | null, [string, ColumnDraftInterface]>({
+    updateColumn: build.mutation<ColumnDraftInterface | null, [string, ColumnDraftInterface]>({
       query([boardID, column]) {
         const { id, ...body } = column;
         return {
@@ -124,7 +124,7 @@ export const boardsAPI = createApi({
       }),
       providesTags: ['Tasks'],
     }),
-    createTasks: build.mutation<TaskInterface | null, [string, string, TaskCreateBodyInterface]>({
+    createTask: build.mutation<TaskInterface | null, [string, string, TaskCreateBodyInterface]>({
       query: ([boardID, columnID, task]) => ({
         url: `/boards/${boardID}/columns/${columnID}/tasks`,
         method: 'POST',
@@ -148,7 +148,7 @@ export const boardsAPI = createApi({
       }),
       invalidatesTags: ['Tasks'],
     }),
-    updateTask: build.mutation<null, [string, string, TaskInterface]>({
+    updateTask: build.mutation<TaskInterface | null, [string, string, TaskInterface]>({
       query([boardID, columnID, task]) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { id, files, ...body } = task;
