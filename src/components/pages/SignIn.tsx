@@ -72,7 +72,7 @@ function SignIn(): React.ReactElement {
       .unwrap()
       .then(async (res) => {
         if (res?.token) {
-          setCookies('token', res.token, { maxAge: 300 });
+          setCookies('token', res.token, { maxAge: 600 });
         }
       })
       .catch((error) => {

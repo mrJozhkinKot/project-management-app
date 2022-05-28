@@ -80,8 +80,8 @@ function EditProfile(): React.ReactElement {
       .unwrap()
       .then(async (response) => {
         if (response?.id) {
-          setCookie('token', token, { maxAge: 300 });
-          setCookie('name', response.name, { maxAge: 300 });
+          setCookie('token', token, { maxAge: 600 });
+          setCookie('name', response.name, { maxAge: 600 });
           resetField('password');
           notifySuccess('Data changed successfully!');
         }

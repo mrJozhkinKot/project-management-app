@@ -86,8 +86,8 @@ function SignUp(): React.ReactElement {
             .unwrap()
             .then((res) => {
               if (res?.token) {
-                setCookie('token', res.token, { maxAge: 300 });
-                setCookie('name', data.name, { maxAge: 300 });
+                setCookie('token', res.token, { maxAge: 600 });
+                setCookie('name', data.name, { maxAge: 600 });
               }
             });
         }
