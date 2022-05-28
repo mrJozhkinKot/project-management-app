@@ -40,7 +40,7 @@ export const usersAPI = createApi({
         },
       }),
     }),
-    updateUser: build.mutation<UpdateUserInterface | null, [string, string, UserInterface]>({
+    updateUser: build.mutation<UserInterface | null, [string, string, UpdateUserInterface]>({
       query: ([token, userID, body]) => ({
         url: `/users/${userID}`,
         method: 'PUT',

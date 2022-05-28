@@ -7,11 +7,10 @@ export interface GlobalStateInterface {
   login: string;
   userName: string;
   language: string;
-  password?: string;
 }
 
 const initialState: GlobalStateInterface = {
-  isAuth: false,
+  isAuth: true,
   token: '',
   userId: '',
   login: '',

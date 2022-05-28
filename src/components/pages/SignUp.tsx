@@ -43,13 +43,12 @@ const style = {
 };
 
 function SignUp(): React.ReactElement {
-  const { isAuth, login, userName, token, userId } = useAppSelector((state) => state.globalReducer);
+  const { isAuth } = useAppSelector((state) => state.globalReducer);
   const navigate = useNavigate();
-  const [cookie, setCookie] = useCookies(['token', 'name']);
+  const [, setCookie] = useCookies(['token', 'name']);
   const [signIn, { isLoading: isSignInLoading }] = usersAPI.useSignInMutation();
   const [signUp, { isLoading: isSignUpLoading }] = usersAPI.useSignUpMutation();
   const { t } = useTranslation();
-
   const {
     register,
     handleSubmit,
@@ -85,7 +84,6 @@ function SignUp(): React.ReactElement {
             .unwrap()
             .then((res) => {
               if (res?.token) {
-                console.log('signIn successful!: ', res);
                 setCookie('token', res.token, { maxAge: 300 });
                 setCookie('name', data.name, { maxAge: 300 });
                 reset();
@@ -174,19 +172,6 @@ function SignUp(): React.ReactElement {
         >
           {t('get_started')}
         </Button>
-        <button
-          onClick={(e: React.MouseEvent) => {
-            e.preventDefault();
-            console.log('cookie.token: ', cookie.token);
-            console.log('token: ', token);
-            console.log('isAuth: ', isAuth);
-            console.log('login: ', login);
-            console.log('userId: ', userId);
-            console.log('userName: ', userName);
-          }}
-        >
-          Show user data
-        </button>
       </Box>
     </Container>
   );
