@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import CloseIcon from '@mui/icons-material/Close';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -80,6 +81,13 @@ const style = {
     overflow: 'hidden',
     cursor: 'pointer',
   },
+  closeIcon: {
+    cursor: 'pointer',
+    float: 'right',
+    marginTop: '-20px',
+    marginRight: '-20px',
+    width: '20px',
+  },
 };
 
 const ModalEditTask = () => {
@@ -152,6 +160,7 @@ const ModalEditTask = () => {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style.box}>
+            <CloseIcon sx={style.closeIcon} onClick={handleClose} />
             <Typography id="modal-modal-title" variant="h6" component="h2">
               {t('edit_task')}:
             </Typography>

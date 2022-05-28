@@ -56,7 +56,7 @@ const Column: React.FC<ColumnProps> = ({ column }) => {
 
   const style = {
     container: {
-      maxWidth: '300px',
+      width: '300px',
       minHeight: '100px',
       maxHeight: 'calc(100vh - 28rem)',
       border: '1px solid gray',

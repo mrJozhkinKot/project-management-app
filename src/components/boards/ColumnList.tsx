@@ -26,7 +26,7 @@ const ColumnList = () => {
             .map((task) => task)
             .sort((a, b) => (a.order > b.order ? 1 : -1))
             .map((column, index) => (
-              <Grid key={String(column.id)} item xs={12} sm={6} md={4} lg={3}>
+              <Grid key={column.id} item xs={12} sm={6} md={4} lg={3}>
                 <Column column={column} index={index} />
               </Grid>
             ))}

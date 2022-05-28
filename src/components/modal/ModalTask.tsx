@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import CloseIcon from '@mui/icons-material/Close';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -80,19 +81,24 @@ const style = {
     overflow: 'hidden',
     cursor: 'pointer',
   },
+  closeIcon: {
+    cursor: 'pointer',
+    float: 'right',
+    marginTop: '-20px',
+    marginRight: '-20px',
+    width: '20px',
+  },
 };
 
 const ModalTask = () => {
   const dispatch = useAppDispatch();
   const { setIsModalTask } = boardsSlice.actions;
   const { userId, userName } = useAppSelector((state) => state.globalReducer);
-  const { isModalTask, currentColumnId, task } = useAppSelector((state) => state.boardsReducer);
+  const { isModalTask, currentColumnId } = useAppSelector((state) => state.boardsReducer);
   const [createTask, {}] = boardsAPI.useCreateTasksMutation();
   const { id } = useParams();
   const { t } = useTranslation();
   const { data: users } = boardsAPI.useGetUsersQuery(10);
-  const { data: user } = boardsAPI.useGetUserQuery(task?.userId);
-
   const [valueTitle, setValueTitle] = useState('');
   const [valueDescription, setValueDescription] = useState('');
   const [valueUserId, setValueUserId] = useState(userId);
@@ -102,6 +108,7 @@ const ModalTask = () => {
   useEffect(() => {
     setValueUserName(userName);
     setValueUserId(userId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isModalTask]);
 
   const {
@@ -148,6 +155,7 @@ const ModalTask = () => {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style.box}>
+            <CloseIcon sx={style.closeIcon} onClick={handleClose} />
             <Typography id="modal-modal-title" variant="h6" component="h2">
               {t('сreate_a_new_task')}:
             </Typography>
