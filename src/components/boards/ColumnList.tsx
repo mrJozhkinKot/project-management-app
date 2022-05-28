@@ -1,21 +1,38 @@
 import Grid from '@mui/material/Grid';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { DragDropContext, DraggableLocation, Droppable } from 'react-beautiful-dnd';
 import { DropResult } from 'react-beautiful-dnd';
 import { useParams } from 'react-router-dom';
 import { boardsAPI } from '../../utils/boardService';
 import Spinner from '../spinner/Spinner';
 import Column from './Column';
-import { ColumnDraftInterface, ColumnInterface, TaskDraftInterface } from '../../utils/interfaces';
+import { ColumnInterface, TaskDraftInterface } from '../../utils/interfaces';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { boardsSlice } from '../../reducers/BoardsSlice';
 
 const ColumnList = () => {
   const { id } = useParams();
-  const { data: columns, isLoading } = boardsAPI.useGetColumnsQuery(id as string);
-  const { data: board } = boardsAPI.useGetBoardQuery(id as string);
+  const { token } = useAppSelector((state) => state.globalReducer);
+  const { data: columns, isLoading } = boardsAPI.useGetColumnsQuery([token, id as string]);
+  const { data: board } = boardsAPI.useGetBoardQuery([token, id as string]);
   const [updateTask, {}] = boardsAPI.useUpdateTaskMutation();
   const [updateColumn, {}] = boardsAPI.useUpdateColummnMutation();
   const [createTask, {}] = boardsAPI.useCreateTasksMutation();
   const [deleteTask, {}] = boardsAPI.useDeleteTaskMutation();
+
+  const { localColumns } = useAppSelector((state) => state.boardsReducer);
+  const { setLocalColumns } = boardsSlice.actions;
+  const dispatch = useAppDispatch();
+  const [shouldRender, setShouldRender] = useState<boolean>(false);
+
+  useEffect(() => {
+    board && board?.columns.length !== 0 && setShouldRender(true);
+  }, [board]);
+
+  useEffect(() => {
+    board && shouldRender && dispatch(setLocalColumns(board?.columns));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [board, shouldRender]);
 
   const style = {
     container: {
@@ -33,8 +50,8 @@ const ColumnList = () => {
     const sInd = source.droppableId;
     const dInd = destination.droppableId;
 
-    const colSource = board?.columns?.filter((col: ColumnInterface) => col.id === sInd)[0];
-    const colDestination = board?.columns?.filter((col: ColumnInterface) => col.id === dInd)[0];
+    const colSource = localColumns?.filter((col: ColumnInterface) => col.id === sInd)[0];
+    const colDestination = localColumns?.filter((col: ColumnInterface) => col.id === dInd)[0];
     const reorderedTasks = colSource?.tasks
       ? reorder(
           colSource?.tasks.map((task) => task).sort((a, b) => (a.order > b.order ? 1 : -1)),
@@ -42,6 +59,9 @@ const ColumnList = () => {
           destination.index
         )
       : [];
+
+    const delArrOfTasks =
+      colDestination?.tasks && colSource?.tasks.map((task) => task).splice(source.index, 1);
 
     const addedArrOfTasks =
       colDestination?.tasks && colSource?.tasks
@@ -55,82 +75,127 @@ const ColumnList = () => {
 
     const reorderedColumns = columns
       ? reorderColumns(
-          columns?.map((col) => col).sort((a, b) => (a.order > b.order ? 1 : -1)),
+          localColumns?.map((col) => col).sort((a, b) => (a.order > b.order ? 1 : -1)),
           source.index,
           destination.index
         )
       : [];
 
-    if (columns && type === 'list') {
-      columns
+    if (localColumns && type === 'list') {
+      dispatch(
+        setLocalColumns(
+          reorderedColumns
+            .map((col, index) => ({ ...col, order: index + 1 }))
+            .sort((a, b) => (a.order > b.order ? 1 : -1))
+        )
+      );
+      localColumns
         .map((col) => col)
         .sort((a, b) => (a.order > b.order ? 1 : -1))
         .map((col, index) => {
-          updateColumn([id as string, { ...col, order: reorderedColumns[index].order }]);
-        });
-    }
-
-    if (sInd === dInd) {
-      colSource?.tasks
-        .map((task) => task)
-        .sort((a, b) => (a.order > b.order ? 1 : -1))
-        .map((task, index) => {
-          updateTask([
+          updateColumn([
+            token,
             id as string,
-            colSource.id as string,
             {
-              ...task,
-              title: reorderedTasks[index].title,
-              description: reorderedTasks[index].description,
-              userId: reorderedTasks[index].userId,
-              boardId: id as string,
-              columnId: colSource.id as string,
+              id: col.id,
+              title: col.title,
+              order: reorderedColumns[index].order,
             },
           ]);
         });
     } else {
-      colSource?.tasks
-        .map((task) => task)
-        .sort((a, b) => (a.order > b.order ? 1 : -1))
-        .map((task, index) => {
-          if (index === source.index) {
-            deleteTask([id as string, colSource.id as string, task.id]);
-          }
-        });
-      colDestination?.tasks
-        .map((task) => task)
-        .sort((a, b) => (a.order > b.order ? 1 : -1))
-        .map((task, index) => {
-          updateTask([
-            id as string,
-            colDestination.id as string,
-            {
-              ...task,
-              title: addedArrOfTasks[index].title,
-              description: addedArrOfTasks[index].description,
-              userId: addedArrOfTasks[index].userId,
-              boardId: id as string,
-              columnId: colDestination.id as string,
-            },
-          ]);
-        });
-      createTask([
-        id as string,
-        colDestination?.id as string,
-        {
-          title: addedArrOfTasks[addedArrOfTasks.length - 1].title,
-          description: addedArrOfTasks[addedArrOfTasks.length - 1].description,
-          userId: addedArrOfTasks[addedArrOfTasks.length - 1].userId,
-        },
-      ]);
+      if (sInd === dInd) {
+        dispatch(
+          setLocalColumns(
+            localColumns.map((col) =>
+              col.id === colSource.id
+                ? {
+                    ...col,
+                    tasks: reorderedTasks
+                      .map((task, index) => ({ ...task, order: index + 1 }))
+                      .sort((a, b) => (a.order > b.order ? 1 : -1)),
+                  }
+                : col
+            )
+          )
+        );
+        colSource?.tasks
+          .map((task) => task)
+          .sort((a, b) => (a.order > b.order ? 1 : -1))
+          .map((task, index) => {
+            updateTask([
+              token,
+              id as string,
+              colSource.id as string,
+              {
+                ...task,
+                title: reorderedTasks[index].title,
+                description: reorderedTasks[index].description,
+                userId: reorderedTasks[index].userId,
+                boardId: id as string,
+                columnId: colSource.id as string,
+              },
+            ]);
+          });
+      } else {
+        dispatch(
+          setLocalColumns(
+            localColumns.map((col) => {
+              if (col.id === colDestination.id) {
+                return { ...col, tasks: addedArrOfTasks };
+              } else if (col.id === colSource.id) {
+                return { ...col, tasks: delArrOfTasks };
+              } else {
+                return col;
+              }
+            })
+          )
+        );
+        colSource?.tasks
+          .map((task) => task)
+          .sort((a, b) => (a.order > b.order ? 1 : -1))
+          .map((task, index) => {
+            if (index === source.index) {
+              deleteTask([token, id as string, colSource.id as string, task.id]);
+            }
+          });
+        colDestination?.tasks
+          .map((task) => task)
+          .sort((a, b) => (a.order > b.order ? 1 : -1))
+          .map((task, index) => {
+            updateTask([
+              token,
+              id as string,
+              colDestination.id as string,
+              {
+                ...task,
+                title: addedArrOfTasks[index].title,
+                description: addedArrOfTasks[index].description,
+                userId: addedArrOfTasks[index].userId,
+                boardId: id as string,
+                columnId: colDestination.id as string,
+              },
+            ]);
+          });
+        createTask([
+          token,
+          id as string,
+          colDestination?.id as string,
+          {
+            title: addedArrOfTasks[addedArrOfTasks.length - 1].title,
+            description: addedArrOfTasks[addedArrOfTasks.length - 1].description,
+            userId: addedArrOfTasks[addedArrOfTasks.length - 1].userId,
+          },
+        ]);
+      }
     }
   };
 
   const reorderColumns = (
-    columns: ColumnDraftInterface[],
+    columns: ColumnInterface[],
     startIndex: number,
     endIndex: number
-  ): ColumnDraftInterface[] => {
+  ): ColumnInterface[] => {
     const result = Array.from(columns);
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
@@ -179,8 +244,9 @@ const ColumnList = () => {
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >
-                {columns &&
-                  columns
+                {shouldRender &&
+                  localColumns &&
+                  localColumns
                     .map((task) => task)
                     .sort((a, b) => (a.order > b.order ? 1 : -1))
                     .map((column, index) => (

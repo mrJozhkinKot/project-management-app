@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import CloseIcon from '@mui/icons-material/Close';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -50,6 +51,7 @@ const style = {
     justifyContent: 'space-between',
     marginTop: '1rem',
     alignItems: 'center',
+    position: 'relative' as const,
   },
   icon: {
     color: '#20B298',
@@ -64,19 +66,51 @@ const style = {
     display: 'block',
     padding: '0.5rem 1rem',
   },
+  list: {
+    position: 'absolute' as const,
+    backgroundColor: '#f0ede9',
+    border: '1px solid #20B298',
+    padding: '0 2rem 0 0',
+    top: '250px',
+    left: '500px',
+    maxHeight: '150px',
+    overflowY: 'scroll' as const,
+  },
+  listUi: {
+    listStyle: 'none' as const,
+    overflow: 'hidden',
+    cursor: 'pointer',
+  },
+  closeIcon: {
+    cursor: 'pointer',
+    float: 'right',
+    marginTop: '-20px',
+    marginRight: '-20px',
+    width: '20px',
+  },
 };
 
 const ModalTask = () => {
-  const [valueTitle, setValueTitle] = useState('');
-  const [valueDescription, setValueDescription] = useState('');
-  const [valueUserId, setValueUserId] = useState('62c94d0d-9cda-447e-99f1-cdcf9c94acbe');
-
   const dispatch = useAppDispatch();
   const { setIsModalTask } = boardsSlice.actions;
+  const { userId, userName } = useAppSelector((state) => state.globalReducer);
   const { isModalTask, currentColumnId } = useAppSelector((state) => state.boardsReducer);
+  const { token } = useAppSelector((state) => state.globalReducer);
   const [createTask, {}] = boardsAPI.useCreateTasksMutation();
   const { id } = useParams();
   const { t } = useTranslation();
+  const { data: users } = boardsAPI.useGetUsersQuery(token);
+  const [valueTitle, setValueTitle] = useState('');
+  const [valueDescription, setValueDescription] = useState('');
+  const [valueUserId, setValueUserId] = useState(userId);
+  const [valueUserName, setValueUserName] = useState(userName);
+  const [isVisibleUserList, setIsVisibleUserList] = useState(false);
+
+  useEffect(() => {
+    setValueUserName(userName);
+    setValueUserId(userId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isModalTask]);
 
   const {
     register,
@@ -97,6 +131,7 @@ const ModalTask = () => {
 
   const onSubmit = () => {
     createTask([
+      token,
       id as string,
       currentColumnId,
       {
@@ -109,7 +144,7 @@ const ModalTask = () => {
   };
 
   const onClickAddUserBtn = () => {
-    setValueUserId('1');
+    setIsVisibleUserList(!isVisibleUserList);
   };
 
   return (
@@ -122,6 +157,7 @@ const ModalTask = () => {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style.box}>
+            <CloseIcon sx={style.closeIcon} onClick={handleClose} />
             <Typography id="modal-modal-title" variant="h6" component="h2">
               {t('сreate_a_new_task')}:
             </Typography>
@@ -153,11 +189,28 @@ const ModalTask = () => {
                   {t('create')}
                 </Button>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                  {t('user_name')}
+                  {valueUserName}
                   <PersonAddIcon sx={style.icon} onClick={onClickAddUserBtn} />
                 </div>
               </div>
             </form>
+            <div style={{ ...style.list, display: isVisibleUserList ? 'block' : 'none' }}>
+              <ul style={style.listUi}>
+                {users &&
+                  users.map((user) => (
+                    <li
+                      key={user.id}
+                      onClick={() => {
+                        setValueUserName(user.name);
+                        setValueUserId(user.id);
+                        setIsVisibleUserList(false);
+                      }}
+                    >
+                      {user.name}
+                    </li>
+                  ))}
+              </ul>
+            </div>
           </Box>
         </Modal>
       </ThemeProvider>

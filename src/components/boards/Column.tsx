@@ -9,12 +9,12 @@ import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { boardsAPI } from '../../utils/boardService';
-import { ColumnDraftInterface } from '../../utils/interfaces';
+import { ColumnInterface, TaskDraftInterface, TaskInterface } from '../../utils/interfaces';
 import { Task } from './Task';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 
 interface ColumnProps {
-  column: ColumnDraftInterface;
+  column: ColumnInterface;
   index: number;
 }
 
@@ -28,12 +28,26 @@ const Column: React.FC<ColumnProps> = ({ column, index }) => {
     setIsConfirmColumnModal,
   } = boardsSlice.actions;
   const dispatch = useAppDispatch();
-  const { isColumnEdit, columnEdited } = useAppSelector((state) => state.boardsReducer);
+  const { isColumnEdit, columnEdited, localColumns } = useAppSelector(
+    (state) => state.boardsReducer
+  );
+  const { token } = useAppSelector((state) => state.globalReducer);
 
   const [valueTitle, setValueTitle] = useState('');
   const { id } = useParams();
-  const { data: tasks } = boardsAPI.useGetTasksQuery([id as string, column.id]);
   const [updateColumn, {}] = boardsAPI.useUpdateColummnMutation();
+  const [localTasks, setLocalTasks] = useState<TaskInterface[]>([]);
+
+  useEffect(() => {
+    setLocalTasks(
+      column.tasks.map((task: TaskDraftInterface) => ({
+        ...task,
+        boardId: id as string,
+        columnId: column.id,
+      }))
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [localColumns]);
 
   const onClickCreateBtn = () => {
     dispatch(setCurrentColumnId(column.id));
@@ -49,8 +63,8 @@ const Column: React.FC<ColumnProps> = ({ column, index }) => {
   };
 
   useEffect(() => {
-    if (id) {
-      updateColumn([id, column]);
+    if (id && valueTitle) {
+      updateColumn([token, id, { id: column.id, title: column.title, order: column.order }]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [valueTitle]);
@@ -58,7 +72,7 @@ const Column: React.FC<ColumnProps> = ({ column, index }) => {
   const style = {
     container: {
       maxWidth: '300px',
-      minHeight: '150px',
+      minHeight: '60px',
       maxHeight: 'calc(100vh - 28rem)',
       border: '1px solid gray',
       padding: '0.5rem',
@@ -131,25 +145,25 @@ const Column: React.FC<ColumnProps> = ({ column, index }) => {
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                           setValueTitle(event.target.value);
                         }}
-                        onBlur={() => {
-                          dispatch(setIsColumnEdit(false));
-                          updateColumn([id as string, { ...columnEdited, title: valueTitle }]);
-                        }}
                       />
                       <DoneIcon
                         sx={style.inputIcon}
                         onClick={(event: React.MouseEvent<SVGSVGElement>) => {
                           event.stopPropagation();
                           dispatch(setIsColumnEdit(false));
-                          updateColumn([id as string, { ...columnEdited, title: valueTitle }]);
+                          updateColumn([
+                            token,
+                            id as string,
+                            { id: columnEdited.id, order: columnEdited.order, title: valueTitle },
+                          ]);
                         }}
                       />
                     </div>
                   )}
                 </div>
                 <div style={style.content}>
-                  {tasks &&
-                    tasks
+                  {localTasks &&
+                    localTasks
                       .map((task) => task)
                       .sort((a, b) => (a.order > b.order ? 1 : -1))
                       .map((task, index) => (

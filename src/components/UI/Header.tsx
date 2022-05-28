@@ -25,6 +25,11 @@ import { boardsSlice } from '../../reducers/BoardsSlice';
 const style = {
   container: {
     backgroundColor: '#323535',
+    transition: 'all 0.5s',
+  },
+  sticky: {
+    backgroundColor: '#494E4D',
+    transition: 'all 0.5s',
   },
   btn: {
     color: '#fff',
@@ -66,9 +71,20 @@ function Header(): React.ReactElement {
   const [, , deleteCookies] = useCookies(['token']);
   const { t, i18n } = useTranslation();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
+  const [sticky, setSticky] = React.useState<boolean>(false);
   const navigate = useNavigate();
   const { setIsModalBoard } = boardsSlice.actions;
   const dispatch = useAppDispatch();
+
+  const stickyHeader = () => {
+    if (window.pageYOffset > 0) {
+      setSticky(true);
+    } else {
+      setSticky(false);
+    }
+  };
+
+  window.addEventListener('scroll', stickyHeader);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -83,7 +99,7 @@ function Header(): React.ReactElement {
   };
 
   return (
-    <AppBar position="sticky" style={style.container}>
+    <AppBar position="sticky" style={sticky ? style.sticky : style.container}>
       <Container maxWidth="xl">
         {isAuth ? (
           <Toolbar disableGutters>

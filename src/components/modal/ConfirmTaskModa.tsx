@@ -51,6 +51,7 @@ const ConfirmTaskModal = () => {
   const { isConfirmTaskModal, currentBoardId, currentColumnId, currentTaskId } = useAppSelector(
     (state) => state.boardsReducer
   );
+  const { token } = useAppSelector((state) => state.globalReducer);
   const [deleteTask, {}] = boardsAPI.useDeleteTaskMutation();
   const { t } = useTranslation();
 
@@ -59,7 +60,7 @@ const ConfirmTaskModal = () => {
   };
 
   const onClickConfirmDeleteBtn = () => {
-    deleteTask([currentBoardId, currentColumnId, currentTaskId]);
+    deleteTask([token, currentBoardId, currentColumnId, currentTaskId]);
     dispatch(setIsConfirmTaskModal(false));
   };
 
@@ -74,7 +75,7 @@ const ConfirmTaskModal = () => {
         >
           <Box sx={style.box}>
             <Typography id="modal-modal-title" variant="h6" component="h2" sx={style.message}>
-              {t('delete_this_board_with_all_columns')}?
+              {t('delete')}?
             </Typography>
             <div style={style.btnContainer}>
               <Button

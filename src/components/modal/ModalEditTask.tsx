@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import CloseIcon from '@mui/icons-material/Close';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -12,6 +13,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { boardsAPI } from '../../utils/boardService';
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 
 const defaultValues = {
   title: '',
@@ -64,6 +66,28 @@ const style = {
     display: 'block',
     padding: '0.5rem 1rem',
   },
+  list: {
+    position: 'absolute' as const,
+    backgroundColor: '#f0ede9',
+    border: '1px solid #20B298',
+    padding: '0 2rem 0 0',
+    top: '250px',
+    left: '500px',
+    maxHeight: '150px',
+    overflowY: 'scroll' as const,
+  },
+  listUi: {
+    listStyle: 'none' as const,
+    overflow: 'hidden',
+    cursor: 'pointer',
+  },
+  closeIcon: {
+    cursor: 'pointer',
+    float: 'right',
+    marginTop: '-20px',
+    marginRight: '-20px',
+    width: '20px',
+  },
 };
 
 const ModalEditTask = () => {
@@ -72,10 +96,18 @@ const ModalEditTask = () => {
   const { isModalEditTask, currentColumnId, currentBoardId, task } = useAppSelector(
     (state) => state.boardsReducer
   );
+  const { token } = useAppSelector((state) => state.globalReducer);
   const [valueTitle, setValueTitle] = useState(task?.title || '');
   const [valueDescription, setValueDescription] = useState(task?.description || '');
   const [updateTask, {}] = boardsAPI.useUpdateTaskMutation();
   const { t } = useTranslation();
+
+  const { id } = useParams();
+  const { data: users } = boardsAPI.useGetUsersQuery(token);
+  const { data: user } = boardsAPI.useGetUserQuery([token, task?.userId]);
+  const [valueUserId, setValueUserId] = useState(user?.id);
+  const [valueUserName, setValueUserName] = useState(user?.name);
+  const [isVisibleUserList, setIsVisibleUserList] = useState(false);
 
   const {
     register,
@@ -88,10 +120,13 @@ const ModalEditTask = () => {
     dispatch(setIsModalEditTask(false));
   };
 
+  useEffect(() => {
+    setValueUserName(user?.name);
+    setValueUserId(user?.id);
+  }, [isModalEditTask, user]);
+
   const onClickAddUserBtn = () => {
-    if (task) {
-      //updateTask([id as string, currentColumnId, { ...task, userId: task?.userId || '' }]);
-    }
+    setIsVisibleUserList(!isVisibleUserList);
   };
 
   useEffect(() => {
@@ -106,11 +141,12 @@ const ModalEditTask = () => {
   }, [task?.title, task?.description]);
 
   const onSubmit = () => {
-    if (task) {
+    if (task && valueUserId) {
       updateTask([
+        token,
         currentBoardId,
         currentColumnId,
-        { ...task, title: valueTitle, description: valueDescription },
+        { ...task, title: valueTitle, description: valueDescription, userId: valueUserId },
       ]);
     }
     handleClose();
@@ -126,6 +162,7 @@ const ModalEditTask = () => {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style.box}>
+            <CloseIcon sx={style.closeIcon} onClick={handleClose} />
             <Typography id="modal-modal-title" variant="h6" component="h2">
               {t('edit_task')}:
             </Typography>
@@ -157,11 +194,36 @@ const ModalEditTask = () => {
                   {t('save')}
                 </Button>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                  {t('user_name')}
+                  {valueUserName}
                   <PersonAddIcon sx={style.icon} onClick={onClickAddUserBtn} />
                 </div>
               </div>
             </form>
+            <div style={{ ...style.list, display: isVisibleUserList ? 'block' : 'none' }}>
+              <ul style={style.listUi}>
+                {users &&
+                  users.map((user) => (
+                    <li
+                      key={user.id}
+                      onClick={() => {
+                        setValueUserName(user.name);
+                        setValueUserId(user.id);
+                        setIsVisibleUserList(false);
+                        if (task && valueUserId) {
+                          updateTask([
+                            token,
+                            id as string,
+                            currentColumnId,
+                            { ...task, userId: valueUserId },
+                          ]);
+                        }
+                      }}
+                    >
+                      {user.name}
+                    </li>
+                  ))}
+              </ul>
+            </div>
           </Box>
         </Modal>
       </ThemeProvider>

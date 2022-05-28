@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import CloseIcon from '@mui/icons-material/Close';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -50,6 +51,13 @@ const style = {
     padding: '0.5rem 1rem',
     marginTop: '1rem',
   },
+  closeIcon: {
+    cursor: 'pointer',
+    float: 'right',
+    marginTop: '-20px',
+    marginRight: '-20px',
+    width: '20px',
+  },
 };
 
 const ModalColumn = () => {
@@ -57,6 +65,7 @@ const ModalColumn = () => {
   const { setIsModalColumn } = boardsSlice.actions;
   const dispatch = useAppDispatch();
   const { isModalColumn } = useAppSelector((state) => state.boardsReducer);
+  const { token } = useAppSelector((state) => state.globalReducer);
   const { id } = useParams();
   const [createColumn, {}] = boardsAPI.useCreateColumnMutation();
   const { t } = useTranslation();
@@ -79,7 +88,7 @@ const ModalColumn = () => {
   }, [isSubmitSuccessful, reset]);
 
   const onSubmit = () => {
-    createColumn([id as string, { title: valueText }]);
+    createColumn([token, id as string, { title: valueText }]);
     handleClose();
   };
 
@@ -93,6 +102,7 @@ const ModalColumn = () => {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style.box}>
+            <CloseIcon sx={style.closeIcon} onClick={handleClose} />
             <Typography id="modal-modal-title" variant="h6" component="h2">
               {t('create_a_new_column')}:
             </Typography>
