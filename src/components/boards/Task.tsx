@@ -11,7 +11,6 @@ const style = {
     padding: '0.5rem 1rem',
     marginBottom: '.5rem',
     backgroundColor: '#fff',
-    cursor: 'move',
     display: 'flex',
     justifyContent: 'space-between',
   },

@@ -58,6 +58,7 @@ const Column: React.FC<ColumnProps> = ({ column, index }) => {
   const style = {
     container: {
       maxWidth: '300px',
+      minHeight: '150px',
       maxHeight: 'calc(100vh - 28rem)',
       border: '1px solid gray',
       padding: '0.5rem',
@@ -65,7 +66,6 @@ const Column: React.FC<ColumnProps> = ({ column, index }) => {
       flexDirection: 'column',
       justifyContent: 'flex-end',
       backgroundColor: '#d3e3e3',
-      cursor: 'move',
       '& ::-webkit-scrollbar': { width: '0.5rem' },
     },
     content: {
@@ -105,7 +105,7 @@ const Column: React.FC<ColumnProps> = ({ column, index }) => {
   return (
     <Draggable draggableId={column.id} index={index}>
       {(provided) => (
-        <div {...provided.draggableProps} ref={provided.innerRef} {...provided.dragHandleProps}>
+        <Box {...provided.draggableProps} ref={provided.innerRef} {...provided.dragHandleProps}>
           <Droppable droppableId={column.id}>
             {(provided) => (
               <Box sx={style.container} {...provided.droppableProps} ref={provided.innerRef}>
@@ -147,13 +147,15 @@ const Column: React.FC<ColumnProps> = ({ column, index }) => {
                     </div>
                   )}
                 </div>
-                {tasks &&
-                  tasks
-                    .map((task) => task)
-                    .sort((a, b) => (a.order > b.order ? 1 : -1))
-                    .map((task, index) => (
-                      <Task key={task.id} task={task} index={index} column={column} />
-                    ))}
+                <div style={style.content}>
+                  {tasks &&
+                    tasks
+                      .map((task) => task)
+                      .sort((a, b) => (a.order > b.order ? 1 : -1))
+                      .map((task, index) => (
+                        <Task key={task.id} task={task} index={index} column={column} />
+                      ))}
+                </div>
                 <div style={style.btnContainer}>
                   <DeleteForeverIcon
                     sx={{
@@ -170,7 +172,7 @@ const Column: React.FC<ColumnProps> = ({ column, index }) => {
               </Box>
             )}
           </Droppable>
-        </div>
+        </Box>
       )}
     </Draggable>
   );
