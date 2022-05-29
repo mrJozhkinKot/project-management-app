@@ -8,15 +8,18 @@ import { useCookies } from 'react-cookie';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Navigate } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useCheckCookiesExpired } from '../../hooks/authorization';
 import { useAppSelector } from '../../hooks/redux';
 import {
-  BadRequestInterface,
+  ParsedErrorInterface,
   SignUpBodyInterface,
   UpdateUserInterface,
 } from '../../utils/interfaces';
 import { usersAPI } from '../../utils/usersService';
 import Spinner from '../spinner/Spinner';
+import { notifyAuthWarning, notifySuccess } from '../toasts/toasts';
 
 const style = {
   container: {
@@ -56,12 +59,19 @@ function EditProfile(): React.ReactElement {
 
   useCheckCookiesExpired();
 
-  function handleErrors(error: BadRequestInterface) {
-    console.log('updateUser failed!: ', error);
-    if (error.statusCode === 400) {
-      console.log('Found incorrect id');
-    } else if (error.statusCode < 200 || error.statusCode >= 300) {
-      console.log('This error code was not processed');
+  function handleErrors(error: ParsedErrorInterface) {
+    const data = error.data;
+
+    if (error.status === 400) {
+      notifyAuthWarning('Found incorrect id');
+    }
+    if (error.status === 401) {
+      notifyAuthWarning('Unauthorized');
+    }
+    if (error.status === 500) {
+      notifyAuthWarning('This login already exists');
+    } else if (error.status < 200 || error.status >= 300) {
+      notifyAuthWarning(data.message);
     }
   }
 
@@ -70,15 +80,15 @@ function EditProfile(): React.ReactElement {
       .unwrap()
       .then(async (response) => {
         if (response?.id) {
-          setCookie('token', token, { maxAge: 300 });
-          setCookie('name', response.name, { maxAge: 300 });
+          setCookie('token', token, { maxAge: 600 });
+          setCookie('name', response.name, { maxAge: 600 });
           resetField('password');
-          //TODO: - change alert for toast or pop-up
-          // alert('Your data update was successful!');
+          notifySuccess('Data changed successfully!');
         }
       })
-      .catch((error: BadRequestInterface) => {
-        handleErrors(error);
+      .catch((error) => {
+        const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
+        handleErrors(parsedError);
       });
   }
 
@@ -161,6 +171,7 @@ function EditProfile(): React.ReactElement {
           {t('save')}
         </Button>
       </Box>
+      <ToastContainer />
     </Container>
   );
 }

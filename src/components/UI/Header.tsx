@@ -88,15 +88,12 @@ function Header(): React.ReactElement {
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
-
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
-
   const onChange = (event: SelectChangeEvent) => {
     i18n.changeLanguage(event.target.value);
   };
-
   return (
     <AppBar position="sticky" style={sticky ? style.sticky : style.container}>
       <Container maxWidth="xl">
@@ -307,5 +304,4 @@ function Header(): React.ReactElement {
     </AppBar>
   );
 }
-
 export default Header;

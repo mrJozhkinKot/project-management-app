@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { boardsAPI } from '../../utils/boardService';
 import Spinner from '../spinner/Spinner';
 import Column from './Column';
+import { ToastContainer } from 'react-toastify';
 
 const ColumnList = () => {
   const { id } = useParams();
@@ -31,6 +32,7 @@ const ColumnList = () => {
               </Grid>
             ))}
       </Grid>
+      <ToastContainer />
     </div>
   );
 };

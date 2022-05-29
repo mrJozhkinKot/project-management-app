@@ -12,6 +12,8 @@ import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { boardsAPI } from '../../utils/boardService';
+import { handleBoardsErrors, notifySuccess } from '../toasts/toasts';
+import { ParsedErrorInterface } from '../../utils/interfaces';
 
 const defaultValues = {
   title: '',
@@ -64,8 +66,8 @@ const ModalBoard = () => {
   const [valueName, setValueName] = useState('');
   const [valueDescription, setValueDescription] = useState('');
   const { setIsModalBoard } = boardsSlice.actions;
-  const dispatch = useAppDispatch();
   const { isModalBoard } = useAppSelector((state) => state.boardsReducer);
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
   const [createBoard, {}] = boardsAPI.useCreateBoardMutation();
@@ -87,8 +89,18 @@ const ModalBoard = () => {
   }, [isSubmitSuccessful, reset]);
 
   const onSubmit = async () => {
-    dispatch(setIsModalBoard(false));
-    createBoard({ title: valueName, description: valueDescription });
+    createBoard({ title: valueName, description: valueDescription })
+      .unwrap()
+      .then((response) => {
+        if (response) {
+          notifySuccess('Board created successfully!');
+        }
+        handleClose();
+      })
+      .catch((error) => {
+        const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
+        handleBoardsErrors(parsedError, 'boards');
+      });
   };
 
   return (

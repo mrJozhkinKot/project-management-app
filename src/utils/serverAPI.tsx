@@ -16,7 +16,8 @@ import {
 } from './interfaces';
 
 // TODO: Add 401 error everywhere
-const remoteServerURL = 'https://evening-lowlands-03074.herokuapp.com/';
+
+const remoteServerURL = 'https://serene-inlet-66010.herokuapp.com';
 const token =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJlYTY5ZDllYi1iYmUxLTQ5ZWYtOTYyOC01YTQ5NDE3NDQwNTQiLCJsb2dpbiI6InRlc3QyIiwiaWF0IjoxNjUyNTQzOTQ2fQ.WJtIq6IU1ha2nXVOVnusrbhRTUxvtjPjjd4l-mXx4dw';
 
@@ -30,7 +31,6 @@ export async function getUsers(): Promise<UserInterface[] | null> {
   });
   const isJson = response.headers.get('content-type')?.includes('application/json');
   const data = isJson ? await response.json() : null;
-
   if (!response.ok) {
     console.log('Something has gone wrong on getUsers()');
     return Promise.reject(data);
@@ -48,12 +48,15 @@ export async function getUser(userID: string): Promise<UserInterface | null> {
   });
   const isJson = response.headers.get('content-type')?.includes('application/json');
   const data = isJson ? await response.json() : null;
-
   if (!response.ok) {
     console.log('Something has gone wrong on getUser()');
     return Promise.reject(data);
   }
   return Promise.resolve(data);
+
+  if (response.status === 400 || response.status === 404) {
+    console.log('Incorrect userID');
+  }
 }
 
 export async function deleteUser(userID: string): Promise<null> {
@@ -66,13 +69,16 @@ export async function deleteUser(userID: string): Promise<null> {
   });
   const isJson = response.headers.get('content-type')?.includes('application/json');
   const data = isJson ? await response.json() : null;
-
   if (!response.ok) {
     console.log('Something has gone wrong on deleteUser()');
     return Promise.reject(data);
   }
   console.log('User deleted successfully!');
   return Promise.resolve(data);
+
+  if (response.status === 400 || response.status === 404) {
+    console.log('User was not found! : ', data);
+  }
 }
 
 export async function updateUser(
@@ -90,12 +96,18 @@ export async function updateUser(
   });
   const isJson = response.headers.get('content-type')?.includes('application/json');
   const data = isJson ? await response.json() : null;
-
   if (!response.ok) {
     console.log('Something has gone wrong on updateUser()');
     return Promise.reject(data);
   }
   return Promise.resolve(data);
+
+  if (response.status === 400 || response.status === 404) {
+    console.log('User was not found (invalid ID)!');
+  }
+  if (response.status === 500) {
+    console.log('User login already exists!');
+  }
 }
 
 export async function signUp(body: SignUpBodyInterface): Promise<UserInterface | null> {
@@ -109,7 +121,6 @@ export async function signUp(body: SignUpBodyInterface): Promise<UserInterface |
   });
   const isJson = response.headers.get('content-type')?.includes('application/json');
   const data = isJson ? await response.json() : null;
-
   if (!response.ok) {
     console.log('Something has gone wrong on signUp()');
     return Promise.reject(data);
@@ -128,7 +139,6 @@ export async function signIn(body: SignInBodyInterface): Promise<SignInResponseI
   });
   const isJson = response.headers.get('content-type')?.includes('application/json');
   const data = isJson ? await response.json() : null;
-
   if (!response.ok) {
     console.log('Something has gone wrong on signIn()');
     return Promise.reject(data);
@@ -146,7 +156,6 @@ export async function getBoards(): Promise<BoardDraftInterface[] | null> {
   });
   const isJson = response.headers.get('content-type')?.includes('application/json');
   const data = isJson ? await response.json() : null;
-
   if (!response.ok) {
     console.log('Something has gone wrong on getBoards()');
     return Promise.reject(data);
@@ -164,12 +173,15 @@ export async function getBoard(boardID: string): Promise<BoardInterface | null> 
   });
   const isJson = response.headers.get('content-type')?.includes('application/json');
   const data = isJson ? await response.json() : null;
-
   if (!response.ok) {
     console.log('Something has gone wrong on getBoard()');
     return Promise.reject(data);
   }
   return Promise.resolve(data);
+
+  if (response.status === 400 || response.status === 404) {
+    console.log('Incorrect boardID');
+  }
 }
 
 export async function createBoard(title: string): Promise<BoardDraftInterface | null> {
@@ -184,7 +196,6 @@ export async function createBoard(title: string): Promise<BoardDraftInterface | 
   });
   const isJson = response.headers.get('content-type')?.includes('application/json');
   const data = isJson ? await response.json() : null;
-
   if (!response.ok) {
     console.log('Something has gone wrong on createBoard()');
     return Promise.reject(data);
@@ -202,13 +213,16 @@ export async function deleteBoard(boardID: string): Promise<InternalServerErrorI
   });
   const isJson = response.headers.get('content-type')?.includes('application/json');
   const data = isJson ? await response.json() : null;
-
   if (!response.ok) {
     console.log('Something has gone wrong on deleteBoard()');
     return Promise.reject(data);
   }
   console.log('Board deleted successfully!');
   return Promise.resolve(data);
+
+  if (response.status === 400 || response.status === 404) {
+    console.log('Board was not found! : ', data);
+  }
 }
 
 export async function updateBoard(
@@ -226,12 +240,15 @@ export async function updateBoard(
   });
   const isJson = response.headers.get('content-type')?.includes('application/json');
   const data = isJson ? await response.json() : null;
-
   if (!response.ok) {
     console.log('Something has gone wrong on updateBoard()');
     return Promise.reject(data);
   }
   return Promise.resolve(data);
+
+  if (response.status === 400 || response.status === 404) {
+    console.log('Board was not found (invalid ID)!');
+  }
 }
 
 export async function getColumns(boardID: string): Promise<ColumnDraftInterface[] | null> {
@@ -244,12 +261,16 @@ export async function getColumns(boardID: string): Promise<ColumnDraftInterface[
   });
   const isJson = response.headers.get('content-type')?.includes('application/json');
   const data = isJson ? await response.json() : null;
-
   if (!response.ok) {
     console.log('Something has gone wrong on getColumns()');
     return Promise.reject(data);
   }
   return Promise.resolve(data);
+
+  if (response.status === 400 || response.status === 404) {
+    console.log('Invalid boardID!');
+    console.log('data:BadRequestInterface : ', data);
+  }
 }
 
 export async function getColumn(
@@ -268,12 +289,15 @@ export async function getColumn(
   );
   const isJson = response.headers.get('content-type')?.includes('application/json');
   const data = isJson ? await response.json() : null;
-
   if (!response.ok) {
     console.log('Something has gone wrong on getColumn()');
     return Promise.reject(data);
   }
   return Promise.resolve(data);
+
+  if (response.status === 400 || response.status === 404) {
+    console.log('Invalid boardID!');
+  }
 }
 
 export async function createColumn(
@@ -291,12 +315,16 @@ export async function createColumn(
   });
   const isJson = response.headers.get('content-type')?.includes('application/json');
   const data = isJson ? await response.json() : null;
-
   if (!response.ok) {
     console.log('Something has gone wrong on createColumn()');
     return Promise.reject(data);
   }
   return Promise.resolve(data);
+
+  if (response.status === 500) {
+    console.log('Column with this order № already exists!');
+    console.log('data:InternalServerErrorInterface : ', data);
+  }
 }
 
 export async function deleteColumn(boardID: string, columnID: string): Promise<null> {
@@ -310,16 +338,18 @@ export async function deleteColumn(boardID: string, columnID: string): Promise<n
       },
     }
   );
-
   const isJson = response.headers.get('content-type')?.includes('application/json');
   const data = isJson ? await response.json() : null;
-
   if (!response.ok) {
     console.log('Something has gone wrong on deleteColumn()');
     return Promise.reject(data);
   }
   console.log('Column deleted successfully!');
   return Promise.resolve(data);
+
+  if (response.status === 400 || response.status === 404) {
+    console.log('Column or Board id was not found! : ', data);
+  }
 }
 
 export async function updateColumn(
@@ -341,12 +371,18 @@ export async function updateColumn(
   );
   const isJson = response.headers.get('content-type')?.includes('application/json');
   const data = isJson ? await response.json() : null;
-
   if (!response.ok) {
     console.log('Something has gone wrong on updateColumn()');
     return Promise.reject(data);
   }
   return Promise.resolve(data);
+
+  if (response.status === 400 || response.status === 404) {
+    console.log('Board or Column was not found (invalid ID)!');
+  }
+  if (response.status === 500) {
+    console.log('This order was already used before!');
+  }
 }
 
 export async function getTasks(boardID: string, columnID: string): Promise<TaskInterface[] | null> {
@@ -362,12 +398,16 @@ export async function getTasks(boardID: string, columnID: string): Promise<TaskI
   );
   const isJson = response.headers.get('content-type')?.includes('application/json');
   const data = isJson ? await response.json() : null;
-
   if (!response.ok) {
     console.log('Something has gone wrong on getTasks()');
     return Promise.reject(data);
   }
   return Promise.resolve(data);
+
+  if (response.status === 400 || response.status === 404) {
+    console.log('Invalid boardID or columnID!');
+    console.log('data:BadRequestInterface : ', data);
+  }
 }
 
 export async function getTask(
@@ -387,12 +427,15 @@ export async function getTask(
   );
   const isJson = response.headers.get('content-type')?.includes('application/json');
   const data = isJson ? await response.json() : null;
-
   if (!response.ok) {
     console.log('Something has gone wrong on getTask()');
     return Promise.reject(data);
   }
   return Promise.resolve(data);
+
+  if (response.status === 400 || response.status === 404) {
+    console.log('Invalid boardID, columnID or taskID!');
+  }
 }
 
 export async function createTask(
@@ -414,12 +457,18 @@ export async function createTask(
   );
   const isJson = response.headers.get('content-type')?.includes('application/json');
   const data = isJson ? await response.json() : null;
-
   if (!response.ok) {
     console.log('Something has gone wrong on createTask()');
     return Promise.reject(data);
   }
   return Promise.resolve(data);
+
+  if (response.status === 400 || response.status === 404) {
+    console.log('Invalid boardID, columnID or ITaskCreateBody!');
+  }
+  if (response.status === 500) {
+    console.log('Invalid userID!');
+  }
 }
 
 export async function deleteTask(boardID: string, columnID: string, taskID: string): Promise<null> {
@@ -435,13 +484,16 @@ export async function deleteTask(boardID: string, columnID: string, taskID: stri
   );
   const isJson = response.headers.get('content-type')?.includes('application/json');
   const data = isJson ? await response.json() : null;
-
   if (!response.ok) {
     console.log('Something has gone wrong on deleteTask()');
     return Promise.reject(data);
   }
   console.log('Task deleted successfully!');
   return Promise.resolve(data);
+
+  if (response.status === 400 || response.status === 404) {
+    console.log('boardID, columnID or taskID was not found! : ', data);
+  }
 }
 
 export async function updateTask(
@@ -464,12 +516,18 @@ export async function updateTask(
   );
   const isJson = response.headers.get('content-type')?.includes('application/json');
   const data = isJson ? await response.json() : null;
-
   if (!response.ok) {
     console.log('Something has gone wrong on updateTask()');
     return Promise.reject(data);
   }
   return Promise.resolve(data);
+
+  if (response.status === 400 || response.status === 404) {
+    console.log('Invalid boardID, columnID or taskID!');
+  }
+  if (response.status === 500) {
+    console.log('There is wrong data in ITaskUpdateBody (probably userId/boardId/columnId)!');
+  }
 }
 
 // Not ready
@@ -480,7 +538,6 @@ export async function uploadFile(
   const formData: FormData = new FormData();
   formData.append('taskId', taskID);
   formData.append('file', file);
-
   await fetch(`${remoteServerURL}/file`, {
     method: 'POST',
     headers: {
@@ -492,7 +549,6 @@ export async function uploadFile(
   })
     .then(async (response) => {
       let data;
-
       if (response.ok) {
         data = await Promise.resolve(response.text());
         console.log('data:string : ', data);
@@ -506,7 +562,6 @@ export async function uploadFile(
           console.log('data:InternalServerErrorInterface : ', data);
         }
       }
-
       return data;
     })
     .catch((error) => {
@@ -528,7 +583,6 @@ export async function downloadFile(
   })
     .then(async (response) => {
       let data;
-
       if (response.ok) {
         data = await response.blob();
         console.log('data:Blob : ', data);
@@ -537,7 +591,6 @@ export async function downloadFile(
         console.log('Something has gone wrong while downloadFile()');
         console.log('data:InternalServerErrorInterface : ', data);
       }
-
       return data;
     })
     .catch((error) => {
