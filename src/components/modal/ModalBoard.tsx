@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import CloseIcon from '@mui/icons-material/Close';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -51,6 +52,13 @@ const style = {
     display: 'block',
     padding: '0.5rem 1rem',
     marginTop: '1rem',
+  },
+  closeIcon: {
+    cursor: 'pointer',
+    float: 'right',
+    marginTop: '-20px',
+    marginRight: '-20px',
+    width: '20px',
   },
 };
 
@@ -105,6 +113,7 @@ const ModalBoard = () => {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style.box}>
+            <CloseIcon sx={style.closeIcon} onClick={handleClose} />
             <Typography id="modal-modal-title" variant="h6" component="h2">
               {t('create_a_new_board')}:
             </Typography>
@@ -120,11 +129,11 @@ const ModalBoard = () => {
               />
               <TextField
                 id="descrtption_input"
-                label="Enter description"
+                label={t('enter_description')}
                 multiline
                 rows={4}
                 sx={style.input}
-                {...register('description', { required: 'Enter the description' })}
+                {...register('description', { required: t('enter_the_description') })}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setValueDescription(event.target.value);
                 }}

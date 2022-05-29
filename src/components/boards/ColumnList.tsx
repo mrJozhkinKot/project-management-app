@@ -23,11 +23,14 @@ const ColumnList = () => {
       {isLoading && <Spinner />}
       <Grid sx={style.container} container spacing={4} pl={4} pr={4}>
         {columns &&
-          columns.map((column, index) => (
-            <Grid key={String(column.id)} item xs={12} sm={6} md={4} lg={3}>
-              <Column column={column} index={index} />
-            </Grid>
-          ))}
+          columns
+            .map((task) => task)
+            .sort((a, b) => (a.order > b.order ? 1 : -1))
+            .map((column, index) => (
+              <Grid key={column.id} item xs={12} sm={6} md={4} lg={3}>
+                <Column column={column} index={index} />
+              </Grid>
+            ))}
       </Grid>
       <ToastContainer />
     </div>

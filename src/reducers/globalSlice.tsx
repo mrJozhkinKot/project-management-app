@@ -10,7 +10,7 @@ export interface GlobalStateInterface {
 }
 
 const initialState: GlobalStateInterface = {
-  isAuth: false,
+  isAuth: true,
   token: '',
   userId: '',
   login: '',
