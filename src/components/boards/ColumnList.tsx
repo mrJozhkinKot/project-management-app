@@ -1,4 +1,3 @@
-import Grid from '@mui/material/Grid';
 import React, { useEffect, useState } from 'react';
 import { DragDropContext, DraggableLocation, Droppable } from 'react-beautiful-dnd';
 import { DropResult } from 'react-beautiful-dnd';
@@ -9,6 +8,7 @@ import Column from './Column';
 import { ColumnInterface, TaskDraftInterface } from '../../utils/interfaces';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
+import { Box } from '@mui/material';
 
 const ColumnList = () => {
   const { id } = useParams();
@@ -37,7 +37,13 @@ const ColumnList = () => {
   const style = {
     container: {
       padding: '1rem',
-      marginBottom: '10rem',
+      display: 'flex',
+    },
+    wrapper: {
+      maxHeight: 'calc(100vh - 20rem)',
+      display: 'flex',
+      flexWrap: 'wrap' as const,
+      height: '100%',
     },
   };
 
@@ -262,32 +268,24 @@ const ColumnList = () => {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div>
+      <div style={style.wrapper}>
         {isLoading && <Spinner />}
         {!isLoading && (
           <Droppable droppableId="columnList" direction="horizontal" type="list">
             {(provided) => (
-              <Grid
-                sx={style.container}
-                container
-                spacing={4}
-                pl={4}
-                pr={4}
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-              >
+              <Box sx={style.container} {...provided.droppableProps} ref={provided.innerRef}>
                 {shouldRender &&
                   localColumns &&
                   localColumns
                     .map((task) => task)
                     .sort((a, b) => (a.order > b.order ? 1 : -1))
                     .map((column, index) => (
-                      <Grid key={String(column.id)} item xs={12} sm={6} md={4} lg={3}>
+                      <Box key={column.id}>
                         <Column column={column} index={index} />
-                      </Grid>
+                      </Box>
                     ))}
                 {provided.placeholder}
-              </Grid>
+              </Box>
             )}
           </Droppable>
         )}

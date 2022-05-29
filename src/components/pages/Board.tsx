@@ -1,5 +1,6 @@
+import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
-import React, { Fragment } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate } from 'react-router-dom';
 import { useCheckCookiesExpired } from '../../hooks/authorization';
@@ -22,10 +23,18 @@ const Board: React.FC = () => {
   useCheckCookiesExpired();
 
   const style = {
-    margin: '2rem',
-    backgroundColor: '#20B298',
-    '&:hover': {
-      backgroundColor: '#1C9D86',
+    container: {
+      height: 'calc(100vh - 6rem)',
+      flexWrap: 'nowrap' as const,
+      overflowX: 'scroll' as const,
+      width: '100vw',
+    },
+    button: {
+      margin: '2rem',
+      backgroundColor: '#20B298',
+      '&:hover': {
+        backgroundColor: '#1C9D86',
+      },
     },
   };
 
@@ -34,10 +43,10 @@ const Board: React.FC = () => {
   }
 
   return (
-    <Fragment>
+    <Box sx={style.container}>
       <Button
         variant="contained"
-        sx={style}
+        sx={style.button}
         onClick={() => {
           dispatch(setIsModalColumn(true));
         }}
@@ -50,7 +59,7 @@ const Board: React.FC = () => {
       {currentColumnId && currentTaskId && <ModalEditTask />}
       <ConfirmColumnModal />
       <ConfirmTaskModal />
-    </Fragment>
+    </Box>
   );
 };
 

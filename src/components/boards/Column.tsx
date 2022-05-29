@@ -71,9 +71,10 @@ const Column: React.FC<ColumnProps> = ({ column, index }) => {
 
   const style = {
     container: {
-      maxWidth: '300px',
+      width: '280px',
+      margin: '0.7rem',
       minHeight: '60px',
-      maxHeight: 'calc(100vh - 28rem)',
+      maxHeight: 'calc(100vh - 20rem)',
       border: '1px solid gray',
       padding: '0.5rem',
       display: 'flex',
@@ -144,6 +145,14 @@ const Column: React.FC<ColumnProps> = ({ column, index }) => {
                         sx={style.input}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                           setValueTitle(event.target.value);
+                        }}
+                        onBlur={() => {
+                          dispatch(setIsColumnEdit(false));
+                          updateColumn([
+                            token,
+                            id as string,
+                            { id: columnEdited.id, order: columnEdited.order, title: valueTitle },
+                          ]);
                         }}
                       />
                       <DoneIcon
