@@ -12,6 +12,8 @@ import { boardsAPI } from '../../utils/boardService';
 import { ColumnInterface, TaskDraftInterface, TaskInterface } from '../../utils/interfaces';
 import { Task } from './Task';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
+import { handleBoardsErrors, notifySuccess } from '../toasts/toasts';
+import { ParsedErrorInterface } from '../../utils/interfaces';
 
 interface ColumnProps {
   column: ColumnInterface;
@@ -64,14 +66,19 @@ const Column: React.FC<ColumnProps> = ({ column, index }) => {
 
   useEffect(() => {
     if (id && valueTitle) {
-      updateColumn([token, id, { id: column.id, title: column.title, order: column.order }]);
+      updateColumn([token, id, { id: column.id, title: column.title, order: column.order }]).catch(
+        (error) => {
+          const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
+          handleBoardsErrors(parsedError, 'columns');
+        }
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [valueTitle]);
 
   const style = {
     container: {
-      width: '280px',
+      width: '260px',
       margin: '0.7rem',
       minHeight: '60px',
       maxHeight: 'calc(100vh - 20rem)',
@@ -164,7 +171,19 @@ const Column: React.FC<ColumnProps> = ({ column, index }) => {
                             token,
                             id as string,
                             { id: columnEdited.id, order: columnEdited.order, title: valueTitle },
-                          ]);
+                          ])
+                            .unwrap()
+                            .then((response) => {
+                              if (response) {
+                                notifySuccess('Column updated successfully!');
+                              }
+                            })
+                            .catch((error) => {
+                              const parsedError: ParsedErrorInterface = JSON.parse(
+                                JSON.stringify(error)
+                              );
+                              handleBoardsErrors(parsedError, 'columns');
+                            });
                         }}
                       />
                     </div>

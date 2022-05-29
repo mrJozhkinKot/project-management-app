@@ -9,9 +9,6 @@ import {
   UserInterface,
 } from './interfaces';
 
-// const token =
-//   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MmM5NGQwZC05Y2RhLTQ0N2UtOTlmMS1jZGNmOWM5NGFjYmUiLCJsb2dpbiI6InVzZXIwMDciLCJpYXQiOjE2NTMzMDkzNTR9.IYK-KOHLPDJx7C8gNmE5FAzvTmvXKIr2Gd4OZZ95wVI';
-
 export const boardsAPI = createApi({
   reducerPath: 'boardsAPI',
   baseQuery: fetchBaseQuery({ baseUrl: 'https://evening-lowlands-03074.herokuapp.com' }),
@@ -53,7 +50,7 @@ export const boardsAPI = createApi({
       }),
       invalidatesTags: ['Boards'],
     }),
-    deleteBoard: build.mutation<BoardDraftInterface | null, string[]>({
+    deleteBoard: build.mutation<null, string[]>({
       query: ([token, boardID]) => ({
         url: `/boards/${boardID}`,
         method: 'DELETE',
@@ -90,7 +87,7 @@ export const boardsAPI = createApi({
       }),
       invalidatesTags: ['Columns'],
     }),
-    deleteColumn: build.mutation<ColumnDraftInterface | null, string[]>({
+    deleteColumn: build.mutation<null, string[]>({
       query: ([token, boardID, columnID]) => ({
         url: `/boards/${boardID}/columns/${columnID}`,
         method: 'DELETE',
@@ -167,7 +164,7 @@ export const boardsAPI = createApi({
       }),
       invalidatesTags: ['Tasks', 'Users'],
     }),
-    updateTask: build.mutation<null, [string, string, string, TaskInterface]>({
+    updateTask: build.mutation<TaskInterface | null, [string, string, string, TaskInterface]>({
       query([token, boardID, columnID, task]) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { id, files, ...body } = task;

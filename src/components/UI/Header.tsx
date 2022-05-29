@@ -12,7 +12,6 @@ import {
   Select,
   SelectChangeEvent,
   Toolbar,
-  Typography,
 } from '@mui/material';
 import React from 'react';
 import { useCookies } from 'react-cookie';
@@ -89,15 +88,12 @@ function Header(): React.ReactElement {
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
-
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
-
   const onChange = (event: SelectChangeEvent) => {
     i18n.changeLanguage(event.target.value);
   };
-
   return (
     <AppBar position="sticky" style={sticky ? style.sticky : style.container}>
       <Container maxWidth="xl">
@@ -146,10 +142,25 @@ function Header(): React.ReactElement {
                   </Select>
                 </FormControl>
                 <MenuItem onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">Edit profile</Typography>
+                  <Button
+                    onClick={() => {
+                      handleCloseNavMenu();
+                      navigate('/editprofile');
+                    }}
+                  >
+                    {t('edit_profile')}
+                  </Button>
                 </MenuItem>
                 <MenuItem onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">Create new board</Typography>
+                  <Button
+                    onClick={() => {
+                      handleCloseNavMenu();
+                      dispatch(setIsModalBoard(true));
+                      navigate('/boards');
+                    }}
+                  >
+                    {t('create_new_board')}
+                  </Button>
                 </MenuItem>
               </Menu>
             </Box>
@@ -189,6 +200,16 @@ function Header(): React.ReactElement {
                 {t('create_new_board')}
               </Button>
             </Box>
+            <Button
+              onClick={() => {
+                navigate('/welcome');
+              }}
+              variant="outlined"
+              size="small"
+              sx={{ ...style.buttonOutlined, marginRight: '10px' }}
+            >
+              Main page
+            </Button>
             <Button
               onClick={() => {
                 deleteCookies('token');
@@ -285,5 +306,4 @@ function Header(): React.ReactElement {
     </AppBar>
   );
 }
-
 export default Header;

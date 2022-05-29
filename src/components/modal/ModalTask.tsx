@@ -14,11 +14,14 @@ import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { boardsAPI } from '../../utils/boardService';
+import { handleBoardsErrors, notifySuccess } from '../toasts/toasts';
+import { ParsedErrorInterface } from '../../utils/interfaces';
 
 const defaultValues = {
   title: '',
   description: '',
 };
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -139,8 +142,18 @@ const ModalTask = () => {
         description: valueDescription,
         userId: valueUserId,
       },
-    ]);
-    handleClose();
+    ])
+      .unwrap()
+      .then((response) => {
+        if (response) {
+          notifySuccess('Task created successfully!');
+        }
+        handleClose();
+      })
+      .catch((error) => {
+        const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
+        handleBoardsErrors(parsedError, 'columns');
+      });
   };
 
   const onClickAddUserBtn = () => {

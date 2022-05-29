@@ -8,6 +8,8 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useTranslation } from 'react-i18next';
 import { boardsAPI } from '../../utils/boardService';
+import { handleBoardsErrors, notifySuccess } from '../toasts/toasts';
+import { ParsedErrorInterface } from '../../utils/interfaces';
 
 const theme = createTheme({
   palette: {
@@ -47,12 +49,12 @@ const style = {
 
 const ConfirmTaskModal = () => {
   const { setIsConfirmTaskModal } = boardsSlice.actions;
-  const dispatch = useAppDispatch();
   const { isConfirmTaskModal, currentBoardId, currentColumnId, currentTaskId } = useAppSelector(
     (state) => state.boardsReducer
   );
   const { token } = useAppSelector((state) => state.globalReducer);
   const [deleteTask, {}] = boardsAPI.useDeleteTaskMutation();
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
   const handleClose = () => {
@@ -60,8 +62,18 @@ const ConfirmTaskModal = () => {
   };
 
   const onClickConfirmDeleteBtn = () => {
-    deleteTask([token, currentBoardId, currentColumnId, currentTaskId]);
-    dispatch(setIsConfirmTaskModal(false));
+    deleteTask([token, currentBoardId, currentColumnId, currentTaskId])
+      .unwrap()
+      .then((response) => {
+        if (!response) {
+          notifySuccess('Task removed successfully!');
+        }
+        handleClose();
+      })
+      .catch((error) => {
+        const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
+        handleBoardsErrors(parsedError, 'tasks');
+      });
   };
 
   return (

@@ -5,9 +5,12 @@ import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
+import 'react-toastify/dist/ReactToastify.css';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { boardsAPI } from '../../utils/boardService';
+import { ParsedErrorInterface } from '../../utils/interfaces';
+import { handleBoardsErrors, notifySuccess } from '../toasts/toasts';
 
 const theme = createTheme({
   palette: {
@@ -47,10 +50,10 @@ const style = {
 
 const ConfirmBoardModal = () => {
   const { setIsConfirmBoardModal } = boardsSlice.actions;
-  const dispatch = useAppDispatch();
   const { isConfirmBoardModal, currentBoardId } = useAppSelector((state) => state.boardsReducer);
   const { token } = useAppSelector((state) => state.globalReducer);
   const [deleteBoard, {}] = boardsAPI.useDeleteBoardMutation();
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
   const handleClose = () => {
@@ -58,8 +61,19 @@ const ConfirmBoardModal = () => {
   };
 
   const onClickConfirmDeleteBtn = () => {
-    deleteBoard([token, currentBoardId]);
     dispatch(setIsConfirmBoardModal(false));
+    deleteBoard([token, currentBoardId])
+      .unwrap()
+      .then((response) => {
+        if (!response) {
+          notifySuccess('Board removed successfully!');
+        }
+        handleClose();
+      })
+      .catch((error) => {
+        const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
+        handleBoardsErrors(parsedError, 'boards');
+      });
   };
 
   return (

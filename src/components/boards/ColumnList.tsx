@@ -9,6 +9,7 @@ import { ColumnInterface, TaskDraftInterface } from '../../utils/interfaces';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { Box } from '@mui/material';
+import { ToastContainer } from 'react-toastify';
 
 const ColumnList = () => {
   const { id } = useParams();
