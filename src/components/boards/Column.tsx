@@ -11,6 +11,8 @@ import { boardsSlice } from '../../reducers/BoardsSlice';
 import { boardsAPI } from '../../utils/boardService';
 import { ColumnDraftInterface } from '../../utils/interfaces';
 import { Task } from './Task';
+import { handleBoardsErrors } from '../toasts/toasts';
+import { ParsedErrorInterface } from '../../utils/interfaces';
 
 interface ColumnProps {
   column: ColumnDraftInterface;
@@ -32,7 +34,7 @@ const Column: React.FC<ColumnProps> = ({ column }) => {
   const [valueTitle, setValueTitle] = useState('');
   const { id } = useParams();
   const { data: tasks } = boardsAPI.useGetTasksQuery([id as string, column.id]);
-  const [updateColumn, {}] = boardsAPI.useUpdateColummnMutation();
+  const [updateColumn, {}] = boardsAPI.useUpdateColumnMutation();
 
   const onClickCreateBtn = () => {
     dispatch(setCurrentColumnId(column.id));
@@ -49,7 +51,10 @@ const Column: React.FC<ColumnProps> = ({ column }) => {
 
   useEffect(() => {
     if (id) {
-      updateColumn([id, column]);
+      updateColumn([id, column]).catch((error) => {
+        const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
+        handleBoardsErrors(parsedError, 'columns');
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [valueTitle]);
@@ -128,7 +133,12 @@ const Column: React.FC<ColumnProps> = ({ column }) => {
               }}
               onBlur={() => {
                 dispatch(setIsColumnEdit(false));
-                updateColumn([id as string, { ...columnEdited, title: valueTitle }]);
+                updateColumn([id as string, { ...columnEdited, title: valueTitle }]).catch(
+                  (error) => {
+                    const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
+                    handleBoardsErrors(parsedError, 'columns');
+                  }
+                );
               }}
             />
             <DoneIcon
@@ -136,7 +146,12 @@ const Column: React.FC<ColumnProps> = ({ column }) => {
               onClick={(event: React.MouseEvent<SVGSVGElement>) => {
                 event.stopPropagation();
                 dispatch(setIsColumnEdit(false));
-                updateColumn([id as string, { ...columnEdited, title: valueTitle }]);
+                updateColumn([id as string, { ...columnEdited, title: valueTitle }]).catch(
+                  (error) => {
+                    const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
+                    handleBoardsErrors(parsedError, 'columns');
+                  }
+                );
               }}
             />
           </div>

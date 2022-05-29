@@ -8,6 +8,8 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { useTranslation } from 'react-i18next';
 import { boardsAPI } from '../../utils/boardService';
+import { handleBoardsErrors, notifySuccess } from '../toasts/toasts';
+import { ParsedErrorInterface } from '../../utils/interfaces';
 
 const theme = createTheme({
   palette: {
@@ -47,11 +49,11 @@ const style = {
 
 const ConfirmColumnModal = () => {
   const { setIsConfirmColumnModal } = boardsSlice.actions;
-  const dispatch = useAppDispatch();
   const { isConfirmColumnModal, currentBoardId, currentColumnId } = useAppSelector(
     (state) => state.boardsReducer
   );
   const [deleteColumn, {}] = boardsAPI.useDeleteColumnMutation();
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
   const handleClose = () => {
@@ -59,8 +61,18 @@ const ConfirmColumnModal = () => {
   };
 
   const onClickConfirmDeleteBtn = () => {
-    deleteColumn([currentBoardId, currentColumnId]);
-    dispatch(setIsConfirmColumnModal(false));
+    deleteColumn([currentBoardId, currentColumnId])
+      .unwrap()
+      .then((response) => {
+        if (!response) {
+          notifySuccess('Column removed successfully!');
+        }
+        handleClose();
+      })
+      .catch((error) => {
+        const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
+        handleBoardsErrors(parsedError, 'columns');
+      });
   };
 
   return (

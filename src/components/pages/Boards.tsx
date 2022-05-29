@@ -10,6 +10,7 @@ import BoardList from '../boards/BoardList';
 import ConfirmBoardModal from '../modal/ConfirmBoardModal';
 import ModalBoard from '../modal/ModalBoard';
 import Spinner from '../spinner/Spinner';
+import { ToastContainer } from 'react-toastify';
 
 const Boards = () => {
   const { setIsModalBoard } = boardsSlice.actions;
@@ -49,6 +50,7 @@ const Boards = () => {
         <BoardList />
         <ModalBoard />
         <ConfirmBoardModal />
+        <ToastContainer />
       </Box>
     </Fragment>
   );
