@@ -74,7 +74,7 @@ const ConfirmTaskModal = () => {
         >
           <Box sx={style.box}>
             <Typography id="modal-modal-title" variant="h6" component="h2" sx={style.message}>
-              {t('delete_this_board_with_all_columns')}?
+              {t('delete_this_task')}?
             </Typography>
             <div style={style.btnContainer}>
               <Button

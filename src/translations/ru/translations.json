@@ -28,6 +28,7 @@
   "create_a_new_column": "Создать новую колонку",
   "new_column": "новая колонка",
   "delete_this_board_with_all_columns": "Удалить эту доску со всеми колонками",
+  "delete_this_task": "Удалить эту задачу",
   "cancel": "ОТМЕНИТЬ",
   "delete_this_column_with_all_tasks": "Удалить эту колонку со всеми задачами",
   "enter_name": "Введите имя",
