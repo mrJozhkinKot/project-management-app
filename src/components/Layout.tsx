@@ -4,10 +4,19 @@ import Footer from './UI/Footer';
 import Header from './UI/Header';
 
 function Layout(): React.ReactElement {
+  const style = {
+    container: {
+      display: 'flex',
+      justifyContent: 'spaceBetween',
+      flexDirection: 'column' as const,
+      height: 'calc(100vh - 6.5rem)',
+    },
+  };
+
   return (
     <>
       <Header />
-      <main id="main">
+      <main id="main" style={style.container}>
         <Outlet />
       </main>
       <Footer />

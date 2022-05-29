@@ -66,6 +66,7 @@ const ModalColumn = () => {
   const [valueText, setValueText] = useState('');
   const { setIsModalColumn } = boardsSlice.actions;
   const { isModalColumn } = useAppSelector((state) => state.boardsReducer);
+  const { token } = useAppSelector((state) => state.globalReducer);
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
@@ -89,7 +90,8 @@ const ModalColumn = () => {
   }, [isSubmitSuccessful, reset]);
 
   const onSubmit = () => {
-    createColumn([id as string, { title: valueText }])
+    handleClose();
+    createColumn([token, id as string, { title: valueText }])
       .unwrap()
       .then((response) => {
         if (response) {

@@ -25,6 +25,7 @@
     "jwt-decode": "^3.1.2",
     "nvm": "^0.0.4",
     "react": "^18.1.0",
+    "react-beautiful-dnd": "^13.1.0",
     "react-cookie": "^4.1.1",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
@@ -60,6 +61,7 @@
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.4",
+    "@types/react-beautiful-dnd": "^13.1.2",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-html": "^6.2.0",
     "eslint-plugin-prettier": "^4.0.0",

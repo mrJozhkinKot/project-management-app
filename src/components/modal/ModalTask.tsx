@@ -98,10 +98,11 @@ const ModalTask = () => {
   const { setIsModalTask } = boardsSlice.actions;
   const { userId, userName } = useAppSelector((state) => state.globalReducer);
   const { isModalTask, currentColumnId } = useAppSelector((state) => state.boardsReducer);
+  const { token } = useAppSelector((state) => state.globalReducer);
+  const [createTask, {}] = boardsAPI.useCreateTasksMutation();
   const { id } = useParams();
-  const [createTask, {}] = boardsAPI.useCreateTaskMutation();
   const { t } = useTranslation();
-  const { data: users } = boardsAPI.useGetUsersQuery(10);
+  const { data: users } = boardsAPI.useGetUsersQuery(token);
   const [valueTitle, setValueTitle] = useState('');
   const [valueDescription, setValueDescription] = useState('');
   const [valueUserId, setValueUserId] = useState(userId);
@@ -133,6 +134,7 @@ const ModalTask = () => {
 
   const onSubmit = () => {
     createTask([
+      token,
       id as string,
       currentColumnId,
       {

@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ColumnDraftInterface, ColumnInterface, TaskInterface } from '../utils/interfaces';
 
 interface BoardsState {
-  columns: ColumnInterface[];
+  localColumns: ColumnInterface[];
   columnEdited: ColumnDraftInterface;
   task: TaskInterface;
   currentBoardId: string;
@@ -20,7 +20,7 @@ interface BoardsState {
 }
 
 const initialState: BoardsState = {
-  columns: [],
+  localColumns: [],
   columnEdited: {
     id: '',
     title: '',
@@ -86,18 +86,8 @@ export const boardsSlice = createSlice({
     setIsConfirmTaskModal(state, action: PayloadAction<boolean>) {
       state.isConfirmTaskModal = action.payload;
     },
-    // reorderTaskList(state, action: PayloadAction<TaskDraftInterface[]>) {
-    //   state.columns.forEach((col) => {
-    //     if (col.id === state.column.id) {
-    //       col.tasks = action.payload;
-    //     }
-    //   });
-    // },
-    reorderColumnList(state, action: PayloadAction<ColumnInterface[]>) {
-      state.columns = action.payload;
-    },
-    setColumns(state, action: PayloadAction<ColumnInterface[]>) {
-      state.columns = action.payload;
+    setLocalColumns(state, action: PayloadAction<ColumnInterface[]>) {
+      state.localColumns = action.payload;
     },
     setColumnEdited(state, action: PayloadAction<ColumnDraftInterface>) {
       state.columnEdited = action.payload;

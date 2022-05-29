@@ -1,13 +1,15 @@
 import Grid from '@mui/material/Grid';
 import React from 'react';
+import { useAppSelector } from '../../hooks/redux';
 import { boardsAPI } from '../../utils/boardService';
 import Spinner from '../spinner/Spinner';
 import Board from './BoardItem';
 import { useTranslation } from 'react-i18next';
 
 const BoardList = () => {
+  const { token } = useAppSelector((state) => state.globalReducer);
+  const { data: boards, error, isLoading } = boardsAPI.useGetBoardsQuery(token);
   const { t } = useTranslation();
-  const { data: boards, error, isLoading } = boardsAPI.useGetBoardsQuery(10);
   const style = {
     container: {
       padding: '1rem',
