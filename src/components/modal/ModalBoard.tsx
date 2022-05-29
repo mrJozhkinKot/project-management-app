@@ -95,7 +95,7 @@ const ModalBoard = () => {
       .unwrap()
       .then((response) => {
         if (response) {
-          notifySuccess('Board created successfully!');
+          notifySuccess(t('board_created_successfully'));
         }
         handleClose();
       })

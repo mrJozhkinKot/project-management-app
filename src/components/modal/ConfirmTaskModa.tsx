@@ -66,7 +66,7 @@ const ConfirmTaskModal = () => {
       .unwrap()
       .then((response) => {
         if (!response) {
-          notifySuccess('Task removed successfully!');
+          notifySuccess(t('task_removed_successfully'));
         }
         handleClose();
       })

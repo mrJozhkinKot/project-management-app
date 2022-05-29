@@ -1,5 +1,6 @@
 import { Slide, toast } from 'react-toastify';
 import { ParsedErrorInterface } from '../../utils/interfaces';
+import i18n from 'i18next';
 
 export function notifyAuthWarning(message: string) {
   toast(message, {
@@ -45,34 +46,34 @@ export function handleBoardsErrors(
   switch (action) {
     case 'boards':
       if (error.status === 400 || error.status === 404) {
-        notifyBoardsWarning('Board ID was not found!');
+        notifyBoardsWarning(i18n.t('board_ID_was_not_found'));
       } else if (error.status < 200 || error.status >= 300) {
         notifyBoardsWarning(data.message);
       }
       break;
     case 'columns':
       if (error.status === 400 || error.status === 404) {
-        notifyBoardsWarning('Board ID was not found!');
+        notifyBoardsWarning(i18n.t('board_ID_was_not_found'));
       }
       if (error.status === 500) {
-        notifyBoardsWarning('This column order already exists!');
+        notifyBoardsWarning(i18n.t('this_column_order_already_exists'));
       } else if (error.status < 200 || error.status >= 300) {
         notifyBoardsWarning(data.message);
       }
       break;
     case 'tasks':
       if (error.status === 400 || error.status === 404) {
-        notifyBoardsWarning('Invalid ID (board, column or task) or task body!');
+        notifyBoardsWarning(i18n.t('invalid_ID_or_task_body'));
       }
       if (error.status === 500) {
-        notifyBoardsWarning('Error in task create/update body!');
+        notifyBoardsWarning(i18n.t('error_in_task_create/update_body'));
       } else if (error.status < 200 || error.status >= 300) {
         notifyBoardsWarning(data.message);
       }
       break;
     case 'files':
       if (error.status === 409) {
-        notifyBoardsWarning('File already exists or incorrect MIME type!');
+        notifyBoardsWarning(i18n.t('file_already_exists_or_incorrect_MIME_type'));
       } else if (error.status < 200 || error.status >= 300) {
         notifyBoardsWarning(data.message);
       }

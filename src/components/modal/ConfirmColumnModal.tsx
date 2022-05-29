@@ -67,7 +67,7 @@ const ConfirmColumnModal = () => {
       .unwrap()
       .then((response) => {
         if (!response) {
-          notifySuccess('Column removed successfully!');
+          notifySuccess(t('column_removed_successfully'));
         }
         handleClose();
       })

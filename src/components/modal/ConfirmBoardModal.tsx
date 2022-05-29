@@ -66,7 +66,7 @@ const ConfirmBoardModal = () => {
       .unwrap()
       .then((response) => {
         if (!response) {
-          notifySuccess('Board removed successfully!');
+          notifySuccess(t('board_removed_successfully'));
         }
         handleClose();
       })

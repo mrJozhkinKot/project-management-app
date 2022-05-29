@@ -95,7 +95,7 @@ const ModalColumn = () => {
       .unwrap()
       .then((response) => {
         if (response) {
-          notifySuccess('Column created successfully!');
+          notifySuccess(t('column_created_successfully'));
         }
         handleClose();
       })

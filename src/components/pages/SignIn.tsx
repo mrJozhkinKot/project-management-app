@@ -58,10 +58,10 @@ function SignIn(): React.ReactElement {
     const data = error.data;
 
     if (error.status === 400) {
-      notifyAuthWarning('Found empty field!');
+      notifyAuthWarning(t('found_empty_field'));
     }
     if (error.status === 403) {
-      notifyAuthWarning('Invalid password or login!');
+      notifyAuthWarning(t('invalid_password_or_login'));
     } else if (error.status < 200 || error.status >= 300) {
       notifyAuthWarning(data.message);
     }
