@@ -40,7 +40,7 @@ const Board: React.FC<Props> = ({ board }) => {
   };
 
   return (
-    <Card sx={{ minWidth: 275 }} style={style.card}>
+    <Card sx={{ minWidth: 260 }} style={style.card}>
       <NavLink to={`${board.id}`} style={style.link}>
         <CardActionArea>
           <CardHeader title={board.title} />

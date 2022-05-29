@@ -52,6 +52,7 @@ const ConfirmColumnModal = () => {
   const { isConfirmColumnModal, currentBoardId, currentColumnId } = useAppSelector(
     (state) => state.boardsReducer
   );
+  const { token } = useAppSelector((state) => state.globalReducer);
   const [deleteColumn, {}] = boardsAPI.useDeleteColumnMutation();
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
@@ -61,7 +62,8 @@ const ConfirmColumnModal = () => {
   };
 
   const onClickConfirmDeleteBtn = () => {
-    deleteColumn([currentBoardId, currentColumnId])
+    dispatch(setIsConfirmColumnModal(false));
+    deleteColumn([token, currentBoardId, currentColumnId])
       .unwrap()
       .then((response) => {
         if (!response) {

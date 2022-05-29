@@ -67,6 +67,7 @@ const ModalBoard = () => {
   const [valueDescription, setValueDescription] = useState('');
   const { setIsModalBoard } = boardsSlice.actions;
   const { isModalBoard } = useAppSelector((state) => state.boardsReducer);
+  const { token } = useAppSelector((state) => state.globalReducer);
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
@@ -89,7 +90,8 @@ const ModalBoard = () => {
   }, [isSubmitSuccessful, reset]);
 
   const onSubmit = async () => {
-    createBoard({ title: valueName, description: valueDescription })
+    dispatch(setIsModalBoard(false));
+    createBoard([token, { title: valueName, description: valueDescription }])
       .unwrap()
       .then((response) => {
         if (response) {

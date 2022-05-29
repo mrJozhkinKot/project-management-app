@@ -29,6 +29,7 @@
   "create_a_new_column": "Create a new column",
   "new_column": "new column",
   "delete_this_board_with_all_columns": "Delete this board with all columns",
+  "delete_this_task": "Delete this task",
   "cancel": "CANCEL",
   "delete_this_column_with_all_tasks": "Delete this column with all tasks",
   "enter_name": "Enter name",

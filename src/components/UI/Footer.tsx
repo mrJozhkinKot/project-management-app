@@ -7,11 +7,11 @@ import { useTranslation } from 'react-i18next';
 const style = {
   footer: {
     backgroundColor: '#323535',
-    marginTop: 'auto',
   },
   container: {
     alignItems: 'center',
     color: '#fff',
+    padding: '3px 0',
   },
   link: {
     '&:hover': {
@@ -52,12 +52,12 @@ const Footer: React.FC = () => {
     <footer style={style.footer}>
       <Container maxWidth="xl">
         <Grid container sx={style.container}>
-          <Grid item lg={4} sm={3} xs={12} sx={style.listItem}>
+          <Grid item lg={4} sm={3} xs={4} sx={style.listItem}>
             <Link href="https://rs.school/react/" target="_blank" rel="noreferrer">
               <SvgIcon component={RSSIcon} inheritViewBox sx={style.logo} />
             </Link>
           </Grid>
-          <Grid container item lg={4} sm={6} xs={12} sx={style.listItem}>
+          <Grid container item lg={4} sm={6} xs={4} sx={style.listItem}>
             <Grid item component="span" sx={style.linkWrapper}>
               <Link
                 sx={style.link}
@@ -104,7 +104,7 @@ const Footer: React.FC = () => {
               </Link>
             </Grid>
           </Grid>
-          <Grid item lg={4} sm={3} xs={12} sx={style.listItem}>
+          <Grid item lg={4} sm={3} xs={4} sx={style.listItem}>
             <Typography component="span" variant="body2">
               © 2022
             </Typography>

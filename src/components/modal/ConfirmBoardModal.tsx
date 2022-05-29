@@ -51,6 +51,7 @@ const style = {
 const ConfirmBoardModal = () => {
   const { setIsConfirmBoardModal } = boardsSlice.actions;
   const { isConfirmBoardModal, currentBoardId } = useAppSelector((state) => state.boardsReducer);
+  const { token } = useAppSelector((state) => state.globalReducer);
   const [deleteBoard, {}] = boardsAPI.useDeleteBoardMutation();
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
@@ -60,7 +61,8 @@ const ConfirmBoardModal = () => {
   };
 
   const onClickConfirmDeleteBtn = () => {
-    deleteBoard(currentBoardId)
+    dispatch(setIsConfirmBoardModal(false));
+    deleteBoard([token, currentBoardId])
       .unwrap()
       .then((response) => {
         if (!response) {

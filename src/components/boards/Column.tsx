@@ -9,17 +9,18 @@ import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { boardsAPI } from '../../utils/boardService';
-import { ColumnDraftInterface } from '../../utils/interfaces';
+import { ColumnInterface, TaskDraftInterface, TaskInterface } from '../../utils/interfaces';
 import { Task } from './Task';
-import { handleBoardsErrors } from '../toasts/toasts';
+import { Draggable, Droppable } from 'react-beautiful-dnd';
+import { handleBoardsErrors, notifySuccess } from '../toasts/toasts';
 import { ParsedErrorInterface } from '../../utils/interfaces';
 
 interface ColumnProps {
-  column: ColumnDraftInterface;
+  column: ColumnInterface;
   index: number;
 }
 
-const Column: React.FC<ColumnProps> = ({ column }) => {
+const Column: React.FC<ColumnProps> = ({ column, index }) => {
   const {
     setIsModalTask,
     setCurrentColumnId,
@@ -29,12 +30,26 @@ const Column: React.FC<ColumnProps> = ({ column }) => {
     setIsConfirmColumnModal,
   } = boardsSlice.actions;
   const dispatch = useAppDispatch();
-  const { isColumnEdit, columnEdited } = useAppSelector((state) => state.boardsReducer);
+  const { isColumnEdit, columnEdited, localColumns } = useAppSelector(
+    (state) => state.boardsReducer
+  );
+  const { token } = useAppSelector((state) => state.globalReducer);
 
   const [valueTitle, setValueTitle] = useState('');
   const { id } = useParams();
-  const { data: tasks } = boardsAPI.useGetTasksQuery([id as string, column.id]);
-  const [updateColumn, {}] = boardsAPI.useUpdateColumnMutation();
+  const [updateColumn, {}] = boardsAPI.useUpdateColummnMutation();
+  const [localTasks, setLocalTasks] = useState<TaskInterface[]>([]);
+
+  useEffect(() => {
+    setLocalTasks(
+      column.tasks.map((task: TaskDraftInterface) => ({
+        ...task,
+        boardId: id as string,
+        columnId: column.id,
+      }))
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [localColumns]);
 
   const onClickCreateBtn = () => {
     dispatch(setCurrentColumnId(column.id));
@@ -50,27 +65,29 @@ const Column: React.FC<ColumnProps> = ({ column }) => {
   };
 
   useEffect(() => {
-    if (id) {
-      updateColumn([id, column]).catch((error) => {
-        const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
-        handleBoardsErrors(parsedError, 'columns');
-      });
+    if (id && valueTitle) {
+      updateColumn([token, id, { id: column.id, title: column.title, order: column.order }]).catch(
+        (error) => {
+          const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
+          handleBoardsErrors(parsedError, 'columns');
+        }
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [valueTitle]);
 
   const style = {
     container: {
-      width: '300px',
-      minHeight: '100px',
-      maxHeight: 'calc(100vh - 28rem)',
+      width: '260px',
+      margin: '0.7rem',
+      minHeight: '60px',
+      maxHeight: 'calc(100vh - 20rem)',
       border: '1px solid gray',
       padding: '0.5rem',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'flex-end',
       backgroundColor: '#d3e3e3',
-      cursor: 'move',
       '& ::-webkit-scrollbar': { width: '0.5rem' },
     },
     content: {
@@ -108,75 +125,98 @@ const Column: React.FC<ColumnProps> = ({ column }) => {
   };
 
   return (
-    <Box sx={style.container}>
-      <div
-        style={style.header}
-        onClick={() => {
-          dispatch(setIsColumnEdit(true));
-          dispatch(setColumnEdited(column));
-          setValueTitle(column.title);
-        }}
-      >
-        {(!isColumnEdit || column.id !== columnEdited.id) && (
-          <Typography variant="h5">{column.title}</Typography>
-        )}
-        {isColumnEdit && column.id === columnEdited.id && (
-          <div style={style.inputContainer}>
-            <Input
-              id="standard-basic"
-              autoFocus={true}
-              value={valueTitle}
-              disableUnderline={true}
-              sx={style.input}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                setValueTitle(event.target.value);
-              }}
-              onBlur={() => {
-                dispatch(setIsColumnEdit(false));
-                updateColumn([id as string, { ...columnEdited, title: valueTitle }]).catch(
-                  (error) => {
-                    const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
-                    handleBoardsErrors(parsedError, 'columns');
-                  }
-                );
-              }}
-            />
-            <DoneIcon
-              sx={style.inputIcon}
-              onClick={(event: React.MouseEvent<SVGSVGElement>) => {
-                event.stopPropagation();
-                dispatch(setIsColumnEdit(false));
-                updateColumn([id as string, { ...columnEdited, title: valueTitle }]).catch(
-                  (error) => {
-                    const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
-                    handleBoardsErrors(parsedError, 'columns');
-                  }
-                );
-              }}
-            />
-          </div>
-        )}
-      </div>
-      <div style={style.content}>
-        {tasks &&
-          tasks
-            .map((task) => task)
-            .sort((a, b) => (a.order > b.order ? 1 : -1))
-            .map((task, index) => <Task key={task.id} task={task} index={index} column={column} />)}
-      </div>
-      <div style={style.btnContainer}>
-        <DeleteForeverIcon
-          sx={{
-            ...style.btn,
-            '&:hover': {
-              color: '#E36655',
-            },
-          }}
-          onClick={onClickDeleteBtn}
-        />
-        <AddBoxIcon sx={style.btn} onClick={onClickCreateBtn} />
-      </div>
-    </Box>
+    <Draggable draggableId={column.id} index={index}>
+      {(provided) => (
+        <Box {...provided.draggableProps} ref={provided.innerRef} {...provided.dragHandleProps}>
+          <Droppable droppableId={column.id}>
+            {(provided) => (
+              <Box sx={style.container} {...provided.droppableProps} ref={provided.innerRef}>
+                <div
+                  style={style.header}
+                  onClick={() => {
+                    dispatch(setIsColumnEdit(true));
+                    dispatch(setColumnEdited(column));
+                    setValueTitle(column.title);
+                  }}
+                >
+                  {(!isColumnEdit || column.id !== columnEdited.id) && (
+                    <Typography variant="h5">{column.title}</Typography>
+                  )}
+                  {isColumnEdit && column.id === columnEdited.id && (
+                    <div style={style.inputContainer}>
+                      <Input
+                        id="standard-basic"
+                        autoFocus={true}
+                        value={valueTitle}
+                        disableUnderline={true}
+                        sx={style.input}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                          setValueTitle(event.target.value);
+                        }}
+                        onBlur={() => {
+                          dispatch(setIsColumnEdit(false));
+                          updateColumn([
+                            token,
+                            id as string,
+                            { id: columnEdited.id, order: columnEdited.order, title: valueTitle },
+                          ]);
+                        }}
+                      />
+                      <DoneIcon
+                        sx={style.inputIcon}
+                        onClick={(event: React.MouseEvent<SVGSVGElement>) => {
+                          event.stopPropagation();
+                          dispatch(setIsColumnEdit(false));
+                          updateColumn([
+                            token,
+                            id as string,
+                            { id: columnEdited.id, order: columnEdited.order, title: valueTitle },
+                          ])
+                            .unwrap()
+                            .then((response) => {
+                              if (response) {
+                                notifySuccess('Column updated successfully!');
+                              }
+                            })
+                            .catch((error) => {
+                              const parsedError: ParsedErrorInterface = JSON.parse(
+                                JSON.stringify(error)
+                              );
+                              handleBoardsErrors(parsedError, 'columns');
+                            });
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+                <div style={style.content}>
+                  {localTasks &&
+                    localTasks
+                      .map((task) => task)
+                      .sort((a, b) => (a.order > b.order ? 1 : -1))
+                      .map((task, index) => (
+                        <Task key={task.id} task={task} index={index} column={column} />
+                      ))}
+                </div>
+                <div style={style.btnContainer}>
+                  <DeleteForeverIcon
+                    sx={{
+                      ...style.btn,
+                      '&:hover': {
+                        color: '#E36655',
+                      },
+                    }}
+                    onClick={onClickDeleteBtn}
+                  />
+                  <AddBoxIcon sx={style.btn} onClick={onClickCreateBtn} />
+                </div>
+                {provided.placeholder}
+              </Box>
+            )}
+          </Droppable>
+        </Box>
+      )}
+    </Draggable>
   );
 };
 
