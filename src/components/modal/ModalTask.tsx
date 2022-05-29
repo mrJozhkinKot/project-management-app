@@ -33,7 +33,7 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 450,
+    width: { xs: 250, md: 450 },
     bgcolor: '#f0ede9',
     border: '1px solid #20B298',
     boxShadow: 24,
@@ -41,7 +41,7 @@ const style = {
   },
   input: {
     margin: '0.5rem 0',
-    width: 450,
+    width: { xs: 250, md: 450 },
     '& .focus': {
       borderColor: 'orange',
     },
