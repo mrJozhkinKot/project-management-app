@@ -117,11 +117,11 @@ const ModalBoard = () => {
               />
               <TextField
                 id="descrtption_input"
-                label="Enter description"
+                label={t('enter_description')}
                 multiline
                 rows={4}
                 sx={style.input}
-                {...register('description', { required: 'Enter the description' })}
+                {...register('description', { required: t('enter_the_description') })}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setValueDescription(event.target.value);
                 }}
