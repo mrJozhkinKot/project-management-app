@@ -22,7 +22,7 @@ export const boardsAPI = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
-      providesTags: ['Boards', 'Columns', 'Tasks'],
+      providesTags: ['Boards'],
     }),
 
     getBoard: build.query<BoardInterface | null, string[]>({
@@ -33,7 +33,7 @@ export const boardsAPI = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
-      providesTags: ['Columns', 'Tasks'],
+      providesTags: ['Boards', 'Columns', 'Tasks'],
     }),
 
     createBoard: build.mutation<
@@ -62,7 +62,7 @@ export const boardsAPI = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
-      invalidatesTags: ['Boards', 'Columns', 'Tasks'],
+      invalidatesTags: ['Boards'],
     }),
 
     getColumns: build.query<ColumnDraftInterface[] | null, string[]>({
@@ -102,7 +102,7 @@ export const boardsAPI = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
-      invalidatesTags: ['Boards', 'Columns', 'Tasks'],
+      invalidatesTags: ['Boards', 'Columns'],
     }),
 
     updateColumn: build.mutation<
@@ -122,7 +122,7 @@ export const boardsAPI = createApi({
           },
         };
       },
-      invalidatesTags: ['Boards', 'Columns', 'Tasks'],
+      invalidatesTags: ['Boards', 'Columns'],
     }),
 
     getTasks: build.query<TaskInterface[] | null, string[]>({
