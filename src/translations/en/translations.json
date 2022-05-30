@@ -46,7 +46,7 @@
   "photo": "photo",
   "contribution_Yulia": "Work on application architecture, set autodeploy to netlify, design application styles, implement main page including boards and columns, implement modals to create and edit boards, columns and tasks, add ability to set user into task, drag-n-drop",
   "contribution_Sergey": "Work on application architecture, update router and redirects, deploy backend to heroku, create base server API, describe possible BE error cases, implement user authorization and logout, create profile editing page, set autologout on cookie expiration, displaying BE errors with toasts",
-  "contribution_Vera": "Implemented header, welcome page, footer, application localization",
+  "contribution_Vera": "Develop welcome page, choose UI library, implement header, process incorrect route errors, develop footer, add application localization (ability to choose language), design styles, fix bugs throughout application",
   "about_the_React_course": "Аbout the React course at RS School",
   "react_development": "'React Development' is a free online course from The Rolling Scopes community. Everyone can study at RS School, regardless of age, professional employment or location. For more information or to register for the course, please",
   "follow_the_link": "follow the link.",
