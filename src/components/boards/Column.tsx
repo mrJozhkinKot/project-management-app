@@ -35,7 +35,6 @@ const Column: React.FC<ColumnProps> = ({ column, index }) => {
   const { isColumnEdit, columnEdited, localColumns } = useAppSelector(
     (state) => state.boardsReducer
   );
-  const { token } = useAppSelector((state) => state.globalReducer);
 
   const [valueTitle, setValueTitle] = useState('');
   const { id } = useParams();

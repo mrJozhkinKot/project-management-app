@@ -96,12 +96,12 @@ const ModalColumn = () => {
         if (response) {
           notifySuccess('Column created successfully!');
         }
-        handleClose();
       })
       .catch((error) => {
         const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
         handleBoardsErrors(parsedError, 'columns');
-      });
+      })
+      .finally(() => handleClose());
   };
 
   return (

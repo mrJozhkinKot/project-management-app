@@ -96,12 +96,12 @@ const ModalBoard = () => {
         if (response) {
           notifySuccess('Board created successfully!');
         }
-        handleClose();
       })
       .catch((error) => {
         const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
         handleBoardsErrors(parsedError, 'boards');
-      });
+      })
+      .finally(() => handleClose());
   };
 
   return (
