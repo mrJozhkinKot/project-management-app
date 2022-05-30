@@ -82,14 +82,14 @@ function EditProfile(): React.ReactElement {
         if (response?.id) {
           setCookie('token', token, { maxAge: 600 });
           setCookie('name', response.name, { maxAge: 600 });
-          resetField('password');
           notifySuccess('Data changed successfully!');
         }
       })
       .catch((error) => {
         const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
         handleErrors(parsedError);
-      });
+      })
+      .finally(() => resetField('password'));
   }
 
   if (isUpdateUserLoading) {

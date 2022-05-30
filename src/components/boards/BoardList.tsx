@@ -1,14 +1,14 @@
 import Grid from '@mui/material/Grid';
 import React from 'react';
-import { useAppSelector } from '../../hooks/redux';
 import { boardsAPI } from '../../utils/boardService';
 import Spinner from '../spinner/Spinner';
 import Board from './BoardItem';
 import { useTranslation } from 'react-i18next';
+import { useCookies } from 'react-cookie';
 
 const BoardList = () => {
-  const { token } = useAppSelector((state) => state.globalReducer);
-  const { data: boards, error, isLoading } = boardsAPI.useGetBoardsQuery(token);
+  const [cookies] = useCookies(['token']);
+  const { data: boards, error, isLoading } = boardsAPI.useGetBoardsQuery(cookies.token);
   const { t } = useTranslation();
   const style = {
     container: {

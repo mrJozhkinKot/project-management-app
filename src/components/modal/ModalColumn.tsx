@@ -90,19 +90,18 @@ const ModalColumn = () => {
   }, [isSubmitSuccessful, reset]);
 
   const onSubmit = () => {
-    handleClose();
     createColumn([token, id as string, { title: valueText }])
       .unwrap()
       .then((response) => {
         if (response) {
           notifySuccess('Column created successfully!');
         }
-        handleClose();
       })
       .catch((error) => {
         const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
         handleBoardsErrors(parsedError, 'columns');
-      });
+      })
+      .finally(() => handleClose());
   };
 
   return (

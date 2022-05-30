@@ -90,19 +90,18 @@ const ModalBoard = () => {
   }, [isSubmitSuccessful, reset]);
 
   const onSubmit = async () => {
-    dispatch(setIsModalBoard(false));
     createBoard([token, { title: valueName, description: valueDescription }])
       .unwrap()
       .then((response) => {
         if (response) {
           notifySuccess('Board created successfully!');
         }
-        handleClose();
       })
       .catch((error) => {
         const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
         handleBoardsErrors(parsedError, 'boards');
-      });
+      })
+      .finally(() => handleClose());
   };
 
   return (
