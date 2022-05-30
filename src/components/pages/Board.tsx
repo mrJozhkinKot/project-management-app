@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import Button from '@mui/material/Button';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -24,7 +24,7 @@ const Board: React.FC = () => {
 
   const style = {
     container: {
-      height: 'calc(100vh - 8rem)',
+      height: 'calc(100vh - 6.5rem)',
       flexWrap: 'nowrap' as const,
       overflowX: 'scroll' as const,
       width: '100vw',
@@ -44,21 +44,23 @@ const Board: React.FC = () => {
 
   return (
     <Box sx={style.container}>
-      <Button
-        variant="contained"
-        sx={style.button}
-        onClick={() => {
-          dispatch(setIsModalColumn(true));
-        }}
-      >
-        {t('create_column')}
-      </Button>
-      <ColumnList />
-      <ModalColumn />
-      {currentColumnId && <ModalTask />}
-      {currentColumnId && currentTaskId && <ModalEditTask />}
-      <ConfirmColumnModal />
-      <ConfirmTaskModal />
+      <Container maxWidth="xl">
+        <Button
+          variant="contained"
+          sx={style.button}
+          onClick={() => {
+            dispatch(setIsModalColumn(true));
+          }}
+        >
+          {t('create_column')}
+        </Button>
+        <ColumnList />
+        <ModalColumn />
+        {currentColumnId && <ModalTask />}
+        {currentColumnId && currentTaskId && <ModalEditTask />}
+        <ConfirmColumnModal />
+        <ConfirmTaskModal />
+      </Container>
     </Box>
   );
 };
