@@ -90,7 +90,6 @@ const ModalBoard = () => {
   }, [isSubmitSuccessful, reset]);
 
   const onSubmit = async () => {
-    dispatch(setIsModalBoard(false));
     createBoard([token, { title: valueName, description: valueDescription }])
       .unwrap()
       .then((response) => {

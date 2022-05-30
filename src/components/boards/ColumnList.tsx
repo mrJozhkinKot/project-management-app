@@ -9,14 +9,15 @@ import { ColumnInterface, TaskDraftInterface } from '../../utils/interfaces';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { Box } from '@mui/material';
+import { useCookies } from 'react-cookie';
 
 const ColumnList = () => {
+  const [cookies] = useCookies(['token']);
   const { id } = useParams();
-  const { token } = useAppSelector((state) => state.globalReducer);
-  const { data: columns, isLoading } = boardsAPI.useGetColumnsQuery([token, id as string]);
-  const { data: board } = boardsAPI.useGetBoardQuery([token, id as string]);
+  const { data: columns, isLoading } = boardsAPI.useGetColumnsQuery([cookies.token, id as string]);
+  const { data: board } = boardsAPI.useGetBoardQuery([cookies.token, id as string]);
   const [updateTask, {}] = boardsAPI.useUpdateTaskMutation();
-  const [updateColumn, {}] = boardsAPI.useUpdateColummnMutation();
+  const [updateColumn, {}] = boardsAPI.useUpdateColumnMutation();
   const [createTask, {}] = boardsAPI.useCreateTasksMutation();
   const [deleteTask, {}] = boardsAPI.useDeleteTaskMutation();
 
@@ -107,7 +108,7 @@ const ColumnList = () => {
         .sort((a, b) => (a.order > b.order ? 1 : -1))
         .map((col, index) => {
           updateColumn([
-            token,
+            cookies.token,
             id as string,
             {
               id: col.id,
@@ -137,7 +138,7 @@ const ColumnList = () => {
           .sort((a, b) => (a.order > b.order ? 1 : -1))
           .map((task, index) => {
             updateTask([
-              token,
+              cookies.token,
               id as string,
               colSource.id as string,
               {
@@ -179,7 +180,7 @@ const ColumnList = () => {
           .sort((a, b) => (a.order > b.order ? 1 : -1))
           .map((task, index) => {
             if (index === source.index) {
-              deleteTask([token, id as string, colSource.id as string, task.id]);
+              deleteTask([cookies.token, id as string, colSource.id as string, task.id]);
             }
           });
         colDestination?.tasks
@@ -187,7 +188,7 @@ const ColumnList = () => {
           .sort((a, b) => (a.order > b.order ? 1 : -1))
           .map((task, index) => {
             updateTask([
-              token,
+              cookies.token,
               id as string,
               colDestination.id as string,
               {
@@ -201,7 +202,7 @@ const ColumnList = () => {
             ]);
           });
         createTask([
-          token,
+          cookies.token,
           id as string,
           colDestination?.id as string,
           {

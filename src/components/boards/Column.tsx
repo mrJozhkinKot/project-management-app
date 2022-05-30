@@ -14,6 +14,7 @@ import { Task } from './Task';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { handleBoardsErrors, notifySuccess } from '../toasts/toasts';
 import { ParsedErrorInterface } from '../../utils/interfaces';
+import { useCookies } from 'react-cookie';
 
 interface ColumnProps {
   column: ColumnInterface;
@@ -21,6 +22,7 @@ interface ColumnProps {
 }
 
 const Column: React.FC<ColumnProps> = ({ column, index }) => {
+  const [cookies] = useCookies(['token']);
   const {
     setIsModalTask,
     setCurrentColumnId,
@@ -37,7 +39,7 @@ const Column: React.FC<ColumnProps> = ({ column, index }) => {
 
   const [valueTitle, setValueTitle] = useState('');
   const { id } = useParams();
-  const [updateColumn, {}] = boardsAPI.useUpdateColummnMutation();
+  const [updateColumn, {}] = boardsAPI.useUpdateColumnMutation();
   const [localTasks, setLocalTasks] = useState<TaskInterface[]>([]);
 
   useEffect(() => {
@@ -66,12 +68,14 @@ const Column: React.FC<ColumnProps> = ({ column, index }) => {
 
   useEffect(() => {
     if (id && valueTitle) {
-      updateColumn([token, id, { id: column.id, title: column.title, order: column.order }]).catch(
-        (error) => {
-          const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
-          handleBoardsErrors(parsedError, 'columns');
-        }
-      );
+      updateColumn([
+        cookies.token,
+        id,
+        { id: column.id, title: column.title, order: column.order },
+      ]).catch((error) => {
+        const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
+        handleBoardsErrors(parsedError, 'columns');
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [valueTitle]);
@@ -156,7 +160,7 @@ const Column: React.FC<ColumnProps> = ({ column, index }) => {
                         onBlur={() => {
                           dispatch(setIsColumnEdit(false));
                           updateColumn([
-                            token,
+                            cookies.token,
                             id as string,
                             { id: columnEdited.id, order: columnEdited.order, title: valueTitle },
                           ]);
@@ -168,7 +172,7 @@ const Column: React.FC<ColumnProps> = ({ column, index }) => {
                           event.stopPropagation();
                           dispatch(setIsColumnEdit(false));
                           updateColumn([
-                            token,
+                            cookies.token,
                             id as string,
                             { id: columnEdited.id, order: columnEdited.order, title: valueTitle },
                           ])

@@ -90,7 +90,6 @@ const ModalColumn = () => {
   }, [isSubmitSuccessful, reset]);
 
   const onSubmit = () => {
-    handleClose();
     createColumn([token, id as string, { title: valueText }])
       .unwrap()
       .then((response) => {

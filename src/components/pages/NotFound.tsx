@@ -30,6 +30,7 @@ const style = {
 function NotFound(): React.ReactElement {
   const { t } = useTranslation();
   const navigate = useNavigate();
+
   return (
     <Box sx={style.wrapper}>
       <SvgIcon component={SadIcon} inheritViewBox sx={style.icon} />

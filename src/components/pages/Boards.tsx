@@ -34,7 +34,7 @@ const Boards = () => {
   };
 
   if (!isAuth) {
-    return <Navigate to="/signin" replace></Navigate>;
+    return <Navigate to="/welcome" replace></Navigate>;
   }
 
   if (isLoading) {

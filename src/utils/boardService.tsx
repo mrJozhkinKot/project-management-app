@@ -22,8 +22,9 @@ export const boardsAPI = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
-      providesTags: ['Boards'],
+      providesTags: ['Boards', 'Columns', 'Tasks'],
     }),
+
     getBoard: build.query<BoardInterface | null, string[]>({
       query: ([token, boardID]) => ({
         url: `/boards/${boardID}`,
@@ -32,8 +33,9 @@ export const boardsAPI = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
-      providesTags: ['Boards', 'Columns', 'Tasks'],
+      providesTags: ['Columns', 'Tasks'],
     }),
+
     createBoard: build.mutation<
       BoardDraftInterface | null,
       [string, { title: string; description: string }]
@@ -50,6 +52,7 @@ export const boardsAPI = createApi({
       }),
       invalidatesTags: ['Boards'],
     }),
+
     deleteBoard: build.mutation<null, string[]>({
       query: ([token, boardID]) => ({
         url: `/boards/${boardID}`,
@@ -59,8 +62,9 @@ export const boardsAPI = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
-      invalidatesTags: ['Boards'],
+      invalidatesTags: ['Boards', 'Columns', 'Tasks'],
     }),
+
     getColumns: build.query<ColumnDraftInterface[] | null, string[]>({
       query: ([token, boardID]) => ({
         url: `/boards/${boardID}/columns`,
@@ -71,6 +75,7 @@ export const boardsAPI = createApi({
       }),
       providesTags: ['Columns'],
     }),
+
     createColumn: build.mutation<
       ColumnDraftInterface | null,
       [string, string, ColumnBodyInterface]
@@ -85,8 +90,9 @@ export const boardsAPI = createApi({
           'Content-Type': 'application/json',
         },
       }),
-      invalidatesTags: ['Columns'],
+      invalidatesTags: ['Boards', 'Columns'],
     }),
+
     deleteColumn: build.mutation<null, string[]>({
       query: ([token, boardID, columnID]) => ({
         url: `/boards/${boardID}/columns/${columnID}`,
@@ -96,9 +102,10 @@ export const boardsAPI = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
-      invalidatesTags: ['Columns'],
+      invalidatesTags: ['Boards', 'Columns', 'Tasks'],
     }),
-    updateColummn: build.mutation<
+
+    updateColumn: build.mutation<
       ColumnDraftInterface | null,
       [string, string, ColumnDraftInterface]
     >({
@@ -115,8 +122,9 @@ export const boardsAPI = createApi({
           },
         };
       },
-      invalidatesTags: ['Columns'],
+      invalidatesTags: ['Boards', 'Columns', 'Tasks'],
     }),
+
     getTasks: build.query<TaskInterface[] | null, string[]>({
       query: ([token, boardID, columnID]) => ({
         url: `/boards/${boardID}/columns/${columnID}/tasks`,
@@ -125,8 +133,9 @@ export const boardsAPI = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
-      providesTags: ['Tasks', 'Users'],
+      providesTags: ['Tasks'],
     }),
+
     getTask: build.query<TaskInterface | null, string[]>({
       query: ([token, boardID, columnID, taskID]) => ({
         url: `/boards/${boardID}/columns/${columnID}/tasks${taskID}`,
@@ -135,8 +144,9 @@ export const boardsAPI = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
-      providesTags: ['Tasks', 'Users'],
+      providesTags: ['Users'],
     }),
+
     createTasks: build.mutation<
       TaskInterface | null,
       [string, string, string, TaskCreateBodyInterface]
@@ -151,8 +161,9 @@ export const boardsAPI = createApi({
           'Content-Type': 'application/json',
         },
       }),
-      invalidatesTags: ['Tasks', 'Users'],
+      invalidatesTags: ['Boards', 'Columns', 'Tasks'],
     }),
+
     deleteTask: build.mutation<null, string[]>({
       query: ([token, boardID, columnID, taskID]) => ({
         url: `/boards/${boardID}/columns/${columnID}/tasks/${taskID}`,
@@ -162,8 +173,9 @@ export const boardsAPI = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
-      invalidatesTags: ['Tasks', 'Users'],
+      invalidatesTags: ['Boards', 'Columns', 'Tasks'],
     }),
+
     updateTask: build.mutation<TaskInterface | null, [string, string, string, TaskInterface]>({
       query([token, boardID, columnID, task]) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -179,8 +191,9 @@ export const boardsAPI = createApi({
           },
         };
       },
-      invalidatesTags: ['Tasks', 'Users'],
+      invalidatesTags: ['Boards', 'Columns', 'Tasks'],
     }),
+
     getUsers: build.query<UserInterface[] | null, string>({
       query: (token) => ({
         url: `/users`,
@@ -189,8 +202,9 @@ export const boardsAPI = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
-      providesTags: ['Tasks', 'Users'],
+      providesTags: ['Users'],
     }),
+
     getUser: build.query<UserInterface | null, string[]>({
       query: ([token, userID]) => ({
         url: `users/${userID}`,
@@ -199,7 +213,6 @@ export const boardsAPI = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
-      providesTags: ['Tasks', 'Users'],
     }),
   }),
 });
