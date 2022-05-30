@@ -146,7 +146,7 @@ const ModalTask = () => {
       .unwrap()
       .then((response) => {
         if (response) {
-          notifySuccess('Task created successfully!');
+          notifySuccess(t('task_created_successfully'));
         }
       })
       .catch((error) => {

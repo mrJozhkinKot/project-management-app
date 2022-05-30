@@ -14,6 +14,7 @@ import { Task } from './Task';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { handleBoardsErrors, notifySuccess } from '../toasts/toasts';
 import { ParsedErrorInterface } from '../../utils/interfaces';
+import { useTranslation } from 'react-i18next';
 import { useCookies } from 'react-cookie';
 
 interface ColumnProps {
@@ -40,6 +41,7 @@ const Column: React.FC<ColumnProps> = ({ column, index }) => {
   const { id } = useParams();
   const [updateColumn, {}] = boardsAPI.useUpdateColumnMutation();
   const [localTasks, setLocalTasks] = useState<TaskInterface[]>([]);
+  const { t } = useTranslation();
 
   useEffect(() => {
     setLocalTasks(
@@ -178,7 +180,7 @@ const Column: React.FC<ColumnProps> = ({ column, index }) => {
                             .unwrap()
                             .then((response) => {
                               if (response) {
-                                notifySuccess('Column updated successfully!');
+                                notifySuccess(t('column_updated_successfully'));
                               }
                             })
                             .catch((error) => {

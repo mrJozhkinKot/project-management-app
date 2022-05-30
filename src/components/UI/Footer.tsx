@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 const style = {
   footer: {
     backgroundColor: '#323535',
+    marginTop: 'auto',
   },
   container: {
     alignItems: 'center',

@@ -154,7 +154,7 @@ const ModalEditTask = () => {
         .unwrap()
         .then((response) => {
           if (response) {
-            notifySuccess('Task updated successfully!');
+            notifySuccess(t('task_updated_successfully'));
           }
         })
         .catch((error) => {

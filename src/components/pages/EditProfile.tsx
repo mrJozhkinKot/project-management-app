@@ -63,13 +63,13 @@ function EditProfile(): React.ReactElement {
     const data = error.data;
 
     if (error.status === 400) {
-      notifyAuthWarning('Found incorrect id');
+      notifyAuthWarning(t('found_incorrect_id'));
     }
     if (error.status === 401) {
-      notifyAuthWarning('Unauthorized');
+      notifyAuthWarning(t('unauthorized'));
     }
     if (error.status === 500) {
-      notifyAuthWarning('This login already exists');
+      notifyAuthWarning(t('this_login_already_exists'));
     } else if (error.status < 200 || error.status >= 300) {
       notifyAuthWarning(data.message);
     }
@@ -82,7 +82,7 @@ function EditProfile(): React.ReactElement {
         if (response?.id) {
           setCookie('token', token, { maxAge: 600 });
           setCookie('name', response.name, { maxAge: 600 });
-          notifySuccess('Data changed successfully!');
+          notifySuccess(t('data_changed_successfully'));
         }
       })
       .catch((error) => {
@@ -103,8 +103,7 @@ function EditProfile(): React.ReactElement {
   return (
     <Container maxWidth="lg" sx={style.container}>
       <Typography variant="h5" sx={{ margin: '0.8em' }}>
-        {/* {t('profile_settings')} */}
-        Profile settings
+        {t('profile_settings')}
       </Typography>
       <Box
         component="form"

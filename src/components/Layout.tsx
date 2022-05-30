@@ -9,7 +9,6 @@ function Layout(): React.ReactElement {
       display: 'flex',
       justifyContent: 'spaceBetween',
       flexDirection: 'column' as const,
-      height: 'calc(100vh - 6.5rem)',
     },
   };
 

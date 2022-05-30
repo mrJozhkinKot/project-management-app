@@ -67,7 +67,7 @@ const ConfirmTaskModal = () => {
       .unwrap()
       .then((response) => {
         if (!response) {
-          notifySuccess('Task removed successfully!');
+          notifySuccess(t('task_removed_successfully'));
         }
       })
       .catch((error) => {
@@ -88,7 +88,7 @@ const ConfirmTaskModal = () => {
         >
           <Box sx={style.box}>
             <Typography id="modal-modal-title" variant="h6" component="h2" sx={style.message}>
-              {t('delete')}?
+              {t('delete_this_task')}?
             </Typography>
             <div style={style.btnContainer}>
               <Button

@@ -11,6 +11,7 @@ import ConfirmBoardModal from '../modal/ConfirmBoardModal';
 import ModalBoard from '../modal/ModalBoard';
 import Spinner from '../spinner/Spinner';
 import { ToastContainer } from 'react-toastify';
+import { Container } from '@mui/material';
 
 const Boards = () => {
   const { setIsModalBoard } = boardsSlice.actions;
@@ -44,13 +45,15 @@ const Boards = () => {
   return (
     <Fragment>
       <Box>
-        <Button variant="contained" sx={style} onClick={onClickCreateBtn}>
-          {t('create_board')}
-        </Button>
-        <BoardList />
-        <ModalBoard />
-        <ConfirmBoardModal />
-        <ToastContainer />
+        <Container maxWidth="xl">
+          <Button variant="contained" sx={style} onClick={onClickCreateBtn}>
+            {t('create_board')}
+          </Button>
+          <BoardList />
+          <ModalBoard />
+          <ConfirmBoardModal />
+          <ToastContainer />
+        </Container>
       </Box>
     </Fragment>
   );

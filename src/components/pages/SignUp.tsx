@@ -63,13 +63,13 @@ function SignUp(): React.ReactElement {
     const data = error.data;
 
     if (error.status === 400) {
-      notifyAuthWarning('Found empty field!');
+      notifyAuthWarning(t('found_empty_field'));
     }
     if (error.status === 403) {
-      notifyAuthWarning('Invalid password or login!');
+      notifyAuthWarning(t('invalid_password_or_login'));
     }
     if (error.status === 409) {
-      notifyAuthWarning('This login already exists!');
+      notifyAuthWarning(t('this_login_already_exists'));
     } else if (error.status < 200 || error.status >= 300) {
       notifyAuthWarning(data.message);
     }
