@@ -1,0 +1,10 @@
+body {
+  background-color: #D8D8D8;
+  font-family: 'Roboto';
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
