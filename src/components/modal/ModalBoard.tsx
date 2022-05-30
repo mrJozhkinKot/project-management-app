@@ -34,7 +34,7 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 450,
+    width: { xs: 250, md: 450 },
     bgcolor: '#f0ede9',
     border: '1px solid #20B298',
     boxShadow: 24,
@@ -42,7 +42,7 @@ const style = {
   },
   input: {
     margin: '0.5rem 0',
-    width: 450,
+    width: { xs: 250, md: 450 },
     '& .focus': {
       borderColor: 'orange',
     },
@@ -90,19 +90,18 @@ const ModalBoard = () => {
   }, [isSubmitSuccessful, reset]);
 
   const onSubmit = async () => {
-    dispatch(setIsModalBoard(false));
     createBoard([token, { title: valueName, description: valueDescription }])
       .unwrap()
       .then((response) => {
         if (response) {
           notifySuccess(t('board_created_successfully'));
         }
-        handleClose();
       })
       .catch((error) => {
         const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
         handleBoardsErrors(parsedError, 'boards');
-      });
+      })
+      .finally(() => handleClose());
   };
 
   return (

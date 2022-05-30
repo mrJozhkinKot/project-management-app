@@ -5,18 +5,20 @@ import { useParams } from 'react-router-dom';
 import { boardsAPI } from '../../utils/boardService';
 import Spinner from '../spinner/Spinner';
 import Column from './Column';
-import { ColumnInterface, TaskDraftInterface } from '../../utils/interfaces';
+import { ColumnInterface, ParsedErrorInterface, TaskDraftInterface } from '../../utils/interfaces';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { boardsSlice } from '../../reducers/BoardsSlice';
 import { Box } from '@mui/material';
+import { useCookies } from 'react-cookie';
+import { handleBoardsErrors } from '../toasts/toasts';
 
 const ColumnList = () => {
+  const [cookies] = useCookies(['token']);
   const { id } = useParams();
-  const { token } = useAppSelector((state) => state.globalReducer);
-  const { data: columns, isLoading } = boardsAPI.useGetColumnsQuery([token, id as string]);
-  const { data: board } = boardsAPI.useGetBoardQuery([token, id as string]);
+  const { data: columns, isLoading } = boardsAPI.useGetColumnsQuery([cookies.token, id as string]);
+  const { data: board } = boardsAPI.useGetBoardQuery([cookies.token, id as string]);
   const [updateTask, {}] = boardsAPI.useUpdateTaskMutation();
-  const [updateColumn, {}] = boardsAPI.useUpdateColummnMutation();
+  const [updateColumn, {}] = boardsAPI.useUpdateColumnMutation();
   const [createTask, {}] = boardsAPI.useCreateTasksMutation();
   const [deleteTask, {}] = boardsAPI.useDeleteTaskMutation();
 
@@ -107,14 +109,17 @@ const ColumnList = () => {
         .sort((a, b) => (a.order > b.order ? 1 : -1))
         .map((col, index) => {
           updateColumn([
-            token,
+            cookies.token,
             id as string,
             {
               id: col.id,
               title: col.title,
               order: reorderedColumns[index].order,
             },
-          ]);
+          ]).catch((error) => {
+            const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
+            handleBoardsErrors(parsedError, 'columns');
+          });
         });
     } else {
       if (sInd === dInd) {
@@ -137,7 +142,7 @@ const ColumnList = () => {
           .sort((a, b) => (a.order > b.order ? 1 : -1))
           .map((task, index) => {
             updateTask([
-              token,
+              cookies.token,
               id as string,
               colSource.id as string,
               {
@@ -148,7 +153,10 @@ const ColumnList = () => {
                 boardId: id as string,
                 columnId: colSource.id as string,
               },
-            ]);
+            ]).catch((error) => {
+              const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
+              handleBoardsErrors(parsedError, 'columns');
+            });
           });
       } else {
         dispatch(
@@ -179,7 +187,12 @@ const ColumnList = () => {
           .sort((a, b) => (a.order > b.order ? 1 : -1))
           .map((task, index) => {
             if (index === source.index) {
-              deleteTask([token, id as string, colSource.id as string, task.id]);
+              deleteTask([cookies.token, id as string, colSource.id as string, task.id]).catch(
+                (error) => {
+                  const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
+                  handleBoardsErrors(parsedError, 'columns');
+                }
+              );
             }
           });
         colDestination?.tasks
@@ -187,7 +200,7 @@ const ColumnList = () => {
           .sort((a, b) => (a.order > b.order ? 1 : -1))
           .map((task, index) => {
             updateTask([
-              token,
+              cookies.token,
               id as string,
               colDestination.id as string,
               {
@@ -198,10 +211,13 @@ const ColumnList = () => {
                 boardId: id as string,
                 columnId: colDestination.id as string,
               },
-            ]);
+            ]).catch((error) => {
+              const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
+              handleBoardsErrors(parsedError, 'columns');
+            });
           });
         createTask([
-          token,
+          cookies.token,
           id as string,
           colDestination?.id as string,
           {
@@ -209,7 +225,10 @@ const ColumnList = () => {
             description: addedArrOfTasks[addedArrOfTasks.length - 1].description,
             userId: addedArrOfTasks[addedArrOfTasks.length - 1].userId,
           },
-        ]);
+        ]).catch((error) => {
+          const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
+          handleBoardsErrors(parsedError, 'columns');
+        });
       }
     }
   };

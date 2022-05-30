@@ -16,6 +16,7 @@ import { boardsSlice } from '../../reducers/BoardsSlice';
 import { boardsAPI } from '../../utils/boardService';
 import { handleBoardsErrors, notifySuccess } from '../toasts/toasts';
 import { ParsedErrorInterface } from '../../utils/interfaces';
+import { useCookies } from 'react-cookie';
 
 const defaultValues = {
   title: '',
@@ -36,7 +37,7 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 450,
+    width: { xs: 250, md: 450 },
     bgcolor: '#f0ede9',
     border: '1px solid #20B298',
     boxShadow: 24,
@@ -44,7 +45,7 @@ const style = {
   },
   input: {
     margin: '0.5rem 0',
-    width: 450,
+    width: { xs: 250, md: 450 },
     '& .focus': {
       borderColor: 'orange',
     },
@@ -95,32 +96,31 @@ const style = {
 
 const ModalTask = () => {
   const dispatch = useAppDispatch();
+  const [cookies] = useCookies(['token']);
   const { setIsModalTask } = boardsSlice.actions;
   const { userId, userName } = useAppSelector((state) => state.globalReducer);
   const { isModalTask, currentColumnId } = useAppSelector((state) => state.boardsReducer);
-  const { token } = useAppSelector((state) => state.globalReducer);
   const [createTask, {}] = boardsAPI.useCreateTasksMutation();
   const { id } = useParams();
   const { t } = useTranslation();
-  const { data: users } = boardsAPI.useGetUsersQuery(token);
+  const { data: users } = boardsAPI.useGetUsersQuery(cookies.token);
   const [valueTitle, setValueTitle] = useState('');
   const [valueDescription, setValueDescription] = useState('');
   const [valueUserId, setValueUserId] = useState(userId);
   const [valueUserName, setValueUserName] = useState(userName);
   const [isVisibleUserList, setIsVisibleUserList] = useState(false);
-
-  useEffect(() => {
-    setValueUserName(userName);
-    setValueUserId(userId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isModalTask]);
-
   const {
     register,
     handleSubmit,
     reset,
     formState: { isSubmitSuccessful },
   } = useForm({ defaultValues });
+
+  useEffect(() => {
+    setValueUserName(userName);
+    setValueUserId(userId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isModalTask]);
 
   const handleClose = () => {
     dispatch(setIsModalTask(false));
@@ -134,7 +134,7 @@ const ModalTask = () => {
 
   const onSubmit = () => {
     createTask([
-      token,
+      cookies.token,
       id as string,
       currentColumnId,
       {
@@ -148,12 +148,12 @@ const ModalTask = () => {
         if (response) {
           notifySuccess(t('task_created_successfully'));
         }
-        handleClose();
       })
       .catch((error) => {
         const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
         handleBoardsErrors(parsedError, 'columns');
-      });
+      })
+      .finally(() => handleClose());
   };
 
   const onClickAddUserBtn = () => {

@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 import { handleBoardsErrors, notifySuccess } from '../toasts/toasts';
 import { ParsedErrorInterface } from '../../utils/interfaces';
 import { useParams } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 
 const defaultValues = {
   title: '',
@@ -36,7 +37,7 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 450,
+    width: { xs: 250, md: 450 },
     bgcolor: '#f0ede9',
     border: '1px solid #20B298',
     boxShadow: 24,
@@ -44,7 +45,7 @@ const style = {
   },
   input: {
     margin: '0.5rem 0',
-    width: 450,
+    width: { xs: 250, md: 450 },
     '& .focus': {
       borderColor: 'orange',
     },
@@ -93,11 +94,11 @@ const style = {
 };
 
 const ModalEditTask = () => {
+  const [cookies] = useCookies(['token']);
   const { setIsModalEditTask } = boardsSlice.actions;
   const { isModalEditTask, currentColumnId, currentBoardId, task } = useAppSelector(
     (state) => state.boardsReducer
   );
-  const { token } = useAppSelector((state) => state.globalReducer);
   const [valueTitle, setValueTitle] = useState(task?.title || '');
   const [valueDescription, setValueDescription] = useState(task?.description || '');
   const [updateTask, {}] = boardsAPI.useUpdateTaskMutation();
@@ -105,8 +106,8 @@ const ModalEditTask = () => {
   const { t } = useTranslation();
 
   const { id } = useParams();
-  const { data: users } = boardsAPI.useGetUsersQuery(token);
-  const { data: user } = boardsAPI.useGetUserQuery([token, task?.userId]);
+  const { data: users } = boardsAPI.useGetUsersQuery(cookies.token);
+  const { data: user } = boardsAPI.useGetUserQuery([cookies.token, task?.userId]);
   const [valueUserId, setValueUserId] = useState(user?.id);
   const [valueUserName, setValueUserName] = useState(user?.name);
   const [isVisibleUserList, setIsVisibleUserList] = useState(false);
@@ -145,7 +146,7 @@ const ModalEditTask = () => {
   const onSubmit = () => {
     if (task && valueUserId) {
       updateTask([
-        token,
+        cookies.token,
         currentBoardId,
         currentColumnId,
         { ...task, title: valueTitle, description: valueDescription, userId: valueUserId },
@@ -155,14 +156,13 @@ const ModalEditTask = () => {
           if (response) {
             notifySuccess(t('task_updated_successfully'));
           }
-          handleClose();
         })
         .catch((error) => {
           const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
           handleBoardsErrors(parsedError, 'columns');
-        });
+        })
+        .finally(() => handleClose());
     }
-    handleClose();
   };
 
   return (
@@ -224,7 +224,7 @@ const ModalEditTask = () => {
                         setIsVisibleUserList(false);
                         if (task && valueUserId) {
                           updateTask([
-                            token,
+                            cookies.token,
                             id as string,
                             currentColumnId,
                             { ...task, userId: valueUserId },

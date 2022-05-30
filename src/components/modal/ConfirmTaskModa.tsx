@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { boardsAPI } from '../../utils/boardService';
 import { handleBoardsErrors, notifySuccess } from '../toasts/toasts';
 import { ParsedErrorInterface } from '../../utils/interfaces';
+import { useCookies } from 'react-cookie';
 
 const theme = createTheme({
   palette: {
@@ -25,7 +26,7 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 350,
+    width: { xs: 250, md: 350 },
     bgcolor: '#f0ede9',
     border: '1px solid #20B298',
     boxShadow: 24,
@@ -48,11 +49,11 @@ const style = {
 };
 
 const ConfirmTaskModal = () => {
+  const [cookies] = useCookies(['token']);
   const { setIsConfirmTaskModal } = boardsSlice.actions;
   const { isConfirmTaskModal, currentBoardId, currentColumnId, currentTaskId } = useAppSelector(
     (state) => state.boardsReducer
   );
-  const { token } = useAppSelector((state) => state.globalReducer);
   const [deleteTask, {}] = boardsAPI.useDeleteTaskMutation();
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
@@ -62,18 +63,18 @@ const ConfirmTaskModal = () => {
   };
 
   const onClickConfirmDeleteBtn = () => {
-    deleteTask([token, currentBoardId, currentColumnId, currentTaskId])
+    deleteTask([cookies.token, currentBoardId, currentColumnId, currentTaskId])
       .unwrap()
       .then((response) => {
         if (!response) {
           notifySuccess(t('task_removed_successfully'));
         }
-        handleClose();
       })
       .catch((error) => {
         const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
         handleBoardsErrors(parsedError, 'tasks');
-      });
+      })
+      .finally(() => handleClose());
   };
 
   return (
@@ -87,7 +88,7 @@ const ConfirmTaskModal = () => {
         >
           <Box sx={style.box}>
             <Typography id="modal-modal-title" variant="h6" component="h2" sx={style.message}>
-              {t('delete')}?
+              {t('delete_this_task')}?
             </Typography>
             <div style={style.btnContainer}>
               <Button

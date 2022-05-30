@@ -1,4 +1,3 @@
-// TODO: Add token from cookies to requests headers automatically
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react';
 import {
   SignInBodyInterface,
@@ -85,9 +84,6 @@ export const usersAPI = createApi({
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
-        // transformResponse: (response: { data: SignInResponseInterface }) => response.data.token,
-        // selectFromResult: (data: SignInResponseInterface) => data.token,
-        // responseHandler: (response) => response.text(),
       }),
     }),
   }),

@@ -11,6 +11,7 @@ import { boardsSlice } from '../../reducers/BoardsSlice';
 import { boardsAPI } from '../../utils/boardService';
 import { ParsedErrorInterface } from '../../utils/interfaces';
 import { handleBoardsErrors, notifySuccess } from '../toasts/toasts';
+import { useCookies } from 'react-cookie';
 
 const theme = createTheme({
   palette: {
@@ -26,7 +27,7 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 350,
+    width: { xs: 250, md: 350 },
     bgcolor: '#f0ede9',
     border: '1px solid #20B298',
     boxShadow: 24,
@@ -49,9 +50,9 @@ const style = {
 };
 
 const ConfirmBoardModal = () => {
+  const [cookies] = useCookies(['token']);
   const { setIsConfirmBoardModal } = boardsSlice.actions;
   const { isConfirmBoardModal, currentBoardId } = useAppSelector((state) => state.boardsReducer);
-  const { token } = useAppSelector((state) => state.globalReducer);
   const [deleteBoard, {}] = boardsAPI.useDeleteBoardMutation();
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
@@ -61,19 +62,18 @@ const ConfirmBoardModal = () => {
   };
 
   const onClickConfirmDeleteBtn = () => {
-    dispatch(setIsConfirmBoardModal(false));
-    deleteBoard([token, currentBoardId])
+    deleteBoard([cookies.token, currentBoardId])
       .unwrap()
       .then((response) => {
         if (!response) {
           notifySuccess(t('board_removed_successfully'));
         }
-        handleClose();
       })
       .catch((error) => {
         const parsedError: ParsedErrorInterface = JSON.parse(JSON.stringify(error));
         handleBoardsErrors(parsedError, 'boards');
-      });
+      })
+      .finally(() => handleClose());
   };
 
   return (

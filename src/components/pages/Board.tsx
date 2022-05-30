@@ -12,10 +12,13 @@ import ConfirmTaskModal from '../modal/ConfirmTaskModa';
 import ModalColumn from '../modal/ModalColumn';
 import ModalEditTask from '../modal/ModalEditTask';
 import ModalTask from '../modal/ModalTask';
+import { ToastContainer } from 'react-toastify';
 
 const Board: React.FC = () => {
   const { setIsModalColumn } = boardsSlice.actions;
-  const { currentColumnId, currentTaskId } = useAppSelector((state) => state.boardsReducer);
+  const { currentColumnId, currentTaskId, isModalTask, isModalEditTask } = useAppSelector(
+    (state) => state.boardsReducer
+  );
   const { isAuth } = useAppSelector((state) => state.globalReducer);
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
@@ -39,7 +42,7 @@ const Board: React.FC = () => {
   };
 
   if (!isAuth) {
-    return <Navigate to="/signin" replace></Navigate>;
+    return <Navigate to="/welcome" replace></Navigate>;
   }
 
   return (
@@ -56,10 +59,11 @@ const Board: React.FC = () => {
         </Button>
         <ColumnList />
         <ModalColumn />
-        {currentColumnId && <ModalTask />}
-        {currentColumnId && currentTaskId && <ModalEditTask />}
+        {currentColumnId && isModalTask && <ModalTask />}
+        {currentColumnId && currentTaskId && isModalEditTask && <ModalEditTask />}
         <ConfirmColumnModal />
         <ConfirmTaskModal />
+        <ToastContainer />
       </Container>
     </Box>
   );
