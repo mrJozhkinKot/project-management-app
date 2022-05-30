@@ -24,7 +24,7 @@ const Board: React.FC = () => {
 
   const style = {
     container: {
-      height: 'calc(100vh - 10rem)',
+      height: 'calc(100vh - 8rem)',
       flexWrap: 'nowrap' as const,
       overflowX: 'scroll' as const,
       width: '100vw',
